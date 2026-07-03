@@ -5,7 +5,7 @@ import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
 import * as path from "path";
 import * as url from "url";
 import { initBackendServices } from "./backend/init";
-import { setupAllIPC } from "../ipc/index"; // Use the new unified index
+import { setupAllIPC } from "./index";
 
 // Global references
 let mainWindow: BrowserWindow | null = null;

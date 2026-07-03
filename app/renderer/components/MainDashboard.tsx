@@ -3,34 +3,34 @@ import { useClipboard } from "../hooks/useClipboard";
 import { useAI } from "../hooks/useAI-simple";
 
 // Import ALL components
-import CreativeStudio from "./CreativeStudio";
+import { CreativeStudio } from "./CreativeStudio";
 import UniversalTranslator from "./UniversalTranslator";
 import VoiceCommands from "./VoiceCommands";
-import VoiceStudio from "./VoiceStudio";
+import { VoiceStudio } from "./VoiceStudio";
 import InstantSearch from "./InstantSearch";
-import GamifiedClipboard from "./GamifiedClipboard";
+import { GamifiedClipboard } from "./GamifiedClipboard";
 import OfflineAI from "./OfflineAI";
-import AIMemoryDashboard from "./AIMemoryDashboard";
+import { AIMemoryDashboard } from "./AIMemoryDashboard";
 import AnalyticsDashboardUI from "./AnalyticsDashboardUI";
-import ProductivityDashboard from "./ProductivityDashboard";
-import PatternRecognitionDashboard from "./PatternRecognitionDashboard";
-import QuantumPredictions from "./QuantumPredictions";
-import QuantumSecurity from "./QuantumSecurity";
+import { ProductivityDashboard } from "./ProductivityDashboard";
+import { PatternRecognitionDashboard } from "./PatternRecognitionDashboard";
+import { QuantumPredictions } from "./QuantumPredictions";
+import { QuantumSecurity } from "./QuantumSecurity";
 import BlockchainSecurityUI from "./BlockchainSecurityUI";
-import NeuralStyleTransferUI from "./NeuralStyleTransferUI";
+import { NeuralStyleTransferUI } from "./NeuralStyleTransferUI";
 import ARVRIntegrationUI from "./ARVRIntegrationUI";
 import UIMorpherUI from "./UIMorpherUI";
 import VoiceCustomizerUI from "./VoiceCustomizerUI";
 import ProductivityScorerUI from "./ProductivityScorerUI";
-import RevolutionaryFeatures from "./RevolutionaryFeatures";
-import SuperDashboard from "./SuperDashboard";
+import { RevolutionaryFeatures } from "./RevolutionaryFeatures";
+import { SuperDashboard } from "./SuperDashboard";
 import FeatureManager from "./FeatureManager";
 import ClipboardView from "./ClipboardView";
 import ClipboardList from "./ClipboardList";
-import HistoryTimeline from "./HistoryTimeline";
+import { HistoryTimeline } from "./HistoryTimeline";
 import FilterPanel from "./FilterPanel";
-import TagManager from "./TagManager";
-import SearchBar from "./SearchBar";
+import { TagManager } from "./TagManager";
+import { SearchBar } from "./SearchBar";
 import { ServiceTester } from "./ServiceTester";
 
 export const MainDashboard: React.FC = () => {
