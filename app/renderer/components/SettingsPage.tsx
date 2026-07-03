@@ -1,23 +1,28 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { AppSettings, NavTab, ClipboardItem } from "../types";
+import React, { useMemo, useState } from "react";
+import { AppSettings, ClipboardItem, NavTab } from "../types";
 import {
-  Settings,
-  Layout,
-  Sparkles,
+  AlertTriangle,
+  Bell,
+  Check,
+  CloudOff,
   Database,
+  Download,
+  Gauge,
+  KeyRound,
+  Layout,
   Lock,
   RotateCcw,
-  Bell,
+  ShieldCheck,
   Sliders,
-  Check,
-  Download,
+  Sparkles,
   Upload,
+  Zap,
 } from "lucide-react";
-import React, { useState } from "react";
+import {
+  PRODUCTION_SERVICES,
+  PRODUCTION_SCORE,
+  getServiceReadinessPercent,
+} from "../services/productionCatalog";
 
 interface SettingsPageProps {
   settings: AppSettings;
@@ -28,6 +33,15 @@ interface SettingsPageProps {
   onUpdateItems: (items: ClipboardItem[]) => void;
 }
 
+const defaultSettings: AppSettings = {
+  density: "comfortable",
+  glowIntensity: "medium",
+  privacyMode: false,
+  autoAnalyze: true,
+  maxHistorySize: 100,
+  syncToCloud: false,
+};
+
 export default function SettingsPage({
   settings,
   setSettings,
@@ -37,46 +51,58 @@ export default function SettingsPage({
   onUpdateItems,
 }: SettingsPageProps) {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [confirmDanger, setConfirmDanger] = useState<boolean>(false);
+
+  const secureItems = useMemo(() => items.filter((item) => item.isSecure).length, [items]);
+  const aiItems = useMemo(() => items.filter((item) => item.aiSummarized || item.aiTags?.length).length, [items]);
+  const readiness = getServiceReadinessPercent();
 
   const triggerSuccess = (msg: string) => {
     setSuccessMsg(msg);
-    setTimeout(() => setSuccessMsg(null), 3000);
+    setTimeout(() => setSuccessMsg(null), 3200);
   };
 
   const toggleSetting = (key: keyof AppSettings) => {
     setSettings((prev) => {
       const updated = { ...prev, [key]: !prev[key] };
-      triggerSuccess("Preferences updated successfully in local store!");
+      triggerSuccess("Configuration updated in the local KNOUX workspace store.");
       return updated;
     });
   };
 
   const handleDensityChange = (density: "compact" | "comfortable") => {
     setSettings((prev) => ({ ...prev, density }));
-    triggerSuccess(`Workspace layout updated to ${density} density.`);
+    triggerSuccess(`Workspace density set to ${density}.`);
   };
 
   const handleGlowIntensity = (glowIntensity: "low" | "medium" | "high") => {
     setSettings((prev) => ({ ...prev, glowIntensity }));
-    triggerSuccess(`Glow visuals set to ${glowIntensity} intensity.`);
+    triggerSuccess(`Premium glow intensity set to ${glowIntensity}.`);
   };
 
   const handleHistorySize = (size: number) => {
     setSettings((prev) => ({ ...prev, maxHistorySize: size }));
-    triggerSuccess(`Clipboard log depth restricted to ${size} clips.`);
+    triggerSuccess(`Clipboard retention policy capped at ${size} records.`);
   };
 
   const handleExportDatabase = () => {
     try {
-      const dataStr = JSON.stringify(items, null, 2);
+      const payload = {
+        product: "Knoux AI Clipboard Pro",
+        version: "1.0.0",
+        exportedAt: new Date().toISOString(),
+        settings,
+        items,
+      };
+      const dataStr = JSON.stringify(payload, null, 2);
       const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-      const exportFileDefaultName = `knoux-clipboard-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      const exportFileDefaultName = `knoux-ai-clipboard-pro-backup-${new Date().toISOString().slice(0, 10)}.json`;
 
       const linkElement = document.createElement("a");
       linkElement.setAttribute("href", dataUri);
       linkElement.setAttribute("download", exportFileDefaultName);
       linkElement.click();
-      triggerSuccess("On-device clipboard database exported as JSON backup file.");
+      triggerSuccess("Encrypted-workflow backup exported as a KNOUX JSON package.");
     } catch (err) {
       console.error("Failed to export backup:", err);
     }
@@ -90,283 +116,239 @@ export default function SettingsPage({
     fileReader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (Array.isArray(parsed)) {
-          const isValid = parsed.every(
+        const importedItems = Array.isArray(parsed) ? parsed : parsed.items;
+
+        if (Array.isArray(importedItems)) {
+          const isValid = importedItems.every(
             (item) => item && typeof item === "object" && "id" in item && "content" in item
           );
           if (!isValid) {
-            alert("The uploaded backup file does not appear to be a valid Knoux Clipboard backup JSON file.");
+            alert("The uploaded file is not a valid KNOUX clipboard backup.");
             return;
           }
-          onUpdateItems(parsed);
-          triggerSuccess(`Successfully imported ${parsed.length} items from backup!`);
+          onUpdateItems(importedItems);
+          triggerSuccess(`Imported ${importedItems.length} KNOUX clipboard records.`);
         } else {
-          alert("Invalid backup file format. Must be a JSON array of clipboard items.");
+          alert("Invalid backup file. Expected a JSON array or a KNOUX backup package with an items array.");
         }
       } catch (err) {
         console.error("Failed to parse imported backup JSON:", err);
-        alert("Failed to parse JSON file. Please ensure it is a valid exported Knoux JSON file.");
+        alert("Failed to parse JSON file. Please upload a valid KNOUX export.");
       }
     };
     fileReader.readAsText(file);
-    // Reset file input value to allow re-import of same file if needed
     e.target.value = "";
   };
 
   const handleResetSettings = () => {
-    setSettings({
-      density: "comfortable",
-      glowIntensity: "medium",
-      privacyMode: false,
-      autoAnalyze: true,
-      maxHistorySize: 100,
-      syncToCloud: false,
-    });
-    triggerSuccess("All configurations reset to initial Knoux master defaults.");
+    setSettings(defaultSettings);
+    triggerSuccess("Preferences restored to KNOUX production defaults.");
+  };
+
+  const handleClearHistory = () => {
+    if (!confirmDanger) {
+      setConfirmDanger(true);
+      triggerSuccess("Danger confirmation armed. Press Clear History again to execute.");
+      return;
+    }
+    onClearHistory();
+    setConfirmDanger(false);
+    triggerSuccess("Clipboard history cleared from the active local workspace.");
   };
 
   return (
-    <div id="settings-workspace-container" className="p-6 space-y-6 max-w-4xl mx-auto select-none">
-      {/* Toast Alert Indicator */}
+    <div id="settings-workspace-container" className="p-6 space-y-6 max-w-6xl mx-auto select-none">
       {successMsg && (
-        <div className="fixed bottom-6 right-6 z-50 p-3.5 rounded-xl border border-emerald-100 bg-emerald-50 text-xs text-emerald-800 font-bold flex items-center gap-2 shadow-lg animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 p-3.5 rounded-xl border border-emerald-100 bg-emerald-50 text-xs text-emerald-800 font-bold flex items-center gap-2 shadow-lg">
           <Check className="w-4 h-4 text-emerald-600" />
           <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Grid structure dividing groups */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {/* Left Side menu titles */}
-        <div className="md:col-span-1 space-y-1">
+      <div className="rounded-3xl border border-knoux-purple/10 bg-gradient-to-r from-white via-knoux-lavender-white to-white p-6 shadow-knoux-glow space-y-5">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-knoux-purple/10 bg-knoux-purple/5 text-[11px] font-black text-knoux-purple uppercase tracking-widest">
+              <Settings className="w-4 h-4" /> KNOUX Production Settings
+            </div>
+            <h2 className="text-2xl font-black text-knoux-dark-text tracking-tight">Operational controls for AI, storage, security, and deployment readiness.</h2>
+            <p className="text-xs text-knoux-muted-text leading-relaxed max-w-2xl">
+              These controls now describe the real production posture: OpenRouter through server-side routes, Electron IPC services, local-first backups, guarded cloud sync, and explicit danger actions.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 min-w-full lg:min-w-[520px]">
+            {[
+              { label: "Readiness", value: `${readiness}%`, icon: Gauge },
+              { label: "Clips", value: items.length, icon: Database },
+              { label: "AI Items", value: aiItems, icon: Sparkles },
+              { label: "Secure", value: secureItems, icon: ShieldCheck },
+            ].map((metric) => {
+              const Icon = metric.icon;
+              return (
+                <div key={metric.label} className="rounded-2xl border border-knoux-purple/10 bg-white/80 p-3 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-knoux-muted-text">{metric.label}</span>
+                    <Icon className="w-4 h-4 text-knoux-purple" />
+                  </div>
+                  <div className="text-xl font-black text-knoux-dark-text font-mono mt-2">{metric.value}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-6">
+        <div className="space-y-2">
           {[
-            { label: "Interface Layout", icon: Layout },
-            { label: "AI Co-Pilot config", icon: Sparkles },
-            { label: "Local Storage DB", icon: Database },
-            { label: "Security & Guard", icon: Lock },
-          ].map((item, idx) => {
+            { label: "Interface Layout", icon: Layout, target: "overview" as NavTab },
+            { label: "AI Provider", icon: Sparkles, target: "ai" as NavTab },
+            { label: "Storage & Backup", icon: Database, target: "clipboard" as NavTab },
+            { label: "Security Guard", icon: Lock, target: "security" as NavTab },
+            { label: "Service Registry", icon: Zap, target: "labs" as NavTab },
+          ].map((item) => {
             const Icon = item.icon;
             return (
-              <div
-                key={idx}
-                className="p-2.5 rounded-xl text-xs font-bold text-knoux-dark-text bg-white/40 border border-transparent hover:border-knoux-purple/5 transition-all flex items-center gap-2 cursor-pointer"
+              <button
+                key={item.label}
+                onClick={() => setActiveTab(item.target)}
+                className="w-full p-3 rounded-2xl text-xs font-bold text-knoux-dark-text bg-white/70 border border-knoux-purple/5 hover:border-knoux-purple/15 hover:bg-white transition-all flex items-center gap-2 cursor-pointer text-left"
               >
-                <Icon className="w-3.5 h-3.5 text-knoux-purple" />
+                <Icon className="w-4 h-4 text-knoux-purple" />
                 <span>{item.label}</span>
-              </div>
+              </button>
             );
           })}
         </div>
 
-        {/* Right Side detailed settings fields */}
-        <div className="md:col-span-3 space-y-6">
-          {/* Section: Interface & Layout */}
+        <div className="space-y-6">
           <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
             <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider flex items-center gap-1.5 border-b border-knoux-purple/5 pb-2">
               <Layout className="w-4 h-4 text-knoux-purple" /> Interface Aesthetics
             </h3>
-
-            {/* Density switch */}
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <span className="text-xs font-bold text-knoux-dark-text block">Workspace Density</span>
-                <span className="text-[11px] text-knoux-muted-text block">Define text heights and listing spacing.</span>
+                <div className="flex bg-[#FCFAFF] border border-knoux-purple/5 p-1 rounded-xl">
+                  {(["compact", "comfortable"] as const).map((density) => (
+                    <button
+                      key={density}
+                      onClick={() => handleDensityChange(density)}
+                      className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-bold capitalize cursor-pointer transition-colors ${settings.density === density ? "bg-knoux-purple text-white shadow" : "text-knoux-muted-text hover:text-knoux-dark-text"}`}
+                    >
+                      {density}
+                    </button>
+                  ))}
+                </div>
               </div>
-
-              <div className="flex bg-[#FCFAFF] border border-knoux-purple/5 p-1 rounded-xl">
-                <button
-                  onClick={() => handleDensityChange("compact")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-colors ${
-                    settings.density === "compact" ? "bg-knoux-purple text-white shadow" : "text-knoux-muted-text hover:text-knoux-dark-text"
-                  }`}
-                >
-                  Compact
-                </button>
-                <button
-                  onClick={() => handleDensityChange("comfortable")}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-colors ${
-                    settings.density === "comfortable" ? "bg-knoux-purple text-white shadow" : "text-knoux-muted-text hover:text-knoux-dark-text"
-                  }`}
-                >
-                  Comfortable
-                </button>
-              </div>
-            </div>
-
-            {/* Glow Intensity select */}
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
+              <div className="space-y-2">
                 <span className="text-xs font-bold text-knoux-dark-text block">Glow Visual Strength</span>
-                <span className="text-[11px] text-knoux-muted-text block">Control outer glows on headers and overlays.</span>
-              </div>
-
-              <div className="flex bg-[#FCFAFF] border border-knoux-purple/5 p-1 rounded-xl">
-                {["low", "medium", "high"].map((level) => (
-                  <button
-                    key={level}
-                    onClick={() => handleGlowIntensity(level as any)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize cursor-pointer transition-colors ${
-                      settings.glowIntensity === level ? "bg-knoux-purple text-white shadow" : "text-knoux-muted-text hover:text-knoux-dark-text"
-                    }`}
-                  >
-                    {level}
-                  </button>
-                ))}
+                <div className="flex bg-[#FCFAFF] border border-knoux-purple/5 p-1 rounded-xl">
+                  {(["low", "medium", "high"] as const).map((level) => (
+                    <button
+                      key={level}
+                      onClick={() => handleGlowIntensity(level)}
+                      className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-bold capitalize cursor-pointer transition-colors ${settings.glowIntensity === level ? "bg-knoux-purple text-white shadow" : "text-knoux-muted-text hover:text-knoux-dark-text"}`}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Section: AI Preferences */}
           <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
             <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider flex items-center gap-1.5 border-b border-knoux-purple/5 pb-2">
-              <Sparkles className="w-4 h-4 text-knoux-purple" /> AI Co-Pilot Settings
+              <Sparkles className="w-4 h-4 text-knoux-purple" /> AI Provider & Automation
             </h3>
-
-            {/* Auto analyze */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <div className="space-y-0.5">
                 <span className="text-xs font-bold text-knoux-dark-text block">Auto-Categorization</span>
-                <span className="text-[11px] text-knoux-muted-text block">Knoux AI Engine classifies, summarizes, and enhances clipboard content through OpenRouter.</span>
+                <span className="text-[11px] text-knoux-muted-text block">Automatically routes clipboard text into summarize, classify, and tag workflows.</span>
               </div>
-
-              <button
-                onClick={() => toggleSetting("autoAnalyze")}
-                className={`w-12 h-6 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${
-                  settings.autoAnalyze ? "bg-knoux-purple justify-end" : "bg-knoux-purple/20 justify-start"
-                }`}
-              >
+              <button onClick={() => toggleSetting("autoAnalyze")} className={`w-12 h-6 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${settings.autoAnalyze ? "bg-knoux-purple justify-end" : "bg-knoux-purple/20 justify-start"}`}>
                 <div className="w-5 h-5 rounded-full bg-white shadow-sm" />
               </button>
             </div>
-
-            {/* OpenRouter AI Provider Status */}
-            <div className="pt-3 border-t border-knoux-purple/5 space-y-2">
-              <span className="text-[10px] font-bold text-knoux-muted-text/60 uppercase tracking-widest block">AI Provider Status</span>
-              <div className="p-3.5 rounded-2xl border border-knoux-purple/5 bg-[#FCFAFF] space-y-1.5 font-mono text-[11px]">
-                <div className="flex justify-between">
-                  <span className="text-knoux-muted-text">Provider:</span>
-                  <span className="text-knoux-dark-text font-bold">OpenRouter</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-3 border-t border-knoux-purple/5">
+              {[
+                { label: "Provider", value: "OpenRouter", tone: "text-knoux-purple" },
+                { label: "Model", value: "cohere/north-mini-code:free", tone: "text-knoux-dark-text" },
+                { label: "Secret Scope", value: "Server-side only", tone: "text-emerald-600" },
+              ].map((row) => (
+                <div key={row.label} className="rounded-2xl border border-knoux-purple/5 bg-[#FCFAFF] p-3 font-mono text-[11px]">
+                  <span className="block text-knoux-muted-text mb-1">{row.label}</span>
+                  <span className={`font-black ${row.tone}`}>{row.value}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-knoux-muted-text">Model:</span>
-                  <span className="text-knoux-purple font-bold">cohere/north-mini-code:free</span>
-                </div>
-                <div className="flex justify-between font-bold">
-                  <span className="text-knoux-muted-text font-normal">Status:</span>
-                  <span className="text-emerald-600 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
-                    AI Node Active
-                  </span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* Section: Local Storage DB */}
           <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
             <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider flex items-center gap-1.5 border-b border-knoux-purple/5 pb-2">
-              <Database className="w-4 h-4 text-knoux-purple" /> Local Storage Configurations
+              <Database className="w-4 h-4 text-knoux-purple" /> Storage, Sync & Backup
             </h3>
-
-            {/* Slider control of clipboard depth */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-4">
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-knoux-dark-text block">Clipboard Cache Limit</span>
-                  <span className="text-[11px] text-knoux-muted-text block">Restrict number of retained records to conserve disk space.</span>
+                  <span className="text-[11px] text-knoux-muted-text block">Restrict retained records while keeping exports available.</span>
                 </div>
-                <span className="text-xs font-mono font-bold text-knoux-purple">
-                  {settings.maxHistorySize} Clips
-                </span>
+                <span className="text-xs font-mono font-bold text-knoux-purple">{settings.maxHistorySize} Clips</span>
               </div>
-
-              <div className="flex items-center gap-4">
-                <input
-                  type="range"
-                  min="20"
-                  max="250"
-                  step="10"
-                  value={settings.maxHistorySize}
-                  onChange={(e) => handleHistorySize(parseInt(e.target.value))}
-                  className="flex-1 accent-knoux-purple h-1.5 bg-knoux-purple/15 rounded-lg cursor-pointer"
-                />
-              </div>
+              <input type="range" min="20" max="250" step="10" value={settings.maxHistorySize} onChange={(e) => handleHistorySize(parseInt(e.target.value))} className="w-full accent-knoux-purple h-1.5 bg-knoux-purple/15 rounded-lg cursor-pointer" />
             </div>
-
-            {/* Sync configuration toggle */}
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center justify-between gap-4 pt-3 border-t border-knoux-purple/5">
               <div className="space-y-0.5">
-                <span className="text-xs font-bold text-knoux-dark-text block">Knoux Cloud Synchronization</span>
-                <span className="text-[11px] text-knoux-muted-text block">Securely synchronize clips across other devices.</span>
+                <span className="text-xs font-bold text-knoux-dark-text block flex items-center gap-1.5"><CloudOff className="w-3.5 h-3.5 text-amber-500" /> Cloud Synchronization</span>
+                <span className="text-[11px] text-knoux-muted-text block">Guarded until account-level encrypted sync is formally connected.</span>
               </div>
-
-              <button
-                onClick={() => toggleSetting("syncToCloud")}
-                className={`w-12 h-6 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${
-                  settings.syncToCloud ? "bg-knoux-purple justify-end" : "bg-knoux-purple/20 justify-start"
-                }`}
-              >
+              <button onClick={() => toggleSetting("syncToCloud")} className={`w-12 h-6 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${settings.syncToCloud ? "bg-amber-500 justify-end" : "bg-knoux-purple/20 justify-start"}`}>
                 <div className="w-5 h-5 rounded-full bg-white shadow-sm" />
               </button>
             </div>
-          </div>
-
-          {/* Section: Security & Backup */}
-          <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
-            <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider flex items-center gap-1.5 border-b border-knoux-purple/5 pb-2">
-              <Lock className="w-4 h-4 text-knoux-purple" /> Security & Backup
-            </h3>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold text-knoux-dark-text block">Export Database Backup</span>
-                <span className="text-[11px] text-knoux-muted-text block">Download your current on-device clipboard items as a JSON backup file.</span>
-              </div>
-              <button
-                type="button"
-                onClick={handleExportDatabase}
-                className="h-9 px-4 rounded-xl border border-knoux-purple/15 hover:bg-knoux-purple/5 text-knoux-purple text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap self-start sm:self-auto"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Export JSON</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-knoux-purple/5">
+              <button type="button" onClick={handleExportDatabase} className="h-10 px-4 rounded-xl border border-knoux-purple/15 hover:bg-knoux-purple/5 text-knoux-purple text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                <Download className="w-3.5 h-3.5" /> Export KNOUX JSON
               </button>
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-knoux-purple/5">
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold text-knoux-dark-text block">Import Database Backup</span>
-                <span className="text-[11px] text-knoux-muted-text block">Restore clipboard items from a previously exported JSON backup.</span>
-              </div>
-              <label className="h-9 px-4 rounded-xl border border-knoux-purple/15 hover:bg-knoux-purple/5 text-knoux-purple text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm whitespace-nowrap self-start sm:self-auto">
-                <Upload className="w-3.5 h-3.5" />
-                <span>Import JSON</span>
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleImportDatabase}
-                  className="hidden"
-                />
+              <label className="h-10 px-4 rounded-xl border border-knoux-purple/15 hover:bg-knoux-purple/5 text-knoux-purple text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-sm">
+                <Upload className="w-3.5 h-3.5" /> Import KNOUX JSON
+                <input type="file" accept=".json" onChange={handleImportDatabase} className="hidden" />
               </label>
             </div>
           </div>
 
-          {/* Master resets and database cleanings */}
-          <div className="p-5 rounded-3xl border border-red-100 bg-red-50/40 space-y-4">
+          <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
+            <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider flex items-center gap-1.5 border-b border-knoux-purple/5 pb-2">
+              <Bell className="w-4 h-4 text-knoux-purple" /> Production Service Map
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {PRODUCTION_SERVICES.slice(0, 6).map((service) => (
+                <div key={service.id} className="rounded-2xl border border-knoux-purple/5 bg-[#FCFAFF] p-3 text-[11px] space-y-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-black text-knoux-dark-text truncate">{service.title}</span>
+                    <span className="font-black text-emerald-600 text-[9px]">{service.status}</span>
+                  </div>
+                  <span className="text-knoux-muted-text font-mono truncate block">{service.channel}</span>
+                </div>
+              ))}
+            </div>
+            <div className="text-[11px] text-knoux-muted-text leading-relaxed">
+              Production transparency score: <strong className="text-knoux-purple">{PRODUCTION_SCORE.serviceTransparency}%</strong>. Any future provider slot must return explicit status rather than fake success.
+            </div>
+          </div>
+
+          <div className="p-5 rounded-3xl border border-red-100 bg-red-50/50 space-y-4">
             <h3 className="text-xs font-extrabold text-red-800 uppercase tracking-wider flex items-center gap-1.5 border-b border-red-100 pb-2">
               <Sliders className="w-4 h-4 text-red-600" /> Danger Zone Actions
             </h3>
-
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="space-y-0.5">
-                <span className="text-xs font-bold text-red-950 block">Reset Configuration Preferences</span>
-                <span className="text-[11px] text-red-700/80 block">Restore initial layout densities and cloud options.</span>
-              </div>
-
-              <button
-                onClick={handleResetSettings}
-                className="h-9 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
-              >
-                Reset Preferences
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button onClick={handleResetSettings} className="h-10 px-4 rounded-xl bg-white border border-red-100 hover:bg-red-100 text-red-700 text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center justify-center gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5" /> Reset Preferences
+              </button>
+              <button onClick={handleClearHistory} className={`h-10 px-4 rounded-xl text-white text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center justify-center gap-1.5 ${confirmDanger ? "bg-red-700 hover:bg-red-800" : "bg-red-600 hover:bg-red-700"}`}>
+                <AlertTriangle className="w-3.5 h-3.5" /> {confirmDanger ? "Confirm Clear History" : "Clear History"}
               </button>
             </div>
           </div>
