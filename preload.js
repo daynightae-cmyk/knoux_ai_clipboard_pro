@@ -1,138 +1,175 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('knoux', {
-  // Test API
-  test: {
-    runAll: () => ipcRenderer.invoke('test:run-all'),
-    runSingle: (testName) => ipcRenderer.invoke('test:run-single', testName),
-  },
-  
-  // AI Engine
-  aiEngine: {
-    summarize: (text) => ipcRenderer.invoke('ai-engine:summarize', text),
-    classify: (content) => ipcRenderer.invoke('ai-engine:classify', content),
-    enhance: (text) => ipcRenderer.invoke('ai-engine:enhance', text),
-  },
-  
-  // Classifier
-  classifier: {
-    classify: (content, options) => ipcRenderer.invoke('classifier:classify', content, options),
-    getStats: () => ipcRenderer.invoke('classifier:getStats'),
-  },
-  
-  // Summarizer
-  summarizer: {
-    summarize: (content, options) => ipcRenderer.invoke('summarizer:summarize', content, options),
-    getCacheStats: () => ipcRenderer.invoke('summarizer:getCacheStats'),
-  },
-  
-  // Clipboard API
-  clipboard: {
-    getHistory: () => ipcRenderer.invoke('clipboard:get-history'),
-    addItem: (item) => ipcRenderer.invoke('clipboard:add-item', item),
-    deleteItem: (id) => ipcRenderer.invoke('clipboard:delete-item', id),
-    search: (query) => ipcRenderer.invoke('clipboard:search', query),
-    startMonitoring: () => ipcRenderer.invoke('clipboard:start-monitoring'),
-    getStats: () => ipcRenderer.invoke('clipboard:get-stats'),
-  },
-  
-  // AI API
-  ai: {
-    chat: (message) => ipcRenderer.invoke('ai:chat', message),
-    summarize: (text) => ipcRenderer.invoke('ai:summarize', text),
-    enhance: (text) => ipcRenderer.invoke('ai:enhance', text),
-    translate: (text, targetLang) => ipcRenderer.invoke('ai:translate', text, targetLang),
-    analyze: (content) => ipcRenderer.invoke('ai:analyze', content),
-    classify: (content) => ipcRenderer.invoke('ai:classify', content),
-  },
-  
-  // Creative API
-  features: {
-    creative: {
-      generate: (options) => ipcRenderer.invoke('creative:generate', options),
-      enhance: (content) => ipcRenderer.invoke('creative:enhance', content),
-      analyze: (content) => ipcRenderer.invoke('creative:analyze', content),
+const ok = (data) => ({ ok: true, success: true, data });
+const fail = (error) => ({ ok: false, success: false, error: error?.message || String(error || 'Unknown error') });
+const invokeSafe = async (channel, ...args) => {
+  try {
+    return await ipcRenderer.invoke(channel, ...args);
+  } catch (error) {
+    return fail(error);
+  }
+};
+
+const clipboardApi = {
+  read: () => invokeSafe('clipboard:get-history'),
+  history: () => invokeSafe('clipboard:get-history'),
+  getHistory: () => invokeSafe('clipboard:get-history'),
+  addItem: (item) => invokeSafe('clipboard:add-item', item),
+  write: (item) => invokeSafe('clipboard:add-item', item),
+  deleteItem: (id) => invokeSafe('clipboard:delete-item', id),
+  search: (query) => invokeSafe('clipboard:search', query),
+  startMonitoring: () => invokeSafe('clipboard:start-monitoring'),
+  getStats: () => invokeSafe('clipboard:get-stats'),
+  normalize: (content) => invokeSafe('clipboard:normalize', content),
+  format: (content, format) => invokeSafe('clipboard:format', content, format),
+};
+
+const aiApi = {
+  chat: (message) => invokeSafe('ai:chat', message),
+  summarize: (text) => invokeSafe('ai:summarize', text),
+  enhance: (text, options) => invokeSafe('ai:enhance', text, options),
+  translate: (text, targetLang) => invokeSafe('ai:translate', text, targetLang),
+  analyze: (content) => invokeSafe('ai:analyze', content),
+  classify: (content) => invokeSafe('ai:classify', content),
+  predict: (context) => invokeSafe('ai:predict', context),
+};
+
+const storageApi = {
+  get: (key) => invokeSafe('storage:load', key),
+  set: (key, value) => invokeSafe('storage:save', key, value),
+  save: (key, value) => invokeSafe('storage:save', key, value),
+  load: (key) => invokeSafe('storage:load', key),
+  export: () => invokeSafe('storage:export'),
+  getStats: () => invokeSafe('storage:get-stats'),
+};
+
+const settingsApi = {
+  get: () => invokeSafe('settings:get'),
+  getAll: () => invokeSafe('settings:get-all'),
+  update: (settings) => invokeSafe('settings:update', settings),
+  reset: () => invokeSafe('settings:reset'),
+  export: () => invokeSafe('settings:export'),
+  import: (payload) => invokeSafe('settings:import', payload),
+};
+
+contextBridge.exposeInMainWorld('electron', {
+  ipcRenderer: {
+    invoke: (channel, ...args) => invokeSafe(channel, ...args),
+    on: (channel, callback) => {
+      const subscription = (_event, ...args) => callback(...args);
+      ipcRenderer.on(channel, subscription);
+      return () => ipcRenderer.removeListener(channel, subscription);
     },
-    patterns: {
-      detect: (content) => ipcRenderer.invoke('patterns:detect', content),
-      analyze: (data) => ipcRenderer.invoke('patterns:analyze', data),
-    },
+    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),
   },
-  
-  // Security API
-  security: {
-    encrypt: (data) => ipcRenderer.invoke('security:encrypt', data),
-    decrypt: (encrypted) => ipcRenderer.invoke('security:decrypt', encrypted),
-    checkPassword: (password) => ipcRenderer.invoke('security:check-password', password),
-    lock: () => ipcRenderer.invoke('security:lock'),
-  },
-  
-  // Storage API
-  storage: {
-    save: (key, value) => ipcRenderer.invoke('storage:save', key, value),
-    load: (key) => ipcRenderer.invoke('storage:load', key),
-    export: () => ipcRenderer.invoke('storage:export'),
-    getStats: () => ipcRenderer.invoke('storage:get-stats'),
-  },
-  
-  // System API
-  system: {
-    getInfo: () => ipcRenderer.invoke('system:get-info'),
-    getStats: () => ipcRenderer.invoke('system:get-stats'),
-    checkHealth: () => ipcRenderer.invoke('system:check-health'),
-  },
-  
-  // Settings API
-  settings: {
-    get: () => ipcRenderer.invoke('settings:get'),
-    update: (settings) => ipcRenderer.invoke('settings:update', settings),
-  },
-  
-  // Theme API
-  theme: {
-    get: () => ipcRenderer.invoke('theme:get'),
-    set: (theme) => ipcRenderer.invoke('theme:set', theme),
-  },
-  
-  // Language API
-  language: {
-    get: () => ipcRenderer.invoke('language:get'),
-    set: (lang) => ipcRenderer.invoke('language:set', lang),
+  shell: {
+    openExternal: (url) => invokeSafe('shell:open-external', url),
   },
 });
 
-// Extended Backend API for new features
+contextBridge.exposeInMainWorld('electronAPI', {
+  getSettings: () => settingsApi.getAll(),
+  updateSettings: (settings) => settingsApi.update(settings),
+  getLanguage: () => invokeSafe('language:get'),
+  setLanguage: (lang) => invokeSafe('language:set', lang),
+  getTheme: () => invokeSafe('theme:get'),
+  setTheme: (theme) => invokeSafe('theme:set', theme),
+  getClipboardItems: (limit, offset) => invokeSafe('clipboard:get-history', { limit, offset }),
+  searchClipboard: (query) => clipboardApi.search(query),
+  getSystemInfo: () => invokeSafe('get-system-info'),
+});
+
+contextBridge.exposeInMainWorld('knoux', {
+  isAppReady: () => true,
+  onAppReady: (callback) => setTimeout(callback, 0),
+  quitApp: () => invokeSafe('app:quit'),
+
+  getSettings: () => settingsApi.getAll(),
+  saveSettings: (settings) => settingsApi.update(settings),
+  getClipboardHistory: () => clipboardApi.getHistory(),
+  copyToClipboard: (content) => clipboardApi.write({ content, timestamp: Date.now() }),
+  processWithAI: (options) => aiApi.analyze(options),
+
+  test: {
+    runAll: () => invokeSafe('test:run-all'),
+    runSingle: (testName) => invokeSafe('test:run-single', testName),
+  },
+  aiEngine: {
+    summarize: (text) => invokeSafe('ai-engine:summarize', text),
+    classify: (content) => invokeSafe('ai-engine:classify', content),
+    enhance: (text) => invokeSafe('ai-engine:enhance', text),
+  },
+  classifier: {
+    classify: (content, options) => invokeSafe('classifier:classify', content, options),
+    getStats: () => invokeSafe('classifier:getStats'),
+  },
+  summarizer: {
+    summarize: (content, options) => invokeSafe('summarizer:summarize', content, options),
+    getCacheStats: () => invokeSafe('summarizer:getCacheStats'),
+  },
+  clipboard: clipboardApi,
+  ai: aiApi,
+  features: {
+    creative: {
+      generate: (options) => invokeSafe('creative:generate', options),
+      enhance: (content) => invokeSafe('creative:enhance', content),
+      analyze: (content) => invokeSafe('creative:analyze', content),
+    },
+    patterns: {
+      detect: (content) => invokeSafe('patterns:detect', content),
+      analyze: (data) => invokeSafe('patterns:analyze', data),
+    },
+  },
+  security: {
+    encrypt: (data) => invokeSafe('security:encrypt', data),
+    decrypt: (encrypted) => invokeSafe('security:decrypt', encrypted),
+    checkPassword: (password) => invokeSafe('security:check-password', password),
+    lock: () => invokeSafe('security:lock'),
+  },
+  storage: storageApi,
+  settings: settingsApi,
+  system: {
+    getInfo: () => invokeSafe('get-system-info'),
+    getStats: () => invokeSafe('system:get-stats'),
+    checkHealth: () => invokeSafe('system:check-health'),
+  },
+  theme: {
+    get: () => invokeSafe('theme:get'),
+    set: (theme) => invokeSafe('theme:set', theme),
+  },
+  language: {
+    get: () => invokeSafe('language:get'),
+    set: (lang) => invokeSafe('language:set', lang),
+  },
+});
+
 contextBridge.exposeInMainWorld('backendAPI', {
   voice: {
-    getProfiles: () => ipcRenderer.invoke('voice:getProfiles'),
-    customize: (audioData, options) => ipcRenderer.invoke('voice:customize', audioData, options),
+    getProfiles: () => invokeSafe('voice:getProfiles'),
+    customize: (audioData, options) => invokeSafe('voice:customize', audioData, options),
   },
-  
   quantum: {
-    secureClip: (clipData, securityLevel) => ipcRenderer.invoke('quantum:secureClip', clipData, securityLevel),
-    audit: () => ipcRenderer.invoke('quantum:audit'),
-    getAnalytics: () => ipcRenderer.invoke('quantum:getAnalytics'),
-    backup: (data) => ipcRenderer.invoke('quantum:backup', data),
-    activateShield: () => ipcRenderer.invoke('quantum:activateShield'),
+    secureClip: (clipData, securityLevel) => invokeSafe('quantum:secureClip', clipData, securityLevel),
+    audit: () => invokeSafe('quantum:audit'),
+    getAnalytics: () => invokeSafe('quantum:getAnalytics'),
+    backup: (data) => invokeSafe('quantum:backup', data),
+    activateShield: () => invokeSafe('quantum:activateShield'),
   },
-  
   security: {
-    storeClip: (clipData) => ipcRenderer.invoke('security:storeClip', clipData),
-    retrieveClip: (clipId) => ipcRenderer.invoke('security:retrieveClip', clipId),
-    getMetrics: () => ipcRenderer.invoke('security:getMetrics'),
-    audit: () => ipcRenderer.invoke('security:audit'),
-    verify: (clipId) => ipcRenderer.invoke('security:verify', clipId),
+    storeClip: (clipData) => invokeSafe('security:storeClip', clipData),
+    retrieveClip: (clipId) => invokeSafe('security:retrieveClip', clipId),
+    getMetrics: () => invokeSafe('security:getMetrics'),
+    audit: () => invokeSafe('security:audit'),
+    verify: (clipId) => invokeSafe('security:verify', clipId),
   },
-  
   arvr: {
-    createVRClip: (clipData, options) => ipcRenderer.invoke('arvr:createVRClip', clipData, options),
-    getMetrics: () => ipcRenderer.invoke('arvr:getMetrics'),
-    search: (query) => ipcRenderer.invoke('arvr:search', query),
+    createVRClip: (clipData, options) => invokeSafe('arvr:createVRClip', clipData, options),
+    getMetrics: () => invokeSafe('arvr:getMetrics'),
+    search: (query) => invokeSafe('arvr:search', query),
   },
-  
   ui: {
-    getProfiles: () => ipcRenderer.invoke('ui:getProfiles'),
-    morph: (morphType, options) => ipcRenderer.invoke('ui:morph', morphType, options),
-    switchStyle: (styleId) => ipcRenderer.invoke('ui:switchStyle', styleId),
+    getProfiles: () => invokeSafe('ui:getProfiles'),
+    morph: (morphType, options) => invokeSafe('ui:morph', morphType, options),
+    switchStyle: (styleId) => invokeSafe('ui:switchStyle', styleId),
   },
 });
