@@ -1,19 +1,21 @@
 /**
- * Knoux Clipboard AI - Renderer Main Entry Point
- * React application bootstrap and initialization
+ * Knoux AI Clipboard Pro — Renderer Main Entry Point
+ * Boots the full production React app with splash, theme, settings, and routes.
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MainDashboard } from './components/MainDashboard';
+import './styles/global.css';
+import App from './App';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const rootElement = document.getElementById('root');
 
-root.render(
+if (!rootElement) {
+  throw new Error('Root element #root was not found.');
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <MainDashboard />
+    <App />
   </React.StrictMode>
 );
-
