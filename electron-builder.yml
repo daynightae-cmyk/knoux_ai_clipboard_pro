@@ -1,0 +1,81 @@
+appId: com.knoux.clipboardai
+productName: Knoux Clipboard AI
+copyright: "Copyright © 2024 Abu Retaj"
+
+# Build Settings
+directories:
+  output: release
+  buildResources: assets
+
+# ASAR: Disabled - causing issues with app-builder icon processing
+asar: false
+asarUnpack: []
+
+# Compression levels: 'store' (fastest), 'normal', 'maximum' (smallest file)
+compression: normal
+
+# Files to include in the final package
+files:
+  - from: "."
+    filter:
+      - "electron.js"
+      - "main.js"
+      - "dist/**/*"
+      - "build/**/*"
+      - "package.json"
+      - "node_modules/**/*"
+      - "!node_modules/.cache"
+      - "!**/*.ts"
+      - "!**/*.tsx"
+      - "!**/*.map"
+      - "!tests/"
+      - "!src/"
+
+# Windows Configuration
+win:
+  icon: "assets/app-icon.ico"
+  target:
+    - portable
+    - nsis
+  requestedExecutionLevel: asInvoker
+  verifyUpdateCodeSignature: false
+
+# Windows Installer (NSIS) Details
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: true
+  displayLanguageSelector: false
+  uninstallDisplayName: "Knoux Clipboard AI (Uninstall)"
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: "Knoux Clipboard AI"
+  runAfterFinish: true
+
+# macOS Configuration
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.productivity
+  hardenedRuntime: true
+  gatekeeperAssess: false
+
+# Linux Configuration
+linux:
+  target:
+    - AppImage
+    - deb
+    - rpm
+  category: Utility
+  description: "Advanced AI Clipboard Manager"
+  synopsis: "Productivity Tool"
+  maintainer: "Abu Retaj <support@knoux.com>"
+
+# Auto Update Configuration
+publish:
+  provider: github
+  owner: knoux
+  repo: clipboard-ai
+  releaseType: release

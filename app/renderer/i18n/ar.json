@@ -1,0 +1,336 @@
+{
+  "app": {
+    "name": "نوكس - مساعد الحافظة الذكي",
+    "tagline": "ذكاء الحافظة • دقة سطح المكتب • هندسة متميزة",
+    "version": "الإصدار 1.0.0"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "clipboard": "سجل الحافظة",
+    "ai": "رؤى الذكاء الاصطناعي",
+    "security": "مركز الأمان",
+    "settings": "الإعدادات",
+    "about": "حول نوكس",
+    "vip": "العضوية المميزة",
+    "analytics": "التحليلات",
+    "smartActions": "الإجراءات الذكية"
+  },
+  "dashboard": {
+    "welcome": "مرحباً بك في نوكس",
+    "subtitle": "مساعدك الذكي لإدارة الحافظة",
+    "officialTime": "التوقيت الرسمي",
+    "stats": {
+      "totalItems": "إجمالي العناصر",
+      "todayItems": "عناصر اليوم",
+      "favorites": "المفضلة",
+      "aiProcessed": "معالج بالذكاء الاصطناعي",
+      "formats": "التنسيقات",
+      "sensitive": "حساس",
+      "urls": "الروابط",
+      "totalSize": "الحجم الإجمالي"
+    },
+    "quickActions": {
+      "title": "الإجراءات السريعة",
+      "clearHistory": "مسح السجل",
+      "exportData": "تصدير البيانات",
+      "importData": "استيراد البيانات",
+      "securityScan": "فحص أمني",
+      "aiAnalysis": "تحليل ذكي"
+    },
+    "recentActivity": {
+      "title": "النشاط الأخير",
+      "noActivity": "لا يوجد نشاط حديث",
+      "copied": "تم النسخ",
+      "analyzed": "تم التحليل",
+      "enhanced": "تم التحسين"
+    }
+  },
+  "clipboard": {
+    "title": "سجل الحافظة",
+    "search": "البحث في الحافظة...",
+    "filters": {
+      "all": "الكل",
+      "text": "نص",
+      "images": "صور",
+      "files": "ملفات",
+      "urls": "روابط",
+      "favorites": "المفضلة",
+      "sensitive": "حساس"
+    },
+    "actions": {
+      "copy": "نسخ",
+      "favorite": "إضافة للمفضلة",
+      "unfavorite": "إزالة من المفضلة",
+      "delete": "حذف",
+      "analyze": "تحليل",
+      "enhance": "تحسين",
+      "share": "مشاركة"
+    },
+    "empty": {
+      "title": "لا توجد عناصر في الحافظة",
+      "subtitle": "ابدأ بنسخ شيء ما وسيظهر هنا"
+    },
+    "itemInfo": {
+      "copiedAt": "تم النسخ في",
+      "size": "الحجم",
+      "format": "التنسيق",
+      "source": "المصدر"
+    }
+  },
+  "ai": {
+    "title": "رؤى الذكاء الاصطناعي",
+    "subtitle": "اكتشف أنماط وتحليلات ذكية لاستخدامك للحافظة",
+    "features": {
+      "classification": "تصنيف المحتوى",
+      "enhancement": "تحسين النص",
+      "summarization": "التلخيص الذكي",
+      "translation": "الترجمة",
+      "sentiment": "تحليل المشاعر",
+      "extraction": "استخراج البيانات"
+    },
+    "status": {
+      "enabled": "مفعل",
+      "disabled": "معطل",
+      "processing": "جاري المعالجة",
+      "ready": "جاهز"
+    },
+    "models": {
+      "local": "محلي",
+      "cloud": "سحابي",
+      "hybrid": "مختلط"
+    },
+    "chat": {
+      "placeholder": "اسأل عن محتوى الحافظة...",
+      "send": "إرسال",
+      "clear": "مسح المحادثة",
+      "examples": {
+        "summarize": "لخص النص الأخير",
+        "translate": "ترجم إلى الإنجليزية",
+        "analyze": "حلل هذا المحتوى"
+      }
+    }
+  },
+  "security": {
+    "title": "مركز الأمان",
+    "subtitle": "حماية بياناتك وخصوصيتك",
+    "features": {
+      "encryption": "التشفير",
+      "sensitiveDetection": "كشف البيانات الحساسة",
+      "secureMemory": "الذاكرة الآمنة",
+      "autoLock": "القفل التلقائي",
+      "permissions": "الصلاحيات"
+    },
+    "status": {
+      "secure": "آمن",
+      "warning": "تحذير",
+      "vulnerable": "معرض للخطر"
+    },
+    "actions": {
+      "scan": "فحص أمني",
+      "encrypt": "تشفير",
+      "decrypt": "فك التشفير",
+      "clearSensitive": "مسح البيانات الحساسة",
+      "lockNow": "قفل الآن"
+    },
+    "settings": {
+      "enableEncryption": "تفعيل التشفير",
+      "autoDetectSensitive": "كشف البيانات الحساسة تلقائياً",
+      "clearOnExit": "مسح عند الخروج",
+      "secureMode": "الوضع الآمن"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "tabs": {
+      "general": "عام",
+      "clipboard": "الحافظة",
+      "ai": "الذكاء الاصطناعي",
+      "security": "الأمان",
+      "appearance": "المظهر",
+      "advanced": "متقدم"
+    },
+    "general": {
+      "language": "اللغة",
+      "theme": "السمة",
+      "startup": "بدء التشغيل",
+      "notifications": "الإشعارات",
+      "updates": "التحديثات"
+    },
+    "themes": {
+      "light": "فاتح",
+      "dark": "داكن",
+      "auto": "تلقائي",
+      "professional": "مهني",
+      "ai": "ذكي",
+      "contrast": "تباين عالي"
+    },
+    "languages": {
+      "english": "English",
+      "arabic": "العربية"
+    },
+    "clipboard": {
+      "monitoring": "مراقبة الحافظة",
+      "maxItems": "الحد الأقصى للعناصر",
+      "autoCleanup": "التنظيف التلقائي",
+      "formatPriority": "أولوية التنسيق"
+    },
+    "ai": {
+      "enable": "تفعيل الذكاء الاصطناعي",
+      "model": "النموذج",
+      "mode": "الوضع",
+      "autoAnalysis": "التحليل التلقائي"
+    },
+    "actions": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "reset": "إعادة تعيين",
+      "export": "تصدير",
+      "import": "استيراد"
+    }
+  },
+  "about": {
+    "title": "حول نوكس",
+    "developer": "المطور والمؤسس",
+    "name": "نوكس - أبو رتاج",
+    "vision": {
+      "title": "الرؤية",
+      "description": "إعادة تعريف تجربة الحافظة من خلال الذكاء الاصطناعي والتصميم الأنيق"
+    },
+    "features": {
+      "title": "الميزات الرئيسية",
+      "smartClipboard": "حافظة ذكية",
+      "aiPowered": "مدعوم بالذكاء الاصطناعي",
+      "crossPlatform": "متعدد المنصات",
+      "secure": "آمن ومشفر",
+      "intuitive": "واجهة بديهية"
+    },
+    "links": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "website": "الموقع الإلكتروني",
+      "support": "الدعم"
+    },
+    "version": "الإصدار",
+    "buildDate": "تاريخ البناء",
+    "license": "الترخيص"
+  },
+  "vip": {
+    "title": "العضوية المميزة",
+    "subtitle": "اطلق العنان للإمكانيات الكاملة لنوكس",
+    "features": {
+      "unlimitedHistory": "سجل غير محدود",
+      "advancedAI": "ذكاء اصطناعي متقدم",
+      "cloudSync": "مزامنة سحابية",
+      "prioritySupport": "دعم أولوية",
+      "customThemes": "سمات مخصصة",
+      "analytics": "تحليلات متقدمة"
+    },
+    "pricing": {
+      "monthly": "شهرياً",
+      "yearly": "سنوياً",
+      "lifetime": "مدى الحياة"
+    },
+    "status": {
+      "active": "نشط",
+      "expired": "منتهي الصلاحية",
+      "trial": "تجريبي"
+    },
+    "actions": {
+      "upgrade": "ترقية",
+      "renew": "تجديد",
+      "manage": "إدارة الاشتراك"
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "copy": "نسخ",
+    "paste": "لصق",
+    "cut": "قص",
+    "undo": "تراجع",
+    "redo": "إعادة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "sort": "ترتيب",
+    "refresh": "تحديث",
+    "close": "إغلاق",
+    "open": "فتح",
+    "new": "جديد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "yes": "نعم",
+    "no": "لا",
+    "ok": "موافق",
+    "apply": "تطبيق",
+    "reset": "إعادة تعيين",
+    "clear": "مسح",
+    "select": "اختيار",
+    "selectAll": "تحديد الكل",
+    "none": "لا شيء",
+    "all": "الكل",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "never": "أبداً",
+    "always": "دائماً",
+    "enabled": "مفعل",
+    "disabled": "معطل",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "connected": "متصل",
+    "disconnected": "منقطع",
+    "available": "متاح",
+    "unavailable": "غير متاح"
+  },
+  "notifications": {
+    "clipboardUpdated": "تم تحديث الحافظة",
+    "itemCopied": "تم نسخ العنصر",
+    "itemDeleted": "تم حذف العنصر",
+    "settingsSaved": "تم حفظ الإعدادات",
+    "aiAnalysisComplete": "اكتمل التحليل الذكي",
+    "securityScanComplete": "اكتمل الفحص الأمني",
+    "dataExported": "تم تصدير البيانات",
+    "dataImported": "تم استيراد البيانات",
+    "errorOccurred": "حدث خطأ",
+    "connectionLost": "انقطع الاتصال",
+    "connectionRestored": "تم استعادة الاتصال"
+  },
+  "errors": {
+    "general": "حدث خطأ غير متوقع",
+    "networkError": "خطأ في الشبكة",
+    "fileNotFound": "الملف غير موجود",
+    "permissionDenied": "تم رفض الإذن",
+    "invalidFormat": "تنسيق غير صالح",
+    "corruptedData": "بيانات تالفة",
+    "insufficientSpace": "مساحة غير كافية",
+    "serviceUnavailable": "الخدمة غير متاحة",
+    "authenticationFailed": "فشل في المصادقة",
+    "timeout": "انتهت مهلة الاتصال"
+  },
+  "shortcuts": {
+    "copy": "Ctrl+C",
+    "paste": "Ctrl+V",
+    "cut": "Ctrl+X",
+    "undo": "Ctrl+Z",
+    "redo": "Ctrl+Y",
+    "selectAll": "Ctrl+A",
+    "find": "Ctrl+F",
+    "save": "Ctrl+S",
+    "open": "Ctrl+O",
+    "new": "Ctrl+N",
+    "quit": "Ctrl+Q",
+    "refresh": "F5",
+    "fullscreen": "F11",
+    "devTools": "F12"
+  }
+}

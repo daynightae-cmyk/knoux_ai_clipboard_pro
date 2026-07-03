@@ -1,0 +1,97 @@
+/* Dark Theme - Knoux Clipboard AI (Midnight) */
+
+/* Dark theme variables */
+:root.dark {
+  /* Color palette - Midnight */
+  --color-primary: #667eea; /* Smart Blue */
+  --color-secondary: #00d4aa; /* AI Green */
+  --color-accent: #764ba2; /* Purple-Blue */
+  --color-success: #00d4aa;
+  --color-warning: #ffa502;
+  --color-error: #ff4757;
+  --color-info: #667eea;
+
+  /* Background colors */
+  --bg-primary: #0f0f1a; /* Dark Background */
+  --bg-secondary: #1a1a2e; /* Surface */
+  --bg-tertiary: #252540;
+  --bg-card: #1a1a2e;
+  --bg-sidebar: #0f0f1a;
+  --bg-modal: #1a1a2e;
+  --bg-input: #1a1a2e;
+  --bg-tooltip: #252540;
+  --bg-dropdown: #1a1a2e;
+
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #8a8a9e;
+  --text-tertiary: #5a5a6e; /* Disabled */
+  --text-muted: #5a5a6e;
+  --text-inverted: #0f0f1a;
+
+  /* Border colors */
+  --border-primary: #2a2a3e;
+  --border-secondary: #3a3a4e;
+  --border-accent: #667eea;
+  --border-input: #2a2a3e;
+
+  /* Shadow colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, #667eea, #764ba2);
+  --gradient-secondary: linear-gradient(135deg, #00d4aa, #00a382);
+  --gradient-accent: linear-gradient(135deg, #ffa502, #ff4757);
+  --gradient-dark: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+
+  /* Glass morphism */
+  --glass-bg: rgba(26, 26, 46, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Animation colors */
+  --glow-primary: 0 0 20px rgba(102, 126, 234, 0.3);
+  --glow-secondary: 0 0 20px rgba(0, 212, 170, 0.3);
+  --glow-success: 0 0 20px rgba(0, 212, 170, 0.3);
+  --glow-error: 0 0 20px rgba(255, 71, 87, 0.3);
+}
+
+/* Dark theme base styles */
+.dark {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.dark body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Dark theme cards */
+.dark .card,
+.dark .modal,
+.dark .dialog {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.dark .card:hover,
+.dark .modal:hover,
+.dark .dialog:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--glow-primary);
+}
+
+/* Dark theme inputs */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+}

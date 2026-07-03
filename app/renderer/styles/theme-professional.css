@@ -1,0 +1,99 @@
+/* Professional Theme - Knoux Clipboard AI (Professional Blue) */
+
+/* Professional theme variables */
+:root.professional {
+  /* Color palette - Professional Blue */
+  --color-primary: #0056b3; /* Deep Blue */
+  --color-secondary: #17a2b8; /* Cyan */
+  --color-accent: #6c757d; /* Gray */
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-error: #dc3545;
+  --color-info: #17a2b8;
+
+  /* Background colors */
+  --bg-primary: #f4f6f9; /* Light Gray-Blue */
+  --bg-secondary: #ffffff; /* Surface */
+  --bg-tertiary: #e9ecef;
+  --bg-card: #ffffff;
+  --bg-sidebar: #343a40; /* Dark Sidebar for Professional look */
+  --bg-modal: #ffffff;
+  --bg-input: #ffffff;
+  --bg-tooltip: #343a40;
+  --bg-dropdown: #ffffff;
+
+  /* Text colors */
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-tertiary: #adb5bd; /* Disabled */
+  --text-muted: #6c757d;
+  --text-inverted: #ffffff;
+
+  /* Border colors */
+  --border-primary: #dee2e6;
+  --border-secondary: #ced4da;
+  --border-accent: #0056b3;
+  --border-input: #ced4da;
+
+  /* Shadow colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, #0056b3, #004494);
+  --gradient-secondary: linear-gradient(135deg, #17a2b8, #138496);
+  --gradient-accent: linear-gradient(135deg, #6c757d, #5a6268);
+  --gradient-light: linear-gradient(135deg, #f8f9fa, #e9ecef);
+
+  /* Glass morphism */
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(222, 226, 230, 0.5);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+
+  /* Animation colors */
+  --glow-primary: 0 0 10px rgba(0, 86, 179, 0.2);
+  --glow-secondary: 0 0 10px rgba(23, 162, 184, 0.2);
+  --glow-success: 0 0 10px rgba(40, 167, 69, 0.2);
+  --glow-error: 0 0 10px rgba(220, 53, 69, 0.2);
+}
+
+/* Professional theme base styles */
+.professional {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.professional body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Professional theme cards */
+.professional .card,
+.professional .modal,
+.professional .dialog {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+  box-shadow: var(--shadow-sm);
+  border-radius: 4px; /* Sharper corners for professional look */
+}
+
+.professional .card:hover,
+.professional .modal:hover,
+.professional .dialog:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+/* Professional theme inputs */
+.professional input,
+.professional textarea,
+.professional select {
+  background-color: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+  border-radius: 4px;
+}

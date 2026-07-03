@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عن Knoux | الدعم والمساعدة</title>
+    <link rel="stylesheet" href="KnouxAbout.css">
+</head>
+<body>
+    <div class="knoux-about-container">
+        <!-- نفس محتوى React Component أعلاه -->
+        <header class="knoux-header">
+            <h1 class="main-title">Knoux</h1>
+            <div class="subtitle">التقنية • الأمان • الإبداع</div>
+            <p class="header-description">
+                Knoux مؤسسة تقنية متخصصة في تطوير التطبيقات الذكية والحلول الرقمية المتقدمة، 
+                تجمع بين الأداء العالي، الخصوصية، والتصميم العصري لتقديم تجربة استخدام استثنائية.
+            </p>
+        </header>
+
+        <section class="about-section">
+            <h2 class="section-title"><span class="title-icon">●</span> من نحن</h2>
+            <p class="section-content">
+                Knoux تعمل على بناء تطبيقات حديثة تعتمد على الابتكار، الذكاء الاصطناعي، والأمن الرقمي، 
+                مع التركيز على جودة المنتج وتجربة المستخدم، واضعة الخصوصية والأمان في أعلى الأولويات.
+            </p>
+        </section>
+
+        <section class="developer-section">
+            <h2 class="section-title"><span class="title-icon">●</span> المطور</h2>
+            <p class="section-content">تم تطوير هذا التطبيق بالكامل بفضل الله على يد:</p>
+            <div class="developer-card">
+                <div class="developer-name">Eng / Sadek Elgazar 👑</div>
+                <p class="developer-role">المطور الأوحد والمؤسس لتطبيقات وأعمال Knoux</p>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <h2 class="section-title"><span class="title-icon">●</span> التواصل والروابط</h2>
+            <div class="contact-grid">
+                <a href="tel:0503281920" class="contact-card">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-text">اتصال مباشر</div>
+                </a>
+                <a href="https://wa.me/971503281920" target="_blank" class="contact-card">
+                    <div class="contact-icon">💬</div>
+                    <div class="contact-text">WhatsApp</div>
+                </a>
+                <a href="mailto:knouxguard@gmail.com" class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-text">Email</div>
+                </a>
+                <a href="https://www.facebook.com/share/1bXebP7S7D/" target="_blank" class="contact-card">
+                    <div class="contact-icon">🌐</div>
+                    <div class="contact-text">Facebook</div>
+                </a>
+                <a href="https://www.pinterest.com/knoux7" target="_blank" class="contact-card">
+                    <div class="contact-icon">📌</div>
+                    <div class="contact-text">Pinterest</div>
+                </a>
+                <a href="https://www.tiktok.com/@knoux_7" target="_blank" class="contact-card">
+                    <div class="contact-icon">🎵</div>
+                    <div class="contact-text">TikTok</div>
+                </a>
+                <a href="https://www.snapchat.com/add/knooux7" target="_blank" class="contact-card">
+                    <div class="contact-icon">👻</div>
+                    <div class="contact-text">Snapchat</div>
+                </a>
+            </div>
+        </section>
+
+        <footer class="knoux-footer">
+            <div class="footer-content">
+                Knoux — نبني التقنية بثقة، ونصنع التجربة باحتراف.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // إضافة تأثيرات التفاعل
+        document.querySelectorAll('.contact-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // تأثير النبضة
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(138, 43, 226, 0.3);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    width: ${size}px;
+                    height: ${size}px;
+                    top: ${y}px;
+                    left: ${x}px;
+                    pointer-events: none;
+                `;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // إضافة أنيميشن النبضة
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

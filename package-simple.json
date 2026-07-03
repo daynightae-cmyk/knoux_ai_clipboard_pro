@@ -1,0 +1,19 @@
+{
+  "name": "knoux-clipboard-ai",
+  "version": "1.0.0",
+  "main": "app/main.ts",
+  "scripts": {
+    "dev": "tsc && electron .",
+    "build": "tsc",
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^25.3.1",
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "@types/node": "^18.15.0",
+    "@types/electron": "^1.4.33"
+  }
+}

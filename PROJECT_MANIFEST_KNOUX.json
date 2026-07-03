@@ -1,0 +1,39 @@
+{
+  "product_name": "Knoux AI Clipboard Pro",
+  "original_name": "Knoux-AI-Clipboard-main.zip",
+  "parent_brand": {
+    "company": "KNOUX",
+    "official_name": "Knoux",
+    "website": "https://knoux.store",
+    "developer": "Eng. Sadek Elgazar (Knoux)",
+    "location": "Abu Dhabi, United Arab Emirates",
+    "github": "https://github.com/KnouxOPS",
+    "tiktok": "https://www.tiktok.com/@knoux7",
+    "instagram": "https://www.instagram.com/knoux7",
+    "whatsapp": "https://wa.me/971503281920",
+    "email": "knuux7@gmail.com",
+    "phone": "+971503281920",
+    "product_line": "A Knoux Product",
+    "slogan": "Safety is not a luxury, it's a life.",
+    "colors": {
+      "Primary Purple": "#8A2BE2",
+      "Deep Purple": "#6F2DBD",
+      "Accent Purple": "#A678DD",
+      "Soft Purple": "#D8B8EC",
+      "Pure White": "#FFFFFF",
+      "Dark Surface": "#262626",
+      "Neutral Gray": "#8A8A8A",
+      "Black": "#000000"
+    }
+  },
+  "purpose": "AI productivity clipboard manager",
+  "tech_stack": [
+    "Electron",
+    "Node.js",
+    "React / Vite"
+  ],
+  "readiness_score": 96,
+  "recommended_category": "01_READY_TO_CONTINUE",
+  "duplicate_status": "هذه هي النسخة المختارة كأفضل نسخة لهذه العائلة/التطبيق.",
+  "generated_at": "2026-07-03T11:27:03.273496Z"
+}

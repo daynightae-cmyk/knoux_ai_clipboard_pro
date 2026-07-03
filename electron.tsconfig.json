@@ -1,0 +1,44 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./app",
+    "target": "es2020",
+    "lib": ["es2020"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "removeComments": false,
+    "typeRoots": ["./node_modules/@types"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["app/*"],
+      "@shared/*": ["app/shared/*"],
+      "@backend/*": ["app/backend/*"]
+    }
+  },
+  "include": [
+    "app/main.ts",
+    "app/backend/**/*",
+    "app/shared/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "app/renderer/**/*",
+    "app/**/*.spec.ts",
+    "app/**/*.test.ts"
+  ]
+}

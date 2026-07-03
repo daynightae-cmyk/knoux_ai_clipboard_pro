@@ -1,0 +1,234 @@
+/**
+ * Item Preview Component Styles - Knoux Clipboard AI
+ */
+
+.item-preview {
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.item-preview:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.item-preview:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-type {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--accent-color);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  align-self: flex-start;
+}
+
+.item-text {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+}
+
+/* Multi-line support for longer content */
+.item-text.multiline {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.item-time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Courier New', monospace;
+}
+
+.favorite-indicator {
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.item-preview:hover .favorite-indicator {
+  opacity: 1;
+}
+
+/* Type-specific styling */
+.item-preview[data-type="text"] .item-type {
+  background: #3b82f6;
+}
+
+.item-preview[data-type="image"] .item-type {
+  background: #10b981;
+}
+
+.item-preview[data-type="file"] .item-type {
+  background: #f59e0b;
+}
+
+/* Selection state */
+.item-preview.selected {
+  border-color: var(--accent-color);
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.item-preview.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* Loading state */
+.item-preview.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.item-preview.loading .item-text {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* RTL Support */
+.dashboard-view.rtl .item-preview {
+  flex-direction: row-reverse;
+}
+
+.dashboard-view.rtl .item-meta {
+  align-items: flex-start;
+}
+
+.dashboard-view.rtl .item-content {
+  align-items: flex-start;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .item-preview {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .item-text {
+    font-size: 13px;
+  }
+  
+  .item-type {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+  
+  .item-time {
+    font-size: 11px;
+  }
+  
+  .favorite-indicator {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .item-preview {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .item-meta {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .item-content {
+    width: 100%;
+  }
+}
+
+/* Accessibility */
+.item-preview:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .item-preview {
+    border-width: 2px;
+  }
+  
+  .item-preview:focus {
+    outline-width: 3px;
+  }
+  
+  .item-type {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .item-preview {
+    transition: none;
+  }
+  
+  .item-preview.loading .item-text {
+    animation: none;
+  }
+}

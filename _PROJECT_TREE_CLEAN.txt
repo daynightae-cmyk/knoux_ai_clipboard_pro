@@ -1,0 +1,592 @@
+===== Knoux Clipboard AI - Clean Project Tree =====
+Root Path: F:\Knoux-Clipboard-AI
+Generated: 01/26/2026 11:04:11
+
+=== CLEAN PROJECT TREE ===
+├── app
+│   ├── assets
+│   │   ├── icons
+│   │   ├── splash
+│   ├── backend
+│   │   ├── ai
+│   │   │   ├── ai-database.ts
+│   │   │   ├── ai-engine.ts
+│   │   │   ├── classifier.ts
+│   │   │   ├── enhancer.ts
+│   │   │   ├── prompt-library.ts
+│   │   │   ├── summarizer.ts
+│   │   ├── clipboard
+│   │   │   ├── formatter.ts
+│   │   │   ├── history-store.ts
+│   │   │   ├── normalizer.ts
+│   │   │   ├── watcher.ts
+│   │   ├── ipc
+│   │   │   ├── enhanced-handlers.ts
+│   │   │   ├── handlers.ts
+│   │   ├── main
+│   │   │   ├── lifecycle.ts
+│   │   │   ├── main.ts
+│   │   │   ├── preload.js
+│   │   │   ├── preload.ts
+│   │   │   ├── tray.ts
+│   │   │   ├── window-manager.ts
+│   │   ├── security
+│   │   │   ├── encryptor.ts
+│   │   │   ├── permission-guard.ts
+│   │   │   ├── sandbox.ts
+│   │   │   ├── security-manager.ts
+│   │   │   ├── sensitive-detector.ts
+│   │   ├── storage
+│   │   │   ├── cache.ts
+│   │   │   ├── export-import.ts
+│   │   │   ├── local-db.ts
+│   │   ├── system
+│   │   │   ├── autostart.ts
+│   │   │   ├── os-detector.ts
+│   │   │   ├── updater.ts
+│   │   ├── init.ts
+│   │   ├── integration-test.ts
+│   │   ├── service-integration.ts
+│   │   ├── service-manager.ts
+│   ├── renderer
+│   │   ├── components
+│   │   │   ├── settings
+│   │   │   │   ├── GeneralSettings.tsx
+│   │   │   ├── AboutKnoux.tsx
+│   │   │   ├── ActionButton.css
+│   │   │   ├── ActionButton.tsx
+│   │   │   ├── AIProcessor.tsx
+│   │   │   ├── AppInfo.tsx
+│   │   │   ├── ClipboardItem.tsx
+│   │   │   ├── ClipboardList.tsx
+│   │   │   ├── ClipboardPreview.tsx
+│   │   │   ├── ClipboardView.tsx
+│   │   │   ├── DashboardFeatures.tsx
+│   │   │   ├── DigitalClock.tsx
+│   │   │   ├── ErrorBoundary.tsx
+│   │   │   ├── FilterPanel.tsx
+│   │   │   ├── HistoryTimeline.tsx
+│   │   │   ├── ItemPreview.css
+│   │   │   ├── ItemPreview.tsx
+│   │   │   ├── Layout.tsx
+│   │   │   ├── LoadingOverlay.tsx
+│   │   │   ├── LoadingScreen.tsx
+│   │   │   ├── SearchBar.tsx
+│   │   │   ├── SettingsPanel.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   ├── SplashScreen.tsx
+│   │   │   ├── StatusCard.css
+│   │   │   ├── StatusCard.tsx
+│   │   │   ├── SystemBar.tsx
+│   │   │   ├── TagManager.tsx
+│   │   │   ├── ToastContainer.css
+│   │   │   ├── ToastContainer.tsx
+│   │   ├── config
+│   │   │   ├── dashboardConfig.ts
+│   │   ├── containers
+│   │   │   ├── UnifiedAppContainer.tsx
+│   │   ├── contexts
+│   │   │   ├── AIContext.tsx
+│   │   │   ├── ClipboardContext.tsx
+│   │   │   ├── NotificationContext.tsx
+│   │   │   ├── SettingsContext.tsx
+│   │   │   ├── ThemeContext.tsx
+│   │   ├── hooks
+│   │   │   ├── useAI.ts
+│   │   │   ├── useAISimple.ts
+│   │   │   ├── useClipboard.ts
+│   │   │   ├── useDatabase.ts
+│   │   │   ├── useLanguage.ts
+│   │   │   ├── useSearch.ts
+│   │   │   ├── useSettings.ts
+│   │   │   ├── useTheme.ts
+│   │   │   ├── useToast.ts
+│   │   ├── i18n
+│   │   │   ├── ar.json
+│   │   │   ├── en.json
+│   │   ├── layouts
+│   │   ├── pages
+│   │   │   ├── DashboardPage.tsx
+│   │   ├── services
+│   │   │   ├── ClipboardService.ts
+│   │   │   ├── initialization.ts
+│   │   ├── sidebar
+│   │   ├── styles
+│   │   │   ├── animations.css
+│   │   │   ├── global.css
+│   │   │   ├── theme-dark.css
+│   │   │   ├── theme-light.css
+│   │   │   ├── theme.ts
+│   │   ├── types
+│   │   │   ├── electron.d.ts
+│   │   ├── utils
+│   │   │   ├── helpers.ts
+│   │   │   ├── i18n.ts
+│   │   ├── views
+│   │   │   ├── About.tsx
+│   │   │   ├── AboutNew.tsx
+│   │   │   ├── AIInsights.tsx
+│   │   │   ├── ClipboardHistory.tsx
+│   │   │   ├── Dashboard.css
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── DashboardFinal.tsx
+│   │   │   ├── DashboardNew.tsx
+│   │   │   ├── DashboardRefactored.tsx
+│   │   │   ├── KnouxAbout.css
+│   │   │   ├── KnouxAbout.html
+│   │   │   ├── KnouxAbout.tsx
+│   │   │   ├── SecurityCenter.tsx
+│   │   │   ├── VIP.css
+│   │   │   ├── VIP.tsx
+│   │   ├── App.tsx
+│   │   ├── AppIntegrated.tsx
+│   │   ├── index.html
+│   │   ├── index.tsx
+│   │   ├── main.tsx
+│   │   ├── store.ts
+│   ├── services
+│   │   ├── aiService.ts
+│   │   ├── databaseService.ts
+│   │   ├── languageService.ts
+│   │   ├── settingsService.ts
+│   │   ├── themeService.ts
+│   ├── shared
+│   │   ├── config-schema.ts
+│   │   ├── constants.ts
+│   │   ├── enums.ts
+│   │   ├── i18n-complete.ts
+│   │   ├── i18n.ts
+│   │   ├── localized-logger.ts
+│   │   ├── logger.ts
+│   │   ├── settings-manager.ts
+│   │   ├── theme-manager.ts
+│   │   ├── types.ts
+│   │   ├── vip-manager.ts
+│   ├── tests
+│   │   ├── e2e
+│   │   ├── fixtures
+│   │   ├── integration
+│   │   │   ├── services-integration.test.ts
+│   │   ├── unit
+│   │   │   ├── ai.test.ts
+│   │   │   ├── clipboard.test.ts
+│   │   ├── ai.test.ts
+│   │   ├── clipboard.test.ts
+│   │   ├── security.test.ts
+│   │   ├── setupTests.ts
+│   ├── main.ts
+│   ├── setupTests.ts
+├── assets
+│   ├── icons
+│   │   ├── icon.icns
+│   │   ├── icon.ico
+│   │   ├── icon.png
+│   │   ├── tray.png
+│   ├── app-icon.ico
+│   ├── README-ICONS.md
+│   ├── splash.png
+│   ├── tray-icon.ico
+├── data
+│   ├── .gitkeep
+├── docs
+│   ├── AI-DESIGN.md
+│   ├── ARCHITECTURE.md
+│   ├── FEATURES.md
+│   ├── index.html
+│   ├── INTEGRATION-GUIDE.md
+│   ├── README.md
+│   ├── ROADMAP.md
+│   ├── SECURITY.md
+├── electron
+│   ├── preload.js
+├── locales
+│   ├── ar.json
+│   ├── en.json
+├── logs
+│   ├── .gitkeep
+├── public
+│   ├── dev-unavailable.html
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── knoux-about.html
+│   ├── manifest.json
+├── release
+│   ├── Knoux-Clipboard-AI-win32-x64
+│   │   ├── locales
+│   │   │   ├── af.pak
+│   │   │   ├── am.pak
+│   │   │   ├── ar.pak
+│   │   │   ├── bg.pak
+│   │   │   ├── bn.pak
+│   │   │   ├── ca.pak
+│   │   │   ├── cs.pak
+│   │   │   ├── da.pak
+│   │   │   ├── de.pak
+│   │   │   ├── el.pak
+│   │   │   ├── en-GB.pak
+│   │   │   ├── en-US.pak
+│   │   │   ├── es-419.pak
+│   │   │   ├── es.pak
+│   │   │   ├── et.pak
+│   │   │   ├── fa.pak
+│   │   │   ├── fi.pak
+│   │   │   ├── fil.pak
+│   │   │   ├── fr.pak
+│   │   │   ├── gu.pak
+│   │   │   ├── he.pak
+│   │   │   ├── hi.pak
+│   │   │   ├── hr.pak
+│   │   │   ├── hu.pak
+│   │   │   ├── id.pak
+│   │   │   ├── it.pak
+│   │   │   ├── ja.pak
+│   │   │   ├── kn.pak
+│   │   │   ├── ko.pak
+│   │   │   ├── lt.pak
+│   │   │   ├── lv.pak
+│   │   │   ├── ml.pak
+│   │   │   ├── mr.pak
+│   │   │   ├── ms.pak
+│   │   │   ├── nb.pak
+│   │   │   ├── nl.pak
+│   │   │   ├── pl.pak
+│   │   │   ├── pt-BR.pak
+│   │   │   ├── pt-PT.pak
+│   │   │   ├── ro.pak
+│   │   │   ├── ru.pak
+│   │   │   ├── sk.pak
+│   │   │   ├── sl.pak
+│   │   │   ├── sr.pak
+│   │   │   ├── sv.pak
+│   │   │   ├── sw.pak
+│   │   │   ├── ta.pak
+│   │   │   ├── te.pak
+│   │   │   ├── th.pak
+│   │   │   ├── tr.pak
+│   │   │   ├── uk.pak
+│   │   │   ├── ur.pak
+│   │   │   ├── vi.pak
+│   │   │   ├── zh-CN.pak
+│   │   │   ├── zh-TW.pak
+│   │   ├── resources
+│   │   │   ├── app
+│   │   │   │   ├── app
+│   │   │   │   │   ├── backend
+│   │   │   │   │   │   ├── ai
+│   │   │   │   │   │   │   ├── ai-database.ts
+│   │   │   │   │   │   │   ├── ai-engine.ts
+│   │   │   │   │   │   │   ├── classifier.ts
+│   │   │   │   │   │   │   ├── enhancer.ts
+│   │   │   │   │   │   │   ├── prompt-library.ts
+│   │   │   │   │   │   │   ├── summarizer.ts
+│   │   │   │   │   │   ├── clipboard
+│   │   │   │   │   │   │   ├── formatter.ts
+│   │   │   │   │   │   │   ├── history-store.ts
+│   │   │   │   │   │   │   ├── normalizer.ts
+│   │   │   │   │   │   │   ├── watcher.ts
+│   │   │   │   │   │   ├── ipc
+│   │   │   │   │   │   │   ├── handlers.ts
+│   │   │   │   │   │   ├── main
+│   │   │   │   │   │   │   ├── lifecycle.ts
+│   │   │   │   │   │   │   ├── main.ts
+│   │   │   │   │   │   │   ├── preload.js
+│   │   │   │   │   │   │   ├── preload.ts
+│   │   │   │   │   │   │   ├── tray.ts
+│   │   │   │   │   │   │   ├── window-manager.ts
+│   │   │   │   │   │   ├── security
+│   │   │   │   │   │   │   ├── encryptor.ts
+│   │   │   │   │   │   │   ├── permission-guard.ts
+│   │   │   │   │   │   │   ├── sandbox.ts
+│   │   │   │   │   │   │   ├── security-manager.ts
+│   │   │   │   │   │   │   ├── sensitive-detector.ts
+│   │   │   │   │   │   ├── storage
+│   │   │   │   │   │   │   ├── cache.ts
+│   │   │   │   │   │   │   ├── export-import.ts
+│   │   │   │   │   │   │   ├── local-db.ts
+│   │   │   │   │   │   ├── system
+│   │   │   │   │   │   │   ├── autostart.ts
+│   │   │   │   │   │   │   ├── os-detector.ts
+│   │   │   │   │   │   │   ├── updater.ts
+│   │   │   │   │   │   ├── init.ts
+│   │   │   │   │   │   ├── integration-test.ts
+│   │   │   │   │   │   ├── service-integration.ts
+│   │   │   │   │   │   ├── service-manager.ts
+│   │   │   │   │   ├── renderer
+│   │   │   │   │   │   ├── components
+│   │   │   │   │   │   │   ├── settings
+│   │   │   │   │   │   │   │   ├── GeneralSettings.tsx
+│   │   │   │   │   │   │   ├── AboutKnoux.tsx
+│   │   │   │   │   │   │   ├── AIProcessor.tsx
+│   │   │   │   │   │   │   ├── AppInfo.tsx
+│   │   │   │   │   │   │   ├── ClipboardItem.tsx
+│   │   │   │   │   │   │   ├── ClipboardList.tsx
+│   │   │   │   │   │   │   ├── ClipboardPreview.tsx
+│   │   │   │   │   │   │   ├── ClipboardView.tsx
+│   │   │   │   │   │   │   ├── DashboardFeatures.tsx
+│   │   │   │   │   │   │   ├── ErrorBoundary.tsx
+│   │   │   │   │   │   │   ├── FilterPanel.tsx
+│   │   │   │   │   │   │   ├── HistoryTimeline.tsx
+│   │   │   │   │   │   │   ├── Layout.tsx
+│   │   │   │   │   │   │   ├── LoadingOverlay.tsx
+│   │   │   │   │   │   │   ├── LoadingScreen.tsx
+│   │   │   │   │   │   │   ├── SearchBar.tsx
+│   │   │   │   │   │   │   ├── SettingsPanel.tsx
+│   │   │   │   │   │   │   ├── Sidebar.tsx
+│   │   │   │   │   │   │   ├── SplashScreen.tsx
+│   │   │   │   │   │   │   ├── SystemBar.tsx
+│   │   │   │   │   │   │   ├── TagManager.tsx
+│   │   │   │   │   │   ├── containers
+│   │   │   │   │   │   │   ├── UnifiedAppContainer.tsx
+│   │   │   │   │   │   ├── contexts
+│   │   │   │   │   │   │   ├── AIContext.tsx
+│   │   │   │   │   │   │   ├── ClipboardContext.tsx
+│   │   │   │   │   │   │   ├── NotificationContext.tsx
+│   │   │   │   │   │   │   ├── SettingsContext.tsx
+│   │   │   │   │   │   │   ├── ThemeContext.tsx
+│   │   │   │   │   │   ├── hooks
+│   │   │   │   │   │   │   ├── useAI.ts
+│   │   │   │   │   │   │   ├── useClipboard.ts
+│   │   │   │   │   │   │   ├── useSearch.ts
+│   │   │   │   │   │   │   ├── useSettings.ts
+│   │   │   │   │   │   ├── services
+│   │   │   │   │   │   │   ├── ClipboardService.ts
+│   │   │   │   │   │   │   ├── initialization.ts
+│   │   │   │   │   │   ├── styles
+│   │   │   │   │   │   │   ├── animations.css
+│   │   │   │   │   │   │   ├── global.css
+│   │   │   │   │   │   │   ├── theme-dark.css
+│   │   │   │   │   │   │   ├── theme-light.css
+│   │   │   │   │   │   │   ├── theme.ts
+│   │   │   │   │   │   ├── utils
+│   │   │   │   │   │   │   ├── helpers.ts
+│   │   │   │   │   │   ├── views
+│   │   │   │   │   │   │   ├── About.tsx
+│   │   │   │   │   │   │   ├── AIInsights.tsx
+│   │   │   │   │   │   │   ├── ClipboardHistory.tsx
+│   │   │   │   │   │   │   ├── Dashboard.tsx
+│   │   │   │   │   │   │   ├── KnouxAbout.css
+│   │   │   │   │   │   │   ├── KnouxAbout.html
+│   │   │   │   │   │   │   ├── KnouxAbout.tsx
+│   │   │   │   │   │   │   ├── SecurityCenter.tsx
+│   │   │   │   │   │   ├── App.tsx
+│   │   │   │   │   │   ├── AppIntegrated.tsx
+│   │   │   │   │   │   ├── index.html
+│   │   │   │   │   │   ├── index.tsx
+│   │   │   │   │   │   ├── main.tsx
+│   │   │   │   │   │   ├── store.ts
+│   │   │   │   │   ├── shared
+│   │   │   │   │   │   ├── config-schema.ts
+│   │   │   │   │   │   ├── constants.ts
+│   │   │   │   │   │   ├── enums.ts
+│   │   │   │   │   │   ├── i18n-complete.ts
+│   │   │   │   │   │   ├── i18n.ts
+│   │   │   │   │   │   ├── localized-logger.ts
+│   │   │   │   │   │   ├── logger.ts
+│   │   │   │   │   │   ├── settings-manager.ts
+│   │   │   │   │   │   ├── theme-manager.ts
+│   │   │   │   │   │   ├── types.ts
+│   │   │   │   │   │   ├── vip-manager.ts
+│   │   │   │   │   ├── tests
+│   │   │   │   │   │   ├── e2e
+│   │   │   │   │   │   ├── fixtures
+│   │   │   │   │   │   ├── integration
+│   │   │   │   │   │   │   ├── services-integration.test.ts
+│   │   │   │   │   │   ├── unit
+│   │   │   │   │   │   │   ├── ai.test.ts
+│   │   │   │   │   │   │   ├── clipboard.test.ts
+│   │   │   │   │   │   ├── ai.test.ts
+│   │   │   │   │   │   ├── clipboard.test.ts
+│   │   │   │   │   │   ├── security.test.ts
+│   │   │   │   │   │   ├── setupTests.ts
+│   │   │   │   │   ├── main.ts
+│   │   │   │   │   ├── setupTests.ts
+│   │   │   │   ├── assets
+│   │   │   │   │   ├── icons
+│   │   │   │   │   │   ├── icon.icns
+│   │   │   │   │   │   ├── icon.ico
+│   │   │   │   │   │   ├── icon.png
+│   │   │   │   │   │   ├── tray.png
+│   │   │   │   │   ├── app-icon.ico
+│   │   │   │   │   ├── README-ICONS.md
+│   │   │   │   │   ├── splash.png
+│   │   │   │   │   ├── tray-icon.ico
+│   │   │   │   ├── data
+│   │   │   │   │   ├── .gitkeep
+│   │   │   │   ├── docs
+│   │   │   │   │   ├── AI-DESIGN.md
+│   │   │   │   │   ├── ARCHITECTURE.md
+│   │   │   │   │   ├── FEATURES.md
+│   │   │   │   │   ├── index.html
+│   │   │   │   │   ├── INTEGRATION-GUIDE.md
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   ├── ROADMAP.md
+│   │   │   │   │   ├── SECURITY.md
+│   │   │   │   ├── electron
+│   │   │   │   │   ├── preload.js
+│   │   │   │   ├── logs
+│   │   │   │   │   ├── .gitkeep
+│   │   │   │   ├── public
+│   │   │   │   │   ├── dev-unavailable.html
+│   │   │   │   │   ├── favicon.ico
+│   │   │   │   │   ├── index.html
+│   │   │   │   │   ├── knoux-about.html
+│   │   │   │   │   ├── manifest.json
+│   │   │   │   ├── scripts
+│   │   │   │   │   ├── analyze-code.js
+│   │   │   │   │   ├── build-flow.md
+│   │   │   │   │   ├── build-test.js
+│   │   │   │   │   ├── dev-run.md
+│   │   │   │   │   ├── doctor.js
+│   │   │   │   │   ├── enhance-docs.js
+│   │   │   │   │   ├── generate-assets.ps1
+│   │   │   │   │   ├── packaging-flow.md
+│   │   │   │   │   ├── recovery-guide.md
+│   │   │   │   │   ├── run-dev.js
+│   │   │   │   ├── setup
+│   │   │   │   │   ├── assets
+│   │   │   │   │   ├── build.bat
+│   │   │   │   │   ├── knoux.nsi
+│   │   │   │   │   ├── prepare.ps1
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   ├── verify.py
+│   │   │   │   ├── src
+│   │   │   │   │   ├── App.css
+│   │   │   │   │   ├── App.tsx
+│   │   │   │   │   ├── index.css
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   ├── react-app-env.d.ts
+│   │   │   │   │   ├── setupTests.ts
+│   │   │   │   ├── userdata
+│   │   │   │   │   ├── .gitkeep
+│   │   │   │   ├── .env
+│   │   │   │   ├── .env.development
+│   │   │   │   ├── .env.example
+│   │   │   │   ├── .eslintrc.json
+│   │   │   │   ├── .gitattributes
+│   │   │   │   ├── .gitignore
+│   │   │   │   ├── .gitignore-new
+│   │   │   │   ├── .npmrc
+│   │   │   │   ├── bridge.js
+│   │   │   │   ├── build.log
+│   │   │   │   ├── CONTRIBUTING.md
+│   │   │   │   ├── craco.config.js
+│   │   │   │   ├── electron-builder.yml
+│   │   │   │   ├── electron.tsconfig.json
+│   │   │   │   ├── FINAL-STATUS.txt
+│   │   │   │   ├── FINAL-SUMMARY.txt
+│   │   │   │   ├── global.d.ts
+│   │   │   │   ├── HOW-TO-USE.md
+│   │   │   │   ├── INSTALLATION.md
+│   │   │   │   ├── Knoux-Clipboard-AI-FIXED.exe
+│   │   │   │   ├── KNOUX.signature
+│   │   │   │   ├── LICENSE
+│   │   │   │   ├── main.js
+│   │   │   │   ├── package-simple.json
+│   │   │   │   ├── package.json
+│   │   │   │   ├── postcss.config.js
+│   │   │   │   ├── preload.js
+│   │   │   │   ├── PROJECT-STRUCTURE.md
+│   │   │   │   ├── QUICK-START.txt
+│   │   │   │   ├── README.md
+│   │   │   │   ├── RELEASES.md
+│   │   │   │   ├── ROOT-CAUSE-ANALYSIS.md
+│   │   │   │   ├── run.bat
+│   │   │   │   ├── run.sh
+│   │   │   │   ├── SETUP-COMPLETE.txt
+│   │   │   │   ├── SETUP-SUMMARY.md
+│   │   │   │   ├── tailwind.config.js
+│   │   │   │   ├── tsconfig.fixed.json
+│   │   │   │   ├── tsconfig.json
+│   │   │   │   ├── vite.config.ts
+│   │   ├── chrome_100_percent.pak
+│   │   ├── chrome_200_percent.pak
+│   │   ├── d3dcompiler_47.dll
+│   │   ├── ffmpeg.dll
+│   │   ├── icudtl.dat
+│   │   ├── Knoux-Clipboard-AI.exe
+│   │   ├── libEGL.dll
+│   │   ├── libGLESv2.dll
+│   │   ├── LICENSE
+│   │   ├── LICENSES.chromium.html
+│   │   ├── resources.pak
+│   │   ├── snapshot_blob.bin
+│   │   ├── v8_context_snapshot.bin
+│   │   ├── version
+│   │   ├── vk_swiftshader_icd.json
+│   │   ├── vk_swiftshader.dll
+│   │   ├── vulkan-1.dll
+│   ├── win-unpacked
+│   │   ├── resources
+│   │   │   ├── app.asar
+├── scripts
+│   ├── analyze-code.js
+│   ├── build-flow.md
+│   ├── build-test.js
+│   ├── dev-run.md
+│   ├── doctor.js
+│   ├── enhance-docs.js
+│   ├── generate-assets.ps1
+│   ├── packaging-flow.md
+│   ├── recovery-guide.md
+│   ├── run-dev.js
+├── setup
+│   ├── assets
+│   ├── build.bat
+│   ├── knoux.nsi
+│   ├── prepare.ps1
+│   ├── README.md
+│   ├── verify.py
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── index.tsx
+│   ├── react-app-env.d.ts
+│   ├── setupTests.ts
+├── userdata
+│   ├── .gitkeep
+├── _PROJECT_TREE_CLEAN.txt
+├── .env
+├── .env.development
+├── .env.example
+├── .eslintrc.json
+├── .gitattributes
+├── .gitignore
+├── .gitignore-new
+├── .npmrc
+├── bridge.js
+├── build.log
+├── CONTRIBUTING.md
+├── craco.config.js
+├── electron-builder.yml
+├── electron.tsconfig.json
+├── FINAL-STATUS.txt
+├── FINAL-SUMMARY.txt
+├── global.d.ts
+├── HOW-TO-USE.md
+├── INSTALLATION.md
+├── Knoux-Clipboard-AI-FIXED.exe
+├── KNOUX.signature
+├── LICENSE
+├── main.js
+├── package-lock.json
+├── package-simple.json
+├── package.json
+├── postcss.config.js
+├── preload.js
+├── PROJECT-STRUCTURE.md
+├── QUICK-START.txt
+├── README.md
+├── RELEASES.md
+├── ROOT-CAUSE-ANALYSIS.md
+├── run.bat
+├── run.sh
+├── SETUP-COMPLETE.txt
+├── SETUP-SUMMARY.md
+├── tailwind.config.js
+├── tsconfig.fixed.json
+├── tsconfig.json
+├── vite.config.ts
+
+=== RELEASE EXECUTABLE ===
+✔ Release EXE Found: F:\Knoux-Clipboard-AI\release\Knoux-Clipboard-AI-win32-x64\Knoux-Clipboard-AI.exe

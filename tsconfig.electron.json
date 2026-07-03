@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["es2020"],
+    "outDir": "build/electron",
+    "rootDir": ".",
+    "strict": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "declaration": false
+  },
+  "include": [
+    "app/backend/ipc/enhanced-handlers.ts",
+    "app/backend/services/**/*.ts",
+    "app/shared/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "release",
+    "app/renderer/**/*",
+    "app/backend/clipboard/**/*",
+    "app/backend/ai/**/*",
+    "app/backend/main/**/*"
+  ]
+}

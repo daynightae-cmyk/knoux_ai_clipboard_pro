@@ -1,0 +1,497 @@
+/* Import Arabic Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f172a;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* Arabic Font Support */
+.lang-ar,
+html[lang="ar"] body,
+html[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', 'Amiri', system-ui, sans-serif !important;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* RTL Support */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] * {
+  direction: rtl;
+}
+
+/* RTL Specific Adjustments */
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+.rtl .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.rtl .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Custom Knoux Theme Variables */
+:root {
+  --knoux-primary: #8b5cf6;
+  --knoux-secondary: #06b6d4;
+  --knoux-background: #0f172a;
+  --knoux-background-surface: #1e293b;
+  --knoux-text-primary: #ffffff;
+  --knoux-text-secondary: #94a3b8;
+  --knoux-border: #334155;
+  --knoux-accent: #f59e0b;
+  --knoux-success: #10b981;
+  --knoux-warning: #f59e0b;
+  --knoux-error: #ef4444;
+}
+
+/* Light Theme */
+html.light {
+  --knoux-background: #ffffff;
+  --knoux-background-surface: #f8fafc;
+  --knoux-text-primary: #1e293b;
+  --knoux-text-secondary: #64748b;
+  --knoux-border: #e2e8f0;
+}
+
+/* Knoux Utility Classes */
+.bg-knoux-background {
+  background-color: var(--knoux-background);
+}
+
+.bg-knoux-background-surface {
+  background-color: var(--knoux-background-surface);
+}
+
+.bg-knoux-primary {
+  background-color: var(--knoux-primary);
+}
+
+.bg-knoux-secondary {
+  background-color: var(--knoux-secondary);
+}
+
+.text-knoux-primary {
+  color: var(--knoux-text-primary);
+}
+
+.text-knoux-secondary {
+  color: var(--knoux-text-secondary);
+}
+
+.border-knoux {
+  border-color: var(--knoux-border);
+}
+
+/* Glassmorphism Effects */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient Backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--knoux-primary), var(--knoux-secondary));
+}
+
+.gradient-surface {
+  background: linear-gradient(135deg, 
+    rgba(139, 92, 246, 0.1), 
+    rgba(6, 182, 212, 0.1)
+  );
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--knoux-background-surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--knoux-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--knoux-secondary);
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--knoux-primary) var(--knoux-background-surface);
+}
+
+/* Selection */
+::selection {
+  background: var(--knoux-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--knoux-primary);
+  color: white;
+}
+
+/* Focus Styles */
+*:focus {
+  outline: 2px solid var(--knoux-primary);
+  outline-offset: 2px;
+}
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--knoux-primary);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -30px, 0);
+  }
+  70% {
+    transform: translate3d(0, -15px, 0);
+  }
+  90% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+/* Animation Classes */
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* RTL Animation Adjustments */
+.rtl .animate-slideInRight {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.rtl .animate-slideInLeft {
+  animation: slideInRight 0.5s ease-out;
+}
+
+/* Typography */
+.font-arabic {
+  font-family: 'Noto Sans Arabic', 'Cairo', 'Tajawal', system-ui, sans-serif;
+}
+
+.font-english {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Arabic Text Improvements */
+.lang-ar h1,
+.lang-ar h2,
+.lang-ar h3,
+.lang-ar h4,
+.lang-ar h5,
+.lang-ar h6 {
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.lang-ar p,
+.lang-ar span,
+.lang-ar div {
+  line-height: 1.6;
+}
+
+/* Button Styles */
+.btn-primary {
+  background: var(--knoux-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--knoux-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--knoux-text-primary);
+  border: 1px solid var(--knoux-border);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: var(--knoux-background-surface);
+  border-color: var(--knoux-primary);
+}
+
+/* Card Styles */
+.card {
+  background: var(--knoux-background-surface);
+  border: 1px solid var(--knoux-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--knoux-primary);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+/* Input Styles */
+.input {
+  background: var(--knoux-background-surface);
+  border: 1px solid var(--knoux-border);
+  color: var(--knoux-text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--knoux-primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.input::placeholder {
+  color: var(--knoux-text-secondary);
+}
+
+/* RTL Input Adjustments */
+.rtl .input {
+  text-align: right;
+}
+
+/* Loading States */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .rtl .flex-row {
+    flex-direction: column;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --knoux-primary: #ffffff;
+    --knoux-secondary: #000000;
+    --knoux-background: #000000;
+    --knoux-background-surface: #1a1a1a;
+    --knoux-text-primary: #ffffff;
+    --knoux-border: #ffffff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Improvements */
+@media (prefers-color-scheme: dark) {
+  html:not(.light) {
+    color-scheme: dark;
+  }
+}
+
+/* Light Mode Improvements */
+@media (prefers-color-scheme: light) {
+  html.light {
+    color-scheme: light;
+  }
+}

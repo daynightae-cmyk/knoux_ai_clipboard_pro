@@ -1,0 +1,507 @@
+/**
+ * VIP Page Styles - Knoux Clipboard AI
+ * Premium glassmorphic design for VIP membership
+ */
+
+.vip-view {
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--glass-bg), rgba(0, 0, 0, 0.3));
+  color: white;
+}
+
+.vip-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Header */
+.vip-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.vip-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.vip-title h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.vip-title svg {
+  color: #ffd700;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+}
+
+.vip-subtitle {
+  margin: 0;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+}
+
+/* Status Card */
+.status-card {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+}
+
+.status-card h2 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+.status-badge.premium {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+}
+
+.status-badge.free {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.expiry-info {
+  margin-top: 15px;
+}
+
+.expiry-info p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Features Section */
+.features-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.features-section h2 {
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.features-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.plan-card {
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.premium-plan {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 237, 78, 0.05));
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.free-plan {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.plan-header svg {
+  margin-bottom: 15px;
+}
+
+.premium-plan .plan-header svg {
+  color: #ffd700;
+}
+
+.free-plan .plan-header svg {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.plan-header h3 {
+  margin: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.currency {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.amount {
+  color: var(--accent-color);
+}
+
+.premium-plan .amount {
+  color: #ffd700;
+}
+
+.period {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.feature-item.included {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.feature-item.locked {
+  background: rgba(255, 255, 255, 0.01);
+  opacity: 0.6;
+}
+
+.feature-item.included svg {
+  color: #4ade80;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-item.locked svg {
+  color: #ef4444;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-content h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+}
+
+.feature-content p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Upgrade Button */
+.upgrade-button {
+  width: 100%;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.upgrade-button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.premium-plan .upgrade-button:not(:disabled) {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+}
+
+.premium-plan .upgrade-button:not(:disabled):hover {
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+}
+
+.upgrade-button.current {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+}
+
+.upgrade-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Benefits Section */
+.benefits-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.benefits-section h2 {
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.benefit-card {
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.benefit-card svg {
+  margin-bottom: 15px;
+  color: var(--accent-color);
+}
+
+.benefit-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.benefit-card p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Developer Note */
+.developer-note {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.note-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.note-content p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* RTL Support */
+.vip-view.rtl {
+  direction: rtl;
+}
+
+.vip-view.rtl .vip-title {
+  flex-direction: row-reverse;
+}
+
+.vip-view.rtl .status-badge {
+  flex-direction: row-reverse;
+}
+
+.vip-view.rtl .feature-item {
+  flex-direction: row-reverse;
+}
+
+.vip-view.rtl .benefits-grid {
+  direction: ltr; /* Keep grid LTR for layout */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vip-view {
+    padding: 15px;
+  }
+  
+  .vip-header {
+    padding: 30px 15px;
+  }
+  
+  .vip-title h1 {
+    font-size: 36px;
+  }
+  
+  .features-comparison {
+    grid-template-columns: 1fr;
+  }
+  
+  .benefits-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .price {
+    font-size: 28px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vip-header,
+.status-card,
+.features-section,
+.benefits-section,
+.developer-note {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.vip-header {
+  animation-delay: 0.1s;
+}
+
+.status-card {
+  animation-delay: 0.2s;
+}
+
+.features-section {
+  animation-delay: 0.3s;
+}
+
+.benefits-section {
+  animation-delay: 0.4s;
+}
+
+.developer-note {
+  animation-delay: 0.5s;
+}
+
+/* Glass Card Base Class */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}

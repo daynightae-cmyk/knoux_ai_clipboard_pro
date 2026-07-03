@@ -1,0 +1,173 @@
+/**
+ * Action Button Component Styles - Knoux Clipboard AI
+ */
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 20px;
+  min-height: 44px; /* Minimum touch target for mobile */
+  min-width: 44px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.action-button:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.action-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+.action-button:disabled:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: none;
+  box-shadow: var(--glass-shadow);
+}
+
+.button-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.button-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Ripple effect for better UX */
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.action-button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Loading state */
+.action-button.loading {
+  color: transparent;
+  pointer-events: none;
+}
+
+.action-button.loading .button-text {
+  opacity: 0;
+}
+
+.action-button.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* RTL Support */
+.dashboard-view.rtl .action-button {
+  flex-direction: row-reverse;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .action-button {
+    padding: 12px 16px;
+    font-size: 13px;
+    min-height: 44px; /* Maintain touch target size */
+  }
+  
+  .button-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-button {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  
+  .button-icon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .action-button {
+    border-width: 2px;
+  }
+  
+  .action-button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .action-button {
+    transition: none;
+  }
+  
+  .action-button::before {
+    transition: none;
+  }
+  
+  .action-button.loading::after {
+    animation: none;
+  }
+}

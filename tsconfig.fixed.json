@@ -1,0 +1,39 @@
+﻿{
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["dom", "dom.iterable", "es2020"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["app/*"],
+      "@shared/*": ["app/shared/*"],
+      "@backend/*": ["app/backend/*"],
+      "@renderer/*": ["app/renderer/*"],
+      "@components/*": ["app/renderer/components/*"],
+      "@hooks/*": ["app/renderer/hooks/*"],
+      "@contexts/*": ["app/renderer/contexts/*"]
+    }
+  },
+  "include": [
+    "app/**/*",
+    "global.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ]
+}

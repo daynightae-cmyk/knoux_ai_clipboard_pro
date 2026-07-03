@@ -1,0 +1,498 @@
+/**
+ * About Page Styles - Knoux Clipboard AI
+ * Glassmorphic design with animations
+ */
+
+.about-view {
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--glass-bg), rgba(0, 0, 0, 0.3));
+  color: white;
+}
+
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Header */
+.about-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.app-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.app-title h1 {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.tagline {
+  margin: 0;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+}
+
+.version-badges {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+/* Developer Section */
+.developer-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+  text-align: center;
+}
+
+.developer-avatar {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.developer-section h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.developer-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--accent-color);
+  margin-bottom: 25px;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.social-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* Vision Section */
+.vision-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.vision-section h2 {
+  margin: 0 0 20px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.vision-text {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Tech Stack */
+.tech-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.tech-section h2 {
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.tech-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.tech-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-color), rgba(102, 126, 234, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.tech-info h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.tech-info p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* Features Section */
+.features-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.features-section h2 {
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.feature-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.feature-content h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.feature-content p {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.4;
+}
+
+/* System Information */
+.system-section {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}
+
+.system-section h2 {
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: white;
+}
+
+.system-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.system-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.system-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+}
+
+.system-value {
+  font-size: 14px;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* Footer */
+.about-footer {
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 20px;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.footer-content p {
+  margin: 0;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.copyright {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* RTL Support */
+.about-view.rtl {
+  direction: rtl;
+}
+
+.about-view.rtl .tech-item,
+.about-view.rtl .feature-item {
+  flex-direction: row-reverse;
+}
+
+.about-view.rtl .system-item {
+  flex-direction: row-reverse;
+}
+
+.about-view.rtl .social-links {
+  flex-direction: row-reverse;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-view {
+    padding: 15px;
+  }
+  
+  .about-header {
+    padding: 30px 15px;
+  }
+  
+  .app-title h1 {
+    font-size: 36px;
+  }
+  
+  .version-badges {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .system-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-links {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-header {
+    padding: 20px 10px;
+  }
+  
+  .app-title h1 {
+    font-size: 28px;
+  }
+  
+  .tagline {
+    font-size: 16px;
+  }
+  
+  .tech-item,
+  .feature-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .system-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-header,
+.developer-section,
+.vision-section,
+.tech-section,
+.features-section,
+.system-section,
+.about-footer {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.about-header {
+  animation-delay: 0.1s;
+}
+
+.developer-section {
+  animation-delay: 0.2s;
+}
+
+.vision-section {
+  animation-delay: 0.3s;
+}
+
+.tech-section {
+  animation-delay: 0.4s;
+}
+
+.features-section {
+  animation-delay: 0.5s;
+}
+
+.system-section {
+  animation-delay: 0.6s;
+}
+
+.about-footer {
+  animation-delay: 0.7s;
+}
+
+/* Glass Card Base Class */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--glass-shadow);
+}

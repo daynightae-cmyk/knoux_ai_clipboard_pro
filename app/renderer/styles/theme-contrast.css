@@ -1,0 +1,115 @@
+/* High Contrast Theme - Knoux Clipboard AI */
+
+/* High Contrast theme variables */
+:root.contrast {
+  /* Color palette - High Contrast */
+  --color-primary: #FFFF00; /* Yellow */
+  --color-secondary: #00FFFF; /* Cyan */
+  --color-accent: #FF00FF; /* Magenta */
+  --color-success: #00FF00; /* Green */
+  --color-warning: #FFA500; /* Orange */
+  --color-error: #FF0000; /* Red */
+  --color-info: #00FFFF; /* Cyan */
+
+  /* Background colors */
+  --bg-primary: #000000; /* Black */
+  --bg-secondary: #000000; /* Black */
+  --bg-tertiary: #000000;
+  --bg-card: #000000;
+  --bg-sidebar: #000000;
+  --bg-modal: #000000;
+  --bg-input: #000000;
+  --bg-tooltip: #000000;
+  --bg-dropdown: #000000;
+
+  /* Text colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #FFFF00;
+  --text-tertiary: #00FFFF;
+  --text-muted: #FFFFFF;
+  --text-inverted: #000000;
+
+  /* Border colors */
+  --border-primary: #FFFFFF;
+  --border-secondary: #FFFF00;
+  --border-accent: #00FFFF;
+  --border-input: #FFFFFF;
+
+  /* Shadow colors */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+
+  /* Gradient backgrounds - Disabled for contrast */
+  --gradient-primary: #FFFF00;
+  --gradient-secondary: #00FFFF;
+  --gradient-accent: #FF00FF;
+  --gradient-dark: #000000;
+
+  /* Glass morphism - Disabled */
+  --glass-bg: #000000;
+  --glass-border: #FFFFFF;
+  --glass-shadow: none;
+
+  /* Animation colors */
+  --glow-primary: none;
+  --glow-secondary: none;
+  --glow-success: none;
+  --glow-error: none;
+}
+
+/* Contrast theme base styles */
+.contrast {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.contrast body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Contrast theme cards */
+.contrast .card,
+.contrast .modal,
+.contrast .dialog {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-primary);
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.contrast .card:hover,
+.contrast .modal:hover,
+.contrast .dialog:hover {
+  border-color: var(--border-secondary);
+}
+
+/* Contrast theme inputs */
+.contrast input,
+.contrast textarea,
+.contrast select {
+  background-color: var(--bg-input);
+  border: 2px solid var(--border-input);
+  color: var(--text-primary);
+  border-radius: 0;
+}
+
+/* Force high contrast specific overrides */
+.contrast * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.contrast button {
+  border: 2px solid var(--text-primary);
+  font-weight: bold;
+}
+
+.contrast a {
+  text-decoration: underline;
+  color: var(--color-secondary);
+}

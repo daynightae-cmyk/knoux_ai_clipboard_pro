@@ -1,0 +1,61 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "module": "esnext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "checkJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@app/*": ["./app/*"],
+      "@shared/*": ["./app/shared/*"],
+      "@backend/*": ["./app/backend/*"],
+      "@renderer/*": ["./app/renderer/*"],
+      "@components/*": ["./app/renderer/components/*"],
+      "@hooks/*": ["./app/renderer/hooks/*"],
+      "@views/*": ["./app/renderer/views/*"],
+      "@services/*": ["./app/renderer/services/*"],
+      "@stores/*": ["./app/renderer/stores/*"],
+      "@contexts/*": ["./app/renderer/contexts/*"],
+      "@utils/*": ["./app/renderer/utils/*"],
+      "@styles/*": ["./app/renderer/styles/*"],
+      "@assets/*": ["./assets/*"],
+      "@types/*": ["./app/shared/types/*"]
+    }
+  },
+  "include": ["app", "src"],
+  "exclude": ["node_modules", "dist", "build", "release"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node"
+    }
+  }
+}

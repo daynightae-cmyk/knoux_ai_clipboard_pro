@@ -1,0 +1,97 @@
+/* AI Theme - Knoux Clipboard AI (AI Green) */
+
+/* AI theme variables */
+:root.ai {
+  /* Color palette - AI Green */
+  --color-primary: #10B981; /* Emerald */
+  --color-secondary: #3B82F6; /* Blue */
+  --color-accent: #8B5CF6; /* Violet */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Background colors */
+  --bg-primary: #064E3B; /* Dark Green */
+  --bg-secondary: #065F46; /* Surface */
+  --bg-tertiary: #047857;
+  --bg-card: #065F46;
+  --bg-sidebar: #064E3B;
+  --bg-modal: #065F46;
+  --bg-input: #047857;
+  --bg-tooltip: #047857;
+  --bg-dropdown: #065F46;
+
+  /* Text colors */
+  --text-primary: #ECFDF5;
+  --text-secondary: #A7F3D0;
+  --text-tertiary: #6EE7B7; /* Disabled */
+  --text-muted: #6EE7B7;
+  --text-inverted: #064E3B;
+
+  /* Border colors */
+  --border-primary: #059669;
+  --border-secondary: #047857;
+  --border-accent: #10B981;
+  --border-input: #059669;
+
+  /* Shadow colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+  /* Gradient backgrounds */
+  --gradient-primary: linear-gradient(135deg, #10B981, #059669);
+  --gradient-secondary: linear-gradient(135deg, #3B82F6, #2563EB);
+  --gradient-accent: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  --gradient-dark: linear-gradient(135deg, #065F46, #064E3B);
+
+  /* Glass morphism */
+  --glass-bg: rgba(6, 95, 70, 0.8);
+  --glass-border: rgba(16, 185, 129, 0.2);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+  /* Animation colors */
+  --glow-primary: 0 0 20px rgba(16, 185, 129, 0.4);
+  --glow-secondary: 0 0 20px rgba(59, 130, 246, 0.4);
+  --glow-success: 0 0 20px rgba(16, 185, 129, 0.4);
+  --glow-error: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* AI theme base styles */
+.ai {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.ai body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* AI theme cards */
+.ai .card,
+.ai .modal,
+.ai .dialog {
+  background-color: var(--bg-card);
+  border-color: var(--border-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.ai .card:hover,
+.ai .modal:hover,
+.ai .dialog:hover {
+  border-color: var(--border-accent);
+  box-shadow: var(--glow-primary);
+}
+
+/* AI theme inputs */
+.ai input,
+.ai textarea,
+.ai select {
+  background-color: var(--bg-input);
+  border-color: var(--border-input);
+  color: var(--text-primary);
+}

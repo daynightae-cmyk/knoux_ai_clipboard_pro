@@ -1,0 +1,73 @@
+{
+  "summary": {
+    "completed": 10,
+    "partial": 0,
+    "stubs": 3
+  },
+  "modifiedFiles": [
+    {
+      "path": "main.js",
+      "change": "modified",
+      "reason": "Registered clipboard, AI, storage IPC handlers"
+    },
+    {
+      "path": "app/backend/main/preload.js",
+      "change": "modified",
+      "reason": "Exposed window.knoux API for renderer"
+    },
+    {
+      "path": "app/renderer/hooks/useClipboard.ts",
+      "change": "modified",
+      "reason": "Updated to use window.knoux.clipboard API"
+    },
+    {
+      "path": "app/renderer/hooks/useAI-simple.ts",
+      "change": "created",
+      "reason": "Simplified AI hook using window.knoux.ai API"
+    },
+    {
+      "path": "app/renderer/components/MainDashboard.tsx",
+      "change": "modified",
+      "reason": "Added live IPC testing, hooks integration, status indicators"
+    },
+    {
+      "path": "app/backend/ipc/clipboard-ipc.js",
+      "change": "created",
+      "reason": "Clipboard IPC wrapper with mock service"
+    },
+    {
+      "path": "app/backend/ipc/ai-ipc.js",
+      "change": "created",
+      "reason": "AI IPC wrapper with mock service"
+    },
+    {
+      "path": "app/backend/ipc/storage-ipc.js",
+      "change": "created",
+      "reason": "Storage IPC wrapper with mock service"
+    },
+    {
+      "path": "run.ps1",
+      "change": "created",
+      "reason": "Development runner script for Windows"
+    },
+    {
+      "path": "run.sh",
+      "change": "created",
+      "reason": "Development runner script for Unix systems"
+    }
+  ],
+  "build": {
+    "success": true,
+    "errors": []
+  },
+  "runChecks": {
+    "proofOfLife": true,
+    "clipboardIPC": true,
+    "aiMock": true,
+    "storageRoundtrip": true,
+    "liveStatusIndicators": true,
+    "interactiveTesting": true,
+    "errorHandling": true,
+    "hookIntegration": true
+  }
+}

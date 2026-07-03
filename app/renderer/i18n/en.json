@@ -1,0 +1,336 @@
+{
+  "app": {
+    "name": "Knoux Clipboard AI",
+    "tagline": "Clipboard Intelligence • Desktop Precision • Premium Engineering",
+    "version": "Version 1.0.0"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "clipboard": "Clipboard History",
+    "ai": "AI Insights",
+    "security": "Security Center",
+    "settings": "Settings",
+    "about": "About Knoux",
+    "vip": "VIP Membership",
+    "analytics": "Analytics",
+    "smartActions": "Smart Actions"
+  },
+  "dashboard": {
+    "welcome": "Welcome to Knoux",
+    "subtitle": "Your intelligent clipboard assistant",
+    "officialTime": "Official Time",
+    "stats": {
+      "totalItems": "Total Items",
+      "todayItems": "Today's Items",
+      "favorites": "Favorites",
+      "aiProcessed": "AI Processed",
+      "formats": "Formats",
+      "sensitive": "Sensitive",
+      "urls": "URLs",
+      "totalSize": "Total Size"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "clearHistory": "Clear History",
+      "exportData": "Export Data",
+      "importData": "Import Data",
+      "securityScan": "Security Scan",
+      "aiAnalysis": "AI Analysis"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity",
+      "copied": "Copied",
+      "analyzed": "Analyzed",
+      "enhanced": "Enhanced"
+    }
+  },
+  "clipboard": {
+    "title": "Clipboard History",
+    "search": "Search clipboard...",
+    "filters": {
+      "all": "All",
+      "text": "Text",
+      "images": "Images",
+      "files": "Files",
+      "urls": "URLs",
+      "favorites": "Favorites",
+      "sensitive": "Sensitive"
+    },
+    "actions": {
+      "copy": "Copy",
+      "favorite": "Add to Favorites",
+      "unfavorite": "Remove from Favorites",
+      "delete": "Delete",
+      "analyze": "Analyze",
+      "enhance": "Enhance",
+      "share": "Share"
+    },
+    "empty": {
+      "title": "No clipboard items",
+      "subtitle": "Start copying something and it will appear here"
+    },
+    "itemInfo": {
+      "copiedAt": "Copied at",
+      "size": "Size",
+      "format": "Format",
+      "source": "Source"
+    }
+  },
+  "ai": {
+    "title": "AI Insights",
+    "subtitle": "Discover intelligent patterns and analytics for your clipboard usage",
+    "features": {
+      "classification": "Content Classification",
+      "enhancement": "Text Enhancement",
+      "summarization": "Smart Summarization",
+      "translation": "Translation",
+      "sentiment": "Sentiment Analysis",
+      "extraction": "Data Extraction"
+    },
+    "status": {
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "processing": "Processing",
+      "ready": "Ready"
+    },
+    "models": {
+      "local": "Local",
+      "cloud": "Cloud",
+      "hybrid": "Hybrid"
+    },
+    "chat": {
+      "placeholder": "Ask about clipboard content...",
+      "send": "Send",
+      "clear": "Clear Chat",
+      "examples": {
+        "summarize": "Summarize the latest text",
+        "translate": "Translate to Arabic",
+        "analyze": "Analyze this content"
+      }
+    }
+  },
+  "security": {
+    "title": "Security Center",
+    "subtitle": "Protect your data and privacy",
+    "features": {
+      "encryption": "Encryption",
+      "sensitiveDetection": "Sensitive Data Detection",
+      "secureMemory": "Secure Memory",
+      "autoLock": "Auto Lock",
+      "permissions": "Permissions"
+    },
+    "status": {
+      "secure": "Secure",
+      "warning": "Warning",
+      "vulnerable": "Vulnerable"
+    },
+    "actions": {
+      "scan": "Security Scan",
+      "encrypt": "Encrypt",
+      "decrypt": "Decrypt",
+      "clearSensitive": "Clear Sensitive Data",
+      "lockNow": "Lock Now"
+    },
+    "settings": {
+      "enableEncryption": "Enable Encryption",
+      "autoDetectSensitive": "Auto-detect Sensitive Data",
+      "clearOnExit": "Clear on Exit",
+      "secureMode": "Secure Mode"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tabs": {
+      "general": "General",
+      "clipboard": "Clipboard",
+      "ai": "AI",
+      "security": "Security",
+      "appearance": "Appearance",
+      "advanced": "Advanced"
+    },
+    "general": {
+      "language": "Language",
+      "theme": "Theme",
+      "startup": "Startup",
+      "notifications": "Notifications",
+      "updates": "Updates"
+    },
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "auto": "Auto",
+      "professional": "Professional",
+      "ai": "AI",
+      "contrast": "High Contrast"
+    },
+    "languages": {
+      "english": "English",
+      "arabic": "العربية"
+    },
+    "clipboard": {
+      "monitoring": "Clipboard Monitoring",
+      "maxItems": "Max Items",
+      "autoCleanup": "Auto Cleanup",
+      "formatPriority": "Format Priority"
+    },
+    "ai": {
+      "enable": "Enable AI",
+      "model": "Model",
+      "mode": "Mode",
+      "autoAnalysis": "Auto Analysis"
+    },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "reset": "Reset",
+      "export": "Export",
+      "import": "Import"
+    }
+  },
+  "about": {
+    "title": "About Knoux",
+    "developer": "Developer & Founder",
+    "name": "Knoux - Abu Retaj",
+    "vision": {
+      "title": "Vision",
+      "description": "Redefining clipboard experience through AI and elegant design"
+    },
+    "features": {
+      "title": "Key Features",
+      "smartClipboard": "Smart Clipboard",
+      "aiPowered": "AI Powered",
+      "crossPlatform": "Cross Platform",
+      "secure": "Secure & Encrypted",
+      "intuitive": "Intuitive Interface"
+    },
+    "links": {
+      "github": "GitHub",
+      "twitter": "Twitter",
+      "website": "Website",
+      "support": "Support"
+    },
+    "version": "Version",
+    "buildDate": "Build Date",
+    "license": "License"
+  },
+  "vip": {
+    "title": "VIP Membership",
+    "subtitle": "Unlock the full potential of Knoux",
+    "features": {
+      "unlimitedHistory": "Unlimited History",
+      "advancedAI": "Advanced AI",
+      "cloudSync": "Cloud Sync",
+      "prioritySupport": "Priority Support",
+      "customThemes": "Custom Themes",
+      "analytics": "Advanced Analytics"
+    },
+    "pricing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "lifetime": "Lifetime"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "trial": "Trial"
+    },
+    "actions": {
+      "upgrade": "Upgrade",
+      "renew": "Renew",
+      "manage": "Manage Subscription"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "copy": "Copy",
+    "paste": "Paste",
+    "cut": "Cut",
+    "undo": "Undo",
+    "redo": "Redo",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "close": "Close",
+    "open": "Open",
+    "new": "New",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "apply": "Apply",
+    "reset": "Reset",
+    "clear": "Clear",
+    "select": "Select",
+    "selectAll": "Select All",
+    "none": "None",
+    "all": "All",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "never": "Never",
+    "always": "Always",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "online": "Online",
+    "offline": "Offline",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "available": "Available",
+    "unavailable": "Unavailable"
+  },
+  "notifications": {
+    "clipboardUpdated": "Clipboard updated",
+    "itemCopied": "Item copied",
+    "itemDeleted": "Item deleted",
+    "settingsSaved": "Settings saved",
+    "aiAnalysisComplete": "AI analysis complete",
+    "securityScanComplete": "Security scan complete",
+    "dataExported": "Data exported",
+    "dataImported": "Data imported",
+    "errorOccurred": "An error occurred",
+    "connectionLost": "Connection lost",
+    "connectionRestored": "Connection restored"
+  },
+  "errors": {
+    "general": "An unexpected error occurred",
+    "networkError": "Network error",
+    "fileNotFound": "File not found",
+    "permissionDenied": "Permission denied",
+    "invalidFormat": "Invalid format",
+    "corruptedData": "Corrupted data",
+    "insufficientSpace": "Insufficient space",
+    "serviceUnavailable": "Service unavailable",
+    "authenticationFailed": "Authentication failed",
+    "timeout": "Connection timeout"
+  },
+  "shortcuts": {
+    "copy": "Ctrl+C",
+    "paste": "Ctrl+V",
+    "cut": "Ctrl+X",
+    "undo": "Ctrl+Z",
+    "redo": "Ctrl+Y",
+    "selectAll": "Ctrl+A",
+    "find": "Ctrl+F",
+    "save": "Ctrl+S",
+    "open": "Ctrl+O",
+    "new": "Ctrl+N",
+    "quit": "Ctrl+Q",
+    "refresh": "F5",
+    "fullscreen": "F11",
+    "devTools": "F12"
+  }
+}
