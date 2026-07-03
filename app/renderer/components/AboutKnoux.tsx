@@ -1,6 +1,7 @@
 import React from 'react';
-import { Github, Twitter, Globe, Mail, Heart, Zap, Shield, Cpu, Smartphone, Star } from 'lucide-react';
+import { Github, Globe, Mail, Heart, Zap, Shield, Cpu, Smartphone, Star, MessageCircle, Instagram } from 'lucide-react';
 import i18n from '../utils/i18n';
+import knouxLogo from '../../../assets/icons/icon.png';
 
 const AboutKnoux: React.FC = () => {
   const isRTL = i18n.isRTL();
@@ -8,31 +9,31 @@ const AboutKnoux: React.FC = () => {
   const features = [
     {
       icon: Zap,
-      title: i18n.t('about.features.smartClipboard'),
-      titleAr: 'حافظة ذكية',
-      description: 'Advanced clipboard management with AI-powered insights',
-      descriptionAr: 'إدارة متقدمة للحافظة مع رؤى مدعومة بالذكاء الاصطناعي'
+      title: 'Smart Clipboard Engine',
+      titleAr: 'محرك حافظة ذكي',
+      description: 'Fast clipboard capture, search, tagging, and productivity workflows.',
+      descriptionAr: 'التقاط سريع للحافظة، بحث، وسوم، وسير عمل إنتاجي.'
     },
     {
       icon: Cpu,
-      title: i18n.t('about.features.aiPowered'),
-      titleAr: 'مدعوم بالذكاء الاصطناعي',
-      description: 'Intelligent content analysis and enhancement',
-      descriptionAr: 'تحليل وتحسين ذكي للمحتوى'
+      title: 'AI Productivity Layer',
+      titleAr: 'طبقة إنتاجية بالذكاء الاصطناعي',
+      description: 'Summarization, enhancement, translation, and content analysis through local/optional AI services.',
+      descriptionAr: 'تلخيص، تحسين، ترجمة، وتحليل محتوى عبر خدمات ذكاء اصطناعي محلية أو اختيارية.'
     },
     {
       icon: Shield,
-      title: i18n.t('about.features.secure'),
-      titleAr: 'آمن ومشفر',
-      description: 'End-to-end encryption and privacy protection',
-      descriptionAr: 'تشفير شامل وحماية للخصوصية'
+      title: 'Local-First Security',
+      titleAr: 'أمان محلي أولاً',
+      description: 'Designed around local storage, safer IPC boundaries, and controlled data flow.',
+      descriptionAr: 'مصمم حول التخزين المحلي، حدود IPC أكثر أمانًا، وتحكم واضح في تدفق البيانات.'
     },
     {
       icon: Smartphone,
-      title: i18n.t('about.features.crossPlatform'),
-      titleAr: 'متعدد المنصات',
-      description: 'Works seamlessly across all your devices',
-      descriptionAr: 'يعمل بسلاسة عبر جميع أجهزتك'
+      title: 'Windows Desktop Product',
+      titleAr: 'منتج سطح مكتب لويندوز',
+      description: 'Prepared for Electron Builder packaging as NSIS and portable Windows EXE.',
+      descriptionAr: 'مجهز للتغليف عبر Electron Builder كنسخة Windows EXE ونسخة محمولة.'
     }
   ];
 
@@ -40,166 +41,113 @@ const AboutKnoux: React.FC = () => {
     {
       icon: Github,
       label: 'GitHub',
-      url: 'https://github.com/knoux',
-      color: 'hover:text-gray-300'
-    },
-    {
-      icon: Twitter,
-      label: 'Twitter',
-      url: 'https://twitter.com/knoux',
-      color: 'hover:text-blue-400'
+      url: 'https://github.com/KnouxOPS',
+      color: 'hover:text-white'
     },
     {
       icon: Globe,
-      label: i18n.t('about.links.website'),
-      url: 'https://knoux.com',
-      color: 'hover:text-green-400'
+      label: 'knoux.store',
+      url: 'https://knoux.store',
+      color: 'hover:text-[#D8B8EC]'
+    },
+    {
+      icon: Instagram,
+      label: '@knoux7',
+      url: 'https://www.instagram.com/knoux7',
+      color: 'hover:text-[#A678DD]'
+    },
+    {
+      icon: MessageCircle,
+      label: 'WhatsApp',
+      url: 'https://wa.me/971503281920',
+      color: 'hover:text-green-300'
     },
     {
       icon: Mail,
-      label: i18n.t('about.links.support'),
-      url: 'mailto:support@knoux.com',
-      color: 'hover:text-purple-400'
+      label: 'Email',
+      url: 'mailto:knuux7@gmail.com',
+      color: 'hover:text-[#D8B8EC]'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-blue-900/20 text-white">
-      <div className="container mx-auto px-6 py-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 shadow-2xl mb-6">
-            <Heart className="w-10 h-10 text-white" />
+    <div className="min-h-screen bg-[#090014] text-white" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mx-auto max-w-6xl px-6 py-12">
+        <div className="mb-14 text-center">
+          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-[28px] border border-white/10 bg-gradient-to-br from-[#8A2BE2] via-[#6F2DBD] to-[#262626] shadow-[0_0_48px_rgba(138,43,226,.45)]">
+            <img src={knouxLogo} alt="KNOUX" className="h-16 w-16 rounded-2xl object-contain" />
           </div>
-          <h1 className="text-5xl font-black mb-4 bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            {i18n.t('about.title')}
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.32em] text-[#D8B8EC]">A KNOUX PRODUCT</p>
+          <h1 className="mb-4 bg-gradient-to-r from-white via-[#D8B8EC] to-[#A678DD] bg-clip-text text-5xl font-black text-transparent">
+            Knoux AI Clipboard Pro
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            {i18n.t('about.vision.description')}
+          <p className="mx-auto max-w-3xl text-lg leading-8 text-white/70">
+            {isRTL
+              ? 'تطبيق سطح مكتب ذكي لإدارة الحافظة، مصمم ضمن منظومة KNOUX ليجمع بين الإنتاجية، الأمان المحلي، والذكاء الاصطناعي.'
+              : 'An intelligent desktop clipboard manager from KNOUX, combining productivity, local-first security, and AI-assisted workflows.'}
           </p>
         </div>
 
-        {/* Developer Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50">
-            <div className={`flex items-center gap-6 mb-6 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold text-white">K</span>
-              </div>
-              <div className={isRTL ? 'text-right' : 'text-left'}>
-                <h2 className="text-2xl font-bold text-white mb-1">
-                  {i18n.t('about.name')}
-                </h2>
-                <p className="text-purple-400 font-medium">
-                  {i18n.t('about.developer')}
-                </p>
-              </div>
+        <div className="mb-12 grid gap-6 lg:grid-cols-[1.1fr_.9fr]">
+          <section className="rounded-[28px] border border-white/10 bg-white/[0.055] p-8 shadow-2xl backdrop-blur-2xl">
+            <h2 className="mb-5 text-2xl font-bold text-white">
+              {isRTL ? 'هوية المنتج والمطور' : 'Product and Developer Identity'}
+            </h2>
+            <div className="space-y-4 text-white/75">
+              <p><strong className="text-white">Company:</strong> KNOUX</p>
+              <p><strong className="text-white">Developer:</strong> Eng. Sadek Elgazar (Knoux)</p>
+              <p><strong className="text-white">Location:</strong> Abu Dhabi, United Arab Emirates</p>
+              <p><strong className="text-white">Website:</strong> https://knoux.store</p>
+              <p><strong className="text-white">Slogan:</strong> Safety is not a luxury, it's a life.</p>
             </div>
+          </section>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  {i18n.t('about.vision.title')}
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  {isRTL 
-                    ? 'إعادة تعريف تجربة الحافظة من خلال الذكاء الاصطناعي والتصميم الأنيق. نوكس يجمع بين القوة والبساطة لتوفير تجربة استثنائية في إدارة المحتوى.'
-                    : 'Redefining clipboard experience through AI and elegant design. Knoux combines power with simplicity to deliver an exceptional content management experience.'
-                  }
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  {isRTL ? 'الروابط' : 'Connect'}
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {links.map((link, index) => {
-                    const Icon = link.icon;
-                    return (
-                      <a
-                        key={index}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-700/50 text-gray-300 transition-all duration-200 ${link.color} hover:bg-gray-700 hover:scale-105`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span className="text-sm font-medium">{link.label}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
+          <section className="rounded-[28px] border border-white/10 bg-white/[0.055] p-8 shadow-2xl backdrop-blur-2xl">
+            <h3 className="mb-5 text-xl font-bold text-white">{isRTL ? 'قنوات التواصل' : 'Connect'}</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {links.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.label}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white/70 transition-all hover:scale-[1.02] hover:bg-white/[0.08] ${link.color}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{link.label}</span>
+                  </a>
+                );
+              })}
             </div>
-          </div>
+          </section>
         </div>
 
-        {/* Features Grid */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
-            {i18n.t('about.features.title')}
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-gray-800/50 backdrop-blur-xl rounded-xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 group"
-                >
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {isRTL ? feature.titleAr : feature.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {isRTL ? feature.descriptionAr : feature.description}
-                  </p>
+        <div className="mb-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <article key={feature.title} className="rounded-[24px] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-[#A678DD]/50 hover:bg-white/[0.07]">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#8A2BE2]/20 text-[#D8B8EC] ring-1 ring-[#A678DD]/30">
+                  <Icon className="h-6 w-6" />
                 </div>
-              );
-            })}
-          </div>
+                <h3 className="mb-2 text-lg font-semibold text-white">{isRTL ? feature.titleAr : feature.title}</h3>
+                <p className="text-sm leading-6 text-white/60">{isRTL ? feature.descriptionAr : feature.description}</p>
+              </article>
+            );
+          })}
         </div>
 
-        {/* Stats */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">1.0.0</div>
-                <div className="text-gray-400 text-sm">{i18n.t('about.version')}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">2024</div>
-                <div className="text-gray-400 text-sm">{i18n.t('about.buildDate')}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-green-400 mb-2">MIT</div>
-                <div className="text-gray-400 text-sm">{i18n.t('about.license')}</div>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-1 mb-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                <div className="text-gray-400 text-sm">{isRTL ? 'تقييم' : 'Rating'}</div>
-              </div>
-            </div>
+        <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-[#8A2BE2]/20 to-white/[0.04] p-8 text-center backdrop-blur-xl">
+          <div className="mb-4 flex items-center justify-center gap-1">
+            {[...Array(5)].map((_, i) => <Star key={i} className="h-5 w-5 fill-[#D8B8EC] text-[#D8B8EC]" />)}
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
-            <span>{isRTL ? 'صُنع بـ' : 'Made with'}</span>
-            <Heart className="w-4 h-4 text-red-400 fill-current animate-pulse" />
-            <span>{isRTL ? 'في المملكة العربية السعودية' : 'in Saudi Arabia'}</span>
-          </div>
-          <div className="mt-4 text-xs text-gray-500">
-            © 2024 Knoux - Abu Retaj. {isRTL ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
+          <p className="text-sm uppercase tracking-[0.28em] text-[#D8B8EC]">Version 1.0.0 · Production Readiness Track</p>
+          <div className="mt-5 flex items-center justify-center gap-2 text-sm text-white/55">
+            <span>{isRTL ? 'صُنع بواسطة' : 'Made by'}</span>
+            <Heart className="h-4 w-4 fill-red-400 text-red-400" />
+            <span>Eng. Sadek Elgazar — KNOUX © 2026</span>
           </div>
         </div>
       </div>
