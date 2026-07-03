@@ -5,9 +5,10 @@
  * Clipboard Intelligence • Desktop Precision • Premium Engineering
  */
 
-import { existsSync, mkdirSync, appendFileSync, createWriteStream, WriteStream } from 'fs';
-import { join, dirname } from 'path';
-import { format, inspect } from 'util';
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
+type WriteStream = fs.WriteStream;
 import { IPC_CHANNELS } from './constants';
 import { OperatingSystem } from './enums';
 
@@ -201,6 +202,10 @@ class KnouxLogger {
 
   constructor(config: Partial<LoggerConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
+
+    if (typeof window !== 'undefined') {
+      this.config.transports.file.enabled = false;
+    }
     
     // Initialize file transport
     if (this.config.transports.file.enabled) {
@@ -227,25 +232,25 @@ class KnouxLogger {
     if (!file.path) {
       // Set default log path based on OS
       const logDir = this.getDefaultLogDir();
-      file.path = join(logDir, 'knoux-clipboard.log');
+      file.path = path.join(logDir, 'knoux-clipboard.log');
     }
     
     // Ensure log directory exists
-    const logDir = dirname(file.path);
-    if (!existsSync(logDir)) {
-      mkdirSync(logDir, { recursive: true });
+    const logDir = path.dirname(file.path);
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
     }
     
     // Check if log rotation is needed
-    if (file.rotation && existsSync(file.path)) {
-      const stats = require('fs').statSync(file.path);
+    if (file.rotation && fs.existsSync(file.path)) {
+      const stats = fs.statSync(file.path);
       if (stats.size >= file.maxSize) {
         this.rotateLogFile();
       }
     }
     
     // Create write stream
-    this.fileStream = createWriteStream(file.path, {
+    this.fileStream = fs.createWriteStream(file.path, {
       flags: 'a',
       encoding: 'utf8',
     });
@@ -264,13 +269,13 @@ class KnouxLogger {
     
     switch (process.platform) {
       case 'win32':
-        return join(os.homedir(), 'AppData', 'Roaming', appName, 'logs');
+        return path.join(os.homedir(), 'AppData', 'Roaming', appName, 'logs');
       case 'darwin':
-        return join(os.homedir(), 'Library', 'Logs', appName);
+        return path.join(os.homedir(), 'Library', 'Logs', appName);
       case 'linux':
-        return join(os.homedir(), '.local', 'share', appName, 'logs');
+        return path.join(os.homedir(), '.local', 'share', appName, 'logs');
       default:
-        return join(os.tmpdir(), appName, 'logs');
+        return path.join(os.tmpdir(), appName, 'logs');
     }
   }
 
@@ -284,7 +289,7 @@ class KnouxLogger {
     
     try {
       // Get existing backup files
-      const logDir = dirname(file.path);
+      const logDir = path.dirname(file.path);
       const logName = path.basename(file.path, '.log');
       const backupFiles = fs.readdirSync(logDir)
         .filter((f: string) => f.startsWith(`${logName}-`) && f.endsWith('.log'))
@@ -317,7 +322,7 @@ class KnouxLogger {
         this.fileStream.end();
       }
       
-      this.fileStream = createWriteStream(file.path, {
+      this.fileStream = fs.createWriteStream(file.path, {
         flags: 'a',
         encoding: 'utf8',
       });
@@ -350,7 +355,7 @@ class KnouxLogger {
     formatted += entry.message;
     
     if (entry.data) {
-      const inspected = inspect(entry.data, {
+      const inspected = util.inspect(entry.data, {
         colors: consoleConfig.colors,
         depth: 2,
         maxArrayLength: 10,

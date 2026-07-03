@@ -7,7 +7,7 @@ import {
   Palette, 
   Shield, 
   Crown, 
-  Flask,
+  FlaskConical,
   Search,
   Download,
   Upload,
@@ -46,7 +46,7 @@ const categoryIcons = {
   ui: Palette,
   security: Shield,
   premium: Crown,
-  experimental: Flask
+  experimental: FlaskConical
 };
 
 const categoryColors = {

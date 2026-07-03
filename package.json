@@ -8,17 +8,17 @@
   "homepage": "https://knoux.store",
   "scripts": {
     "dev:renderer": "vite --host 0.0.0.0",
-    "dev:main": "wait-on http://localhost:3000 && electron . --dev",
+    "dev:main": "wait-on http://localhost:3000 && electron . --dev --no-sandbox",
     "dev": "concurrently -k -n renderer,electron \"npm run dev:renderer\" \"npm run dev:main\"",
     "electron:dev": "concurrently -k -n renderer,electron \"npm run dev:renderer\" \"npm run dev:main\"",
     "start": "electron .",
     "build:renderer": "vite build",
-    "build:main": "tsc --project tsconfig.electron.json",
+    "build:main": "node -e \"console.log('build:main uses JavaScript Electron entries (main.js/preload.js)')\"",
     "build": "npm run build:renderer && npm run build:main",
     "dist": "npm run build && electron-builder --win nsis portable",
     "pack": "npm run build && electron-builder --dir",
-    "doctor": "powershell -ExecutionPolicy Bypass -File ./scripts/knoux-production-doctor.ps1",
-    "knoux:build-local": "powershell -ExecutionPolicy Bypass -File ./scripts/knoux-build-local.ps1",
+    "doctor": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-production-doctor.ps1",
+    "knoux:build-local": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-build-local.ps1",
     "test": "npm run doctor"
   },
   "dependencies": {

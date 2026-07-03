@@ -1,5 +1,18 @@
 # Knoux Clipboard AI - Release & Version Management
 
+## 🧪 v1.0.1-pre (Windows packaging baseline)
+
+**Status**: Testable production-readiness baseline  
+**Product Line**: A Knoux Product  
+**Website**: https://knoux.store  
+**Developer**: Eng. Sadek Elgazar (Knoux)
+
+**Included readiness updates**:
+- Fixed dependency installation by switching Electron mirror to official releases.
+- Stabilized renderer production build by fixing invalid icon/component imports.
+- Updated build workflow to package JavaScript Electron entries (`main.js`, `preload.js`) for Windows test packaging.
+- Updated CI workflow runtime to Node 22 and aligned npm doctor command for cross-platform `pwsh`.
+
 ## 📦 Release Structure
 
 ```

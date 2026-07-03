@@ -127,7 +127,7 @@ export class ContentClassifier {
 
     // Bash/Shell patterns
     this.addPatternRule({
-      pattern: /(?:#!\\/bin\\/|#!\\/usr\\/bin\\/|echo\s+|cd\s+|ls\s+|grep\s+|awk\s+|sed\s+)/,
+      pattern: /(?:#!\/bin\/|#!\/usr\/bin\/|echo\s+|cd\s+|ls\s+|grep\s+|awk\s+|sed\s+)/,
       type: CONTENT_TYPES.CODE.BASH,
       confidence: 0.8,
       category: ContentCategory.CODE,
@@ -1069,7 +1069,6 @@ export class ContentClassifier {
     });
   }
 }
-
 
 
 
