@@ -13,7 +13,7 @@
     "electron:dev": "concurrently -k -n renderer,electron \"npm run dev:renderer\" \"npm run dev:main\"",
     "start": "electron .",
     "build:renderer": "vite build",
-    "build:main": "node -e \"console.log('build:main uses JavaScript Electron entries (main.js/preload.js)')\"",
+    "build:main": "echo \"Skipping TypeScript main build (using JavaScript Electron entries)\"",
     "build": "npm run build:renderer && npm run build:main",
     "dist": "npm run build && electron-builder --win nsis portable",
     "pack": "npm run build && electron-builder --dir",
