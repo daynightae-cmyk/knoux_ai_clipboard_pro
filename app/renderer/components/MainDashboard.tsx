@@ -1,434 +1,303 @@
-import React, { useState, useEffect } from "react";
-import { useClipboard } from "../hooks/useClipboard";
-import { useAI } from "../hooks/useAI-simple";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Activity,
+  Brain,
+  ClipboardList,
+  FlaskConical,
+  Gauge,
+  Info,
+  RefreshCcw,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  Zap
+} from 'lucide-react';
+import { useClipboard } from '../hooks/useClipboard';
+import { useAI } from '../hooks/useAI-simple';
 
-// Import ALL components
-import { CreativeStudio } from "./CreativeStudio";
-import UniversalTranslator from "./UniversalTranslator";
-import VoiceCommands from "./VoiceCommands";
-import { VoiceStudio } from "./VoiceStudio";
-import InstantSearch from "./InstantSearch";
-import { GamifiedClipboard } from "./GamifiedClipboard";
-import OfflineAI from "./OfflineAI";
-import { AIMemoryDashboard } from "./AIMemoryDashboard";
-import AnalyticsDashboardUI from "./AnalyticsDashboardUI";
-import { ProductivityDashboard } from "./ProductivityDashboard";
-import { PatternRecognitionDashboard } from "./PatternRecognitionDashboard";
-import { QuantumPredictions } from "./QuantumPredictions";
-import { QuantumSecurity } from "./QuantumSecurity";
-import BlockchainSecurityUI from "./BlockchainSecurityUI";
-import { NeuralStyleTransferUI } from "./NeuralStyleTransferUI";
-import ARVRIntegrationUI from "./ARVRIntegrationUI";
-import UIMorpherUI from "./UIMorpherUI";
-import VoiceCustomizerUI from "./VoiceCustomizerUI";
-import ProductivityScorerUI from "./ProductivityScorerUI";
-import { RevolutionaryFeatures } from "./RevolutionaryFeatures";
-import { SuperDashboard } from "./SuperDashboard";
-import FeatureManager from "./FeatureManager";
-import ClipboardView from "./ClipboardView";
-import ClipboardList from "./ClipboardList";
-import { HistoryTimeline } from "./HistoryTimeline";
-import FilterPanel from "./FilterPanel";
-import { TagManager } from "./TagManager";
-import { SearchBar } from "./SearchBar";
-import { ServiceTester } from "./ServiceTester";
+type DashboardTab = 'overview' | 'clipboard' | 'ai' | 'labs';
+
+type ServiceStatus = 'checking' | 'ready' | 'degraded' | 'offline';
+
+const labs = [
+  'Creative Studio',
+  'Voice Commands',
+  'Offline AI',
+  'Analytics',
+  'Pattern Recognition',
+  'Quantum Security',
+  'Blockchain Security',
+  'AR/VR Workspace',
+  'UI Morpher',
+  'Service Tester'
+];
 
 export const MainDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("home");
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
+  const [status, setStatus] = useState<Record<string, ServiceStatus>>({
+    clipboard: 'checking',
+    ai: 'checking',
+    storage: 'checking'
+  });
+  const [aiInput, setAiInput] = useState('Summarize this clipboard workspace into a productivity action list.');
+  const [aiOutput, setAiOutput] = useState<string | null>(null);
+
   const {
     items: clipboardItems,
     isLoading: clipboardLoading,
     error: clipboardError,
-    refresh: refreshClipboard,
+    refresh: refreshClipboard
   } = useClipboard();
+
   const {
     isProcessing: aiProcessing,
     error: aiError,
     summarize,
-    enhance,
+    enhance
   } = useAI();
-  const [testResults, setTestResults] = useState<any>({});
 
-  // Test IPC connections on mount
   useEffect(() => {
-    const testConnections = async () => {
-      const results: any = {};
+    const checkServices = async () => {
+      const nextStatus: Record<string, ServiceStatus> = {
+        clipboard: 'offline',
+        ai: 'offline',
+        storage: 'offline'
+      };
 
-      // Test clipboard
       try {
-        if (window.knoux?.clipboard?.read) {
-          const clipResult = await window.knoux.clipboard.read();
-          results.clipboard = clipResult.ok ? "Connected" : "Error";
-        } else {
-          results.clipboard = "Not Available";
-        }
+        const response = await window.knoux?.clipboard?.read?.();
+        nextStatus.clipboard = response?.ok || response?.success ? 'ready' : 'degraded';
       } catch {
-        results.clipboard = "Failed";
+        nextStatus.clipboard = 'offline';
       }
 
-      // Test AI
       try {
-        if (window.knoux?.ai?.summarize) {
-          const aiResult = await window.knoux.ai.summarize("Test text");
-          results.ai = aiResult.ok ? "Connected" : "Error";
-        } else {
-          results.ai = "Not Available";
-        }
+        const response = await window.knoux?.ai?.summarize?.('KNOUX health check');
+        nextStatus.ai = response?.ok || response?.success ? 'ready' : 'degraded';
       } catch {
-        results.ai = "Failed";
+        nextStatus.ai = 'offline';
       }
 
-      // Test storage
       try {
-        if (window.knoux?.storage?.get) {
-          const storageResult = await window.knoux.storage.get("test");
-          results.storage = storageResult.ok ? "Connected" : "Error";
-        } else {
-          results.storage = "Not Available";
-        }
+        const response = await window.knoux?.storage?.get?.('knoux-health-check');
+        nextStatus.storage = response?.ok || response?.success ? 'ready' : 'degraded';
       } catch {
-        results.storage = "Failed";
+        nextStatus.storage = 'offline';
       }
 
-      setTestResults(results);
+      setStatus(nextStatus);
     };
 
-    testConnections();
+    checkServices();
   }, []);
 
+  const latestItems = useMemo(() => clipboardItems.slice(0, 5), [clipboardItems]);
+  const readyCount = Object.values(status).filter(value => value === 'ready').length;
+
+  const runAiSummary = async () => {
+    const result = await summarize(aiInput);
+    setAiOutput(result);
+  };
+
+  const runAiEnhance = async () => {
+    const result = await enhance(aiInput, { tone: 'professional', brand: 'KNOUX' });
+    setAiOutput(result);
+  };
+
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        display: "flex",
-        fontFamily: "Inter, sans-serif",
-        color: "white",
-      }}
-    >
-      {/* Sidebar */}
-      <div
-        style={{
-          width: "280px",
-          background: "rgba(0,0,0,0.3)",
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "8px",
-          overflowY: "auto",
-        }}
-      >
-        <h2 style={{ margin: "0 0 20px 0", fontSize: "20px" }}>🚀 Knoux AI</h2>
+    <div className="min-h-screen bg-[#090014] text-white">
+      <div className="flex min-h-screen">
+        <aside className="hidden w-72 shrink-0 border-r border-white/10 bg-white/[0.035] p-5 backdrop-blur-xl lg:block">
+          <div className="mb-8 rounded-3xl border border-white/10 bg-gradient-to-br from-[#8A2BE2]/30 to-white/[0.04] p-5">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#D8B8EC]">KNOUX</p>
+            <h1 className="text-2xl font-black leading-tight">AI Clipboard Pro</h1>
+            <p className="mt-3 text-sm leading-6 text-white/55">Production workspace for secure clipboard intelligence.</p>
+          </div>
 
-        {/* Core Features */}
-        <div style={{ marginBottom: "15px" }}>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>CORE</h3>
-          <NavButton active={activeTab === "home"} onClick={() => setActiveTab("home")}>🏠 Dashboard</NavButton>
-          <NavButton active={activeTab === "clipboard"} onClick={() => setActiveTab("clipboard")}>📋 Clipboard</NavButton>
-          <NavButton active={activeTab === "clipboardview"} onClick={() => setActiveTab("clipboardview")}>📄 Clipboard View</NavButton>
-          <NavButton active={activeTab === "history"} onClick={() => setActiveTab("history")}>📚 History Timeline</NavButton>
-          <NavButton active={activeTab === "search"} onClick={() => setActiveTab("search")}>🔍 Instant Search</NavButton>
-        </div>
+          <nav className="space-y-2">
+            <NavButton icon={Gauge} label="Overview" active={activeTab === 'overview'} onClick={() => setActiveTab('overview')} />
+            <NavButton icon={ClipboardList} label="Clipboard" active={activeTab === 'clipboard'} onClick={() => setActiveTab('clipboard')} />
+            <NavButton icon={Brain} label="AI Tools" active={activeTab === 'ai'} onClick={() => setActiveTab('ai')} />
+            <NavButton icon={FlaskConical} label="Labs" active={activeTab === 'labs'} onClick={() => setActiveTab('labs')} />
+          </nav>
 
-        {/* AI Features */}
-        <div style={{ marginBottom: "15px" }}>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>AI POWERED</h3>
-          <NavButton active={activeTab === "creative"} onClick={() => setActiveTab("creative")}>🎭 Creative Studio</NavButton>
-          <NavButton active={activeTab === "ai"} onClick={() => setActiveTab("ai")}>🧠 Offline AI</NavButton>
-          <NavButton active={activeTab === "aimemory"} onClick={() => setActiveTab("aimemory")}>🧩 AI Memory</NavButton>
-          <NavButton active={activeTab === "analytics"} onClick={() => setActiveTab("analytics")}>📊 Analytics</NavButton>
-          <NavButton active={activeTab === "patterns"} onClick={() => setActiveTab("patterns")}>🔮 Pattern Recognition</NavButton>
-          <NavButton active={activeTab === "productivity"} onClick={() => setActiveTab("productivity")}>⚡ Productivity</NavButton>
-          <NavButton active={activeTab === "scorer"} onClick={() => setActiveTab("scorer")}>🎯 Productivity Scorer</NavButton>
-        </div>
+          <div className="mt-8 space-y-2 border-t border-white/10 pt-5">
+            <NavButton icon={Settings} label="Settings" active={false} onClick={() => navigate('/settings')} />
+            <NavButton icon={Info} label="About KNOUX" active={false} onClick={() => navigate('/about')} />
+          </div>
+        </aside>
 
-        {/* Advanced Features */}
-        <div style={{ marginBottom: "15px" }}>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>ADVANCED</h3>
-          <NavButton active={activeTab === "translator"} onClick={() => setActiveTab("translator")}>🌐 Translator</NavButton>
-          <NavButton active={activeTab === "voice"} onClick={() => setActiveTab("voice")}>🎤 Voice Commands</NavButton>
-          <NavButton active={activeTab === "voicestudio"} onClick={() => setActiveTab("voicestudio")}>🎵 Voice Studio</NavButton>
-          <NavButton active={activeTab === "voicecustomizer"} onClick={() => setActiveTab("voicecustomizer")}>🎛️ Voice Customizer</NavButton>
-          <NavButton active={activeTab === "gamification"} onClick={() => setActiveTab("gamification")}>🎮 Gamification</NavButton>
-        </div>
+        <main className="flex-1 overflow-auto p-5 lg:p-8">
+          <header className="mb-8 flex flex-col gap-4 rounded-[28px] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.32em] text-[#D8B8EC]">A KNOUX PRODUCT</p>
+              <h2 className="text-3xl font-black">Production Dashboard</h2>
+              <p className="mt-2 text-sm text-white/55">Stable core first. Experimental modules are isolated in Labs.</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <button onClick={refreshClipboard} className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm text-white/75 transition hover:bg-white/[0.1]">
+                <RefreshCcw className="h-4 w-4" /> Refresh
+              </button>
+              <button onClick={() => navigate('/settings')} className="inline-flex items-center gap-2 rounded-2xl bg-[#8A2BE2] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#6F2DBD]">
+                <Settings className="h-4 w-4" /> Settings
+              </button>
+            </div>
+          </header>
 
-        {/* Quantum & Security */}
-        <div style={{ marginBottom: "15px" }}>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>QUANTUM & SECURITY</h3>
-          <NavButton active={activeTab === "quantum"} onClick={() => setActiveTab("quantum")}>⚛️ Quantum Predictions</NavButton>
-          <NavButton active={activeTab === "quantumsec"} onClick={() => setActiveTab("quantumsec")}>🔐 Quantum Security</NavButton>
-          <NavButton active={activeTab === "blockchain"} onClick={() => setActiveTab("blockchain")}>⛓️ Blockchain Security</NavButton>
-        </div>
+          {activeTab === 'overview' && (
+            <section className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-3">
+                <MetricCard title="Clipboard Items" value={clipboardLoading ? 'Loading' : clipboardItems.length.toString()} icon={ClipboardList} detail="Local history entries" />
+                <MetricCard title="Services Ready" value={`${readyCount}/3`} icon={Activity} detail="Clipboard, AI, Storage" />
+                <MetricCard title="AI Status" value={aiProcessing ? 'Working' : 'Ready'} icon={Sparkles} detail="Summarize and enhance" />
+              </div>
 
-        {/* Neural & AR/VR */}
-        <div style={{ marginBottom: "15px" }}>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>NEURAL & IMMERSIVE</h3>
-          <NavButton active={activeTab === "neural"} onClick={() => setActiveTab("neural")}>🧬 Neural Style Transfer</NavButton>
-          <NavButton active={activeTab === "arvr"} onClick={() => setActiveTab("arvr")}>🥽 AR/VR Integration</NavButton>
-          <NavButton active={activeTab === "uimorpher"} onClick={() => setActiveTab("uimorpher")}>🎨 UI Morpher</NavButton>
-        </div>
+              <div className="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
+                <Panel title="Service Health" subtitle="IPC channels currently exposed to renderer">
+                  <div className="grid gap-3 md:grid-cols-3">
+                    <StatusPill label="Clipboard" status={status.clipboard} />
+                    <StatusPill label="AI" status={status.ai} />
+                    <StatusPill label="Storage" status={status.storage} />
+                  </div>
+                </Panel>
 
-        {/* Management */}
-        <div>
-          <h3 style={{ fontSize: "12px", opacity: 0.7, margin: "0 0 8px 0" }}>MANAGEMENT</h3>
-          <NavButton active={activeTab === "tester"} onClick={() => setActiveTab("tester")}>🧪 Service Tester</NavButton>
-          <NavButton active={activeTab === "features"} onClick={() => setActiveTab("features")}>⚙️ Feature Manager</NavButton>
-          <NavButton active={activeTab === "revolutionary"} onClick={() => setActiveTab("revolutionary")}>🚀 Revolutionary</NavButton>
-          <NavButton active={activeTab === "super"} onClick={() => setActiveTab("super")}>💎 Super Dashboard</NavButton>
-          <NavButton active={activeTab === "tags"} onClick={() => setActiveTab("tags")}>🏷️ Tag Manager</NavButton>
-          <NavButton active={activeTab === "filter"} onClick={() => setActiveTab("filter")}>🔧 Filter Panel</NavButton>
-        </div>
-      </div>
+                <Panel title="Production Notes" subtitle="Current hardening scope">
+                  <ul className="space-y-3 text-sm text-white/65">
+                    <li className="flex gap-3"><ShieldCheck className="h-5 w-5 text-[#D8B8EC]" /> Preload APIs now use explicit compatibility wrappers.</li>
+                    <li className="flex gap-3"><Zap className="h-5 w-5 text-[#D8B8EC]" /> Demo-heavy modules moved behind Labs planning.</li>
+                    <li className="flex gap-3"><Search className="h-5 w-5 text-[#D8B8EC]" /> Build Gate tracks install, doctor, renderer build, and package build.</li>
+                  </ul>
+                </Panel>
+              </div>
+            </section>
+          )}
 
-      {/* Content */}
-      <div style={{ flex: 1, padding: "20px", overflow: "auto" }}>
-        {activeTab === "home" && (
-          <HomeView
-            testResults={testResults}
-            clipboardItems={clipboardItems}
-            aiProcessing={aiProcessing}
-            onRefreshClipboard={refreshClipboard}
-            onSummarize={summarize}
-            clipboardError={clipboardError}
-            aiError={aiError}
-          />
-        )}
-        {activeTab === "clipboard" && <GamifiedClipboard />}
-        {activeTab === "clipboardview" && <ClipboardView />}
-        {activeTab === "history" && <HistoryTimeline />}
-        {activeTab === "creative" && <CreativeStudio />}
-        {activeTab === "translator" && <UniversalTranslator />}
-        {activeTab === "voice" && <VoiceCommands />}
-        {activeTab === "voicestudio" && <VoiceStudio />}
-        {activeTab === "voicecustomizer" && <VoiceCustomizerUI />}
-        {activeTab === "search" && <InstantSearch />}
-        {activeTab === "gamification" && <GamifiedClipboard />}
-        {activeTab === "ai" && <OfflineAI />}
-        {activeTab === "aimemory" && <AIMemoryDashboard />}
-        {activeTab === "analytics" && <AnalyticsDashboardUI />}
-        {activeTab === "productivity" && <ProductivityDashboard />}
-        {activeTab === "patterns" && <PatternRecognitionDashboard />}
-        {activeTab === "scorer" && <ProductivityScorerUI />}
-        {activeTab === "quantum" && <QuantumPredictions />}
-        {activeTab === "quantumsec" && <QuantumSecurity />}
-        {activeTab === "blockchain" && <BlockchainSecurityUI />}
-        {activeTab === "neural" && <NeuralStyleTransferUI />}
-        {activeTab === "arvr" && <ARVRIntegrationUI />}
-        {activeTab === "uimorpher" && <UIMorpherUI />}
-        {activeTab === "features" && <FeatureManager />}
-        {activeTab === "revolutionary" && <RevolutionaryFeatures />}
-        {activeTab === "super" && <SuperDashboard />}
-        {activeTab === "tester" && <ServiceTester />}
-        {activeTab === "tags" && <TagManager />}
-        {activeTab === "filter" && <FilterPanel />}
+          {activeTab === 'clipboard' && (
+            <Panel title="Clipboard Workspace" subtitle="Recent clipboard entries from the local backend">
+              {clipboardError && <Alert tone="error" message={clipboardError} />}
+              {!clipboardError && latestItems.length === 0 && (
+                <EmptyState title="No clipboard items yet" message="Copy content on your device, then refresh to populate the secure local history." />
+              )}
+              <div className="space-y-3">
+                {latestItems.map((item, index) => (
+                  <article key={item?.id || index} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                    <div className="mb-2 flex items-center justify-between gap-4">
+                      <span className="text-xs uppercase tracking-[0.24em] text-[#D8B8EC]">Clipboard #{index + 1}</span>
+                      <span className="text-xs text-white/35">{item?.type || 'text'}</span>
+                    </div>
+                    <p className="line-clamp-3 text-sm leading-6 text-white/70">{String(item?.content || item?.text || item?.value || 'No preview available')}</p>
+                  </article>
+                ))}
+              </div>
+            </Panel>
+          )}
+
+          {activeTab === 'ai' && (
+            <Panel title="AI Productivity" subtitle="Run stable AI actions without exposing experimental modules">
+              {aiError && <Alert tone="error" message={aiError} />}
+              <textarea
+                value={aiInput}
+                onChange={(event) => setAiInput(event.target.value)}
+                className="min-h-36 w-full rounded-2xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-white outline-none transition focus:border-[#A678DD]"
+              />
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button disabled={aiProcessing} onClick={runAiSummary} className="rounded-2xl bg-[#8A2BE2] px-4 py-3 text-sm font-semibold transition hover:bg-[#6F2DBD] disabled:cursor-not-allowed disabled:opacity-50">Summarize</button>
+                <button disabled={aiProcessing} onClick={runAiEnhance} className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-semibold transition hover:bg-white/[0.1] disabled:cursor-not-allowed disabled:opacity-50">Enhance</button>
+              </div>
+              {aiOutput && <div className="mt-5 rounded-2xl border border-[#A678DD]/30 bg-[#8A2BE2]/10 p-4 text-sm leading-6 text-white/75">{aiOutput}</div>}
+            </Panel>
+          )}
+
+          {activeTab === 'labs' && (
+            <Panel title="Labs" subtitle="Experimental modules are isolated here until individually verified">
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {labs.map((name) => (
+                  <div key={name} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                    <p className="font-semibold text-white">{name}</p>
+                    <p className="mt-2 text-xs leading-5 text-white/50">Disabled from the production shell until build, IPC, and UX verification are complete.</p>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          )}
+        </main>
       </div>
     </div>
   );
 };
 
 const NavButton: React.FC<{
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
   active: boolean;
   onClick: () => void;
-  children: React.ReactNode;
-}> = ({ active, onClick, children }) => (
+}> = ({ icon: Icon, label, active, onClick }) => (
   <button
     onClick={onClick}
-    style={{
-      padding: "8px 12px",
-      background: active ? "rgba(255,255,255,0.2)" : "transparent",
-      border: "none",
-      color: "white",
-      textAlign: "left",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "12px",
-      fontWeight: active ? "600" : "400",
-      transition: "all 0.2s",
-      width: "100%",
-      marginBottom: "2px",
-    }}
+    className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm transition ${
+      active ? 'bg-[#8A2BE2] text-white shadow-lg shadow-[#8A2BE2]/20' : 'text-white/60 hover:bg-white/[0.06] hover:text-white'
+    }`}
   >
-    {children}
+    <Icon className="h-4 w-4" />
+    <span>{label}</span>
   </button>
 );
 
-const HomeView: React.FC<{
-  testResults: any;
-  clipboardItems: any[];
-  aiProcessing: boolean;
-  onRefreshClipboard: () => void;
-  onSummarize: (text: string) => Promise<string | null>;
-  clipboardError: string | null;
-  aiError: string | null;
-}> = ({
-  testResults,
-  clipboardItems,
-  aiProcessing,
-  onRefreshClipboard,
-  onSummarize,
-  clipboardError,
-  aiError,
-}) => (
-  <div>
-    <h1 style={{ fontSize: "32px", margin: "0 0 20px 0" }}>
-      Knoux Clipboard AI — INTEGRATED
-    </h1>
-    <p style={{ fontSize: "14px", opacity: 0.8, marginBottom: "30px" }}>
-      Build: {new Date().toLocaleString()} | IPC Status:{" "}
-      {Object.keys(testResults).length > 0 ? "✅ Connected" : "⏳ Testing..."}
-    </p>
-
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "20px",
-        marginBottom: "30px",
-      }}
-    >
-      <StatCard
-        title="Clipboard Items"
-        value={clipboardItems.length.toString()}
-        icon="📋"
-        status={testResults.clipboard || "Testing..."}
-      />
-      <StatCard
-        title="AI Engine"
-        value={aiProcessing ? "Processing..." : "Ready"}
-        icon="🧠"
-        status={testResults.ai || "Testing..."}
-      />
-      <StatCard
-        title="Storage"
-        value="Active"
-        icon="💾"
-        status={testResults.storage || "Testing..."}
-      />
-    </div>
-
-    <div
-      style={{
-        background: "rgba(255,255,255,0.1)",
-        padding: "20px",
-        borderRadius: "12px",
-      }}
-    >
-      <h3 style={{ margin: "0 0 15px 0", fontSize: "18px" }}>
-        🧪 Live IPC Tests
-      </h3>
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <TestButton
-          onClick={async () => {
-            const result = await onSummarize(
-              "This is a test text for AI summarization.",
-            );
-            alert(result ? `Summary: ${result}` : "AI test failed");
-          }}
-        >
-          Test AI Summarize
-        </TestButton>
-
-        <TestButton onClick={onRefreshClipboard}>Refresh Clipboard</TestButton>
-
-        <TestButton
-          onClick={async () => {
-            if (window.knoux?.storage?.set) {
-              await window.knoux.storage.set("test-key", "test-value");
-              const result = await window.knoux.storage.get("test-key");
-              alert(
-                result?.ok
-                  ? `Storage test: ${result.data}`
-                  : "Storage test failed",
-              );
-            }
-          }}
-        >
-          Test Storage
-        </TestButton>
-      </div>
-    </div>
-
-    {(clipboardError || aiError) && (
-      <div
-        style={{
-          marginTop: "20px",
-          padding: "15px",
-          background: "rgba(255,0,0,0.2)",
-          borderRadius: "8px",
-          border: "1px solid rgba(255,0,0,0.3)",
-        }}
-      >
-        <strong>⚠️ Errors:</strong>
-        {clipboardError && <div>Clipboard: {clipboardError}</div>}
-        {aiError && <div>AI: {aiError}</div>}
-      </div>
-    )}
-  </div>
-);
-
-const TestButton: React.FC<{
-  onClick: () => void;
-  children: React.ReactNode;
-}> = ({ onClick, children }) => (
-  <button
-    onClick={onClick}
-    style={{
-      padding: "8px 16px",
-      background: "rgba(255,255,255,0.2)",
-      border: "1px solid rgba(255,255,255,0.3)",
-      color: "white",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "12px",
-      fontWeight: "500",
-    }}
-  >
-    {children}
-  </button>
-);
-
-const StatCard: React.FC<{
+const MetricCard: React.FC<{
   title: string;
   value: string;
-  icon: string;
-  status?: string;
-}> = ({ title, value, icon, status }) => (
-  <div
-    style={{
-      background: "rgba(255,255,255,0.1)",
-      padding: "20px",
-      borderRadius: "12px",
-      backdropFilter: "blur(10px)",
-      position: "relative",
-    }}
-  >
-    <div style={{ fontSize: "32px", marginBottom: "10px" }}>{icon}</div>
-    <div style={{ fontSize: "28px", fontWeight: "700", marginBottom: "5px" }}>
-      {value}
+  detail: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = ({ title, value, detail, icon: Icon }) => (
+  <div className="rounded-[24px] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-xl">
+    <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#8A2BE2]/20 text-[#D8B8EC] ring-1 ring-[#A678DD]/25">
+      <Icon className="h-5 w-5" />
     </div>
-    <div style={{ fontSize: "12px", opacity: 0.8 }}>{title}</div>
-    {status && (
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          padding: "4px 8px",
-          borderRadius: "4px",
-          fontSize: "10px",
-          fontWeight: "600",
-          background:
-            status === "Connected"
-              ? "#10b981"
-              : status === "Error" || status === "Failed"
-                ? "#ef4444"
-                : "#f59e0b",
-          color: "white",
-        }}
-      >
-        {status}
-      </div>
-    )}
+    <p className="text-sm text-white/50">{title}</p>
+    <p className="mt-2 text-3xl font-black text-white">{value}</p>
+    <p className="mt-2 text-xs text-white/40">{detail}</p>
   </div>
 );
+
+const Panel: React.FC<{
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+}> = ({ title, subtitle, children }) => (
+  <section className="rounded-[28px] border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl">
+    <div className="mb-5">
+      <h3 className="text-xl font-bold text-white">{title}</h3>
+      <p className="mt-1 text-sm text-white/45">{subtitle}</p>
+    </div>
+    {children}
+  </section>
+);
+
+const StatusPill: React.FC<{ label: string; status: ServiceStatus }> = ({ label, status }) => {
+  const color = status === 'ready' ? 'bg-emerald-400' : status === 'degraded' ? 'bg-amber-400' : status === 'checking' ? 'bg-sky-400' : 'bg-red-400';
+  return (
+    <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+      <div className="mb-2 flex items-center gap-2">
+        <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
+        <span className="text-sm font-semibold text-white">{label}</span>
+      </div>
+      <p className="text-xs uppercase tracking-[0.2em] text-white/40">{status}</p>
+    </div>
+  );
+};
+
+const EmptyState: React.FC<{ title: string; message: string }> = ({ title, message }) => (
+  <div className="rounded-2xl border border-dashed border-white/15 bg-black/20 p-8 text-center">
+    <p className="text-lg font-bold text-white">{title}</p>
+    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-white/50">{message}</p>
+  </div>
+);
+
+const Alert: React.FC<{ tone: 'error'; message: string }> = ({ message }) => (
+  <div className="mb-4 rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-100">{message}</div>
+);
+
+export default MainDashboard;
