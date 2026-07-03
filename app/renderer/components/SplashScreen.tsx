@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ClipboardCopy, Zap, Shield, Cpu, CheckCircle } from 'lucide-react';
+import knouxLogo from '../../../assets/icons/icon.png';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -13,81 +14,76 @@ interface LoadingStep {
   duration: number;
 }
 
+const loadingSteps: LoadingStep[] = [
+  {
+    id: 'init',
+    label: 'Initializing KNOUX core...',
+    labelAr: 'تهيئة نواة KNOUX...',
+    icon: ClipboardCopy,
+    duration: 700
+  },
+  {
+    id: 'services',
+    label: 'Loading clipboard intelligence...',
+    labelAr: 'تحميل ذكاء الحافظة...',
+    icon: Zap,
+    duration: 650
+  },
+  {
+    id: 'security',
+    label: 'Securing local data...',
+    labelAr: 'تأمين البيانات المحلية...',
+    icon: Shield,
+    duration: 550
+  },
+  {
+    id: 'ai',
+    label: 'Activating AI workspace...',
+    labelAr: 'تفعيل مساحة الذكاء الاصطناعي...',
+    icon: Cpu,
+    duration: 650
+  },
+  {
+    id: 'complete',
+    label: 'Ready for productivity.',
+    labelAr: 'جاهز للإنتاجية.',
+    icon: CheckCircle,
+    duration: 350
+  }
+];
+
 const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  const loadingSteps: LoadingStep[] = [
-    {
-      id: 'init',
-      label: 'Initializing Knoux...',
-      labelAr: 'تهيئة نوكس...',
-      icon: ClipboardCopy,
-      duration: 800
-    },
-    {
-      id: 'services',
-      label: 'Loading Services...',
-      labelAr: 'تحميل الخدمات...',
-      icon: Zap,
-      duration: 600
-    },
-    {
-      id: 'security',
-      label: 'Securing Data...',
-      labelAr: 'تأمين البيانات...',
-      icon: Shield,
-      duration: 500
-    },
-    {
-      id: 'ai',
-      label: 'Activating AI...',
-      labelAr: 'تفعيل الذكاء الاصطناعي...',
-      icon: Cpu,
-      duration: 700
-    },
-    {
-      id: 'complete',
-      label: 'Ready!',
-      labelAr: 'جاهز!',
-      icon: CheckCircle,
-      duration: 400
-    }
-  ];
-
   useEffect(() => {
-    let progressInterval: NodeJS.Timeout;
-    let stepTimeout: NodeJS.Timeout;
+    let progressInterval: ReturnType<typeof setInterval> | undefined;
+    let stepTimeout: ReturnType<typeof setTimeout> | undefined;
 
     const startStep = (stepIndex: number) => {
       if (stepIndex >= loadingSteps.length) {
         setIsComplete(true);
-        setTimeout(onComplete, 500);
+        stepTimeout = setTimeout(onComplete, 450);
         return;
       }
 
       const step = loadingSteps[stepIndex];
       setCurrentStep(stepIndex);
-      
-      // Animate progress for this step
       let stepProgress = 0;
-      const stepIncrement = 100 / (step.duration / 16); // 60fps
-      
+      const stepIncrement = 100 / (step.duration / 16);
+
       progressInterval = setInterval(() => {
         stepProgress += stepIncrement;
         const totalProgress = (stepIndex * 100 + Math.min(stepProgress, 100)) / loadingSteps.length;
-        setProgress(totalProgress);
-        
-        if (stepProgress >= 100) {
+        setProgress(Math.min(totalProgress, 100));
+
+        if (stepProgress >= 100 && progressInterval) {
           clearInterval(progressInterval);
         }
       }, 16);
 
-      // Move to next step
-      stepTimeout = setTimeout(() => {
-        startStep(stepIndex + 1);
-      }, step.duration);
+      stepTimeout = setTimeout(() => startStep(stepIndex + 1), step.duration);
     };
 
     startStep(0);
@@ -98,111 +94,57 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
     };
   }, [onComplete]);
 
-  const currentStepData = loadingSteps[currentStep];
-  const Icon = currentStepData?.icon || ClipboardCopy;
-  const isArabic = document.documentElement.lang === 'ar';
+  const currentStepData = loadingSteps[currentStep] || loadingSteps[0];
+  const Icon = currentStepData.icon;
+  const isArabic = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center z-50">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse animation-delay-4000"></div>
-      </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#12051f] text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(138,43,226,0.38),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(166,120,221,0.24),transparent_32%),linear-gradient(135deg,#090014_0%,#1a0630_45%,#05040a_100%)]" />
+      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)', backgroundSize: '42px 42px' }} />
 
-      {/* Main Content */}
-      <div className="relative z-10 text-center">
-        {/* Logo Animation */}
-        <div className="mb-8">
-          <div className={`relative inline-flex items-center justify-center w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 shadow-2xl transform transition-all duration-500 ${
-            isComplete ? 'scale-110 rotate-12' : 'scale-100 rotate-0'
-          }`}>
-            <Icon className={`w-12 h-12 text-white transition-all duration-300 ${
-              isComplete ? 'scale-110' : 'scale-100'
-            }`} />
-            
-            {/* Pulse Ring */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 animate-ping opacity-20"></div>
-          </div>
+      <div className="relative z-10 w-[min(92vw,520px)] rounded-[32px] border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-2xl">
+        <div className="mx-auto mb-7 flex h-28 w-28 items-center justify-center rounded-[30px] border border-white/15 bg-gradient-to-br from-[#8A2BE2] via-[#6F2DBD] to-[#262626] shadow-[0_0_48px_rgba(138,43,226,.5)]">
+          <img src={knouxLogo} alt="KNOUX" className={`h-20 w-20 rounded-2xl object-contain transition-all duration-500 ${isComplete ? 'scale-110 rotate-6' : 'scale-100'}`} />
+          <div className="absolute h-28 w-28 animate-ping rounded-[30px] border border-[#A678DD]/40" />
         </div>
 
-        {/* App Name */}
-        <h1 className="text-4xl font-black text-white mb-2 bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-          {isArabic ? 'نوكس' : 'Knoux'}
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.36em] text-[#D8B8EC]">
+          A KNOUX PRODUCT
+        </p>
+        <h1 className="mb-3 bg-gradient-to-r from-white via-[#D8B8EC] to-[#A678DD] bg-clip-text text-4xl font-black text-transparent">
+          Knoux AI Clipboard Pro
         </h1>
-        <p className="text-lg text-gray-300 mb-8 font-medium">
-          {isArabic ? 'مساعد الحافظة الذكي' : 'Intelligent Clipboard Assistant'}
+        <p className="mx-auto mb-8 max-w-sm text-sm leading-6 text-white/70">
+          {isArabic ? 'مدير حافظة ذكي، آمن، وسريع — مبني للإنتاجية اليومية.' : 'A secure, intelligent clipboard workspace engineered for daily productivity.'}
         </p>
 
-        {/* Loading Step */}
-        <div className="mb-8">
-          <div className={`flex items-center justify-center gap-3 mb-4 transition-all duration-300 ${
-            isArabic ? 'flex-row-reverse' : 'flex-row'
-          }`}>
-            <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            </div>
-            <span className="text-white font-medium">
-              {isArabic ? currentStepData?.labelAr : currentStepData?.label}
-            </span>
+        <div className={`mb-5 flex items-center justify-center gap-3 ${isArabic ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8A2BE2]/25 text-[#D8B8EC] ring-1 ring-[#A678DD]/30">
+            <Icon className="h-5 w-5" />
           </div>
-
-          {/* Progress Bar */}
-          <div className="w-80 h-2 bg-gray-700 rounded-full overflow-hidden mx-auto">
-            <div 
-              className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            >
-              <div className="h-full bg-white opacity-30 animate-pulse"></div>
-            </div>
-          </div>
-          
-          {/* Progress Percentage */}
-          <div className="mt-2 text-sm text-gray-400">
-            {Math.round(progress)}%
-          </div>
+          <span className="text-sm font-medium text-white/90">
+            {isArabic ? currentStepData.labelAr : currentStepData.label}
+          </span>
         </div>
 
-        {/* Feature Highlights */}
-        <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-          <div className="flex items-center gap-2 text-gray-300 text-sm">
-            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-            {isArabic ? 'ذكاء اصطناعي' : 'AI Powered'}
-          </div>
-          <div className="flex items-center gap-2 text-gray-300 text-sm">
-            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-            {isArabic ? 'آمن ومشفر' : 'Secure & Encrypted'}
-          </div>
-          <div className="flex items-center gap-2 text-gray-300 text-sm">
-            <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-            {isArabic ? 'سريع وذكي' : 'Fast & Smart'}
-          </div>
-          <div className="flex items-center gap-2 text-gray-300 text-sm">
-            <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-            {isArabic ? 'سهل الاستخدام' : 'Easy to Use'}
-          </div>
+        <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-gradient-to-r from-[#8A2BE2] via-[#A678DD] to-[#D8B8EC] transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
 
-        {/* Version */}
-        <div className="mt-8 text-xs text-gray-500">
-          {isArabic ? 'الإصدار' : 'Version'} 1.0.0
+        <div className="mt-3 text-xs text-white/50">{Math.round(progress)}%</div>
+
+        <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-white/70">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">AI Clipboard</div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">Local Security</div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">Fast Search</div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">KNOUX Brand</div>
+        </div>
+
+        <div className="mt-7 text-[11px] text-white/40">
+          v1.0.0 · knoux.store · Eng. Sadek Elgazar
         </div>
       </div>
-
-      {/* Completion Animation */}
-      {isComplete && (
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 animate-pulse"></div>
-      )}
-
-      <style jsx>{`
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </div>
   );
 };
