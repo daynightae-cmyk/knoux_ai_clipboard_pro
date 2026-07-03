@@ -1,0 +1,52 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* Knoux Premium UI - Custom Theme Styles */
+
+.knoux-glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(138, 43, 226, 0.1);
+  box-shadow: 0 10px 40px rgba(138, 43, 226, 0.05);
+}
+
+.knoux-glass-lavender {
+  background: rgba(247, 242, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(110%);
+  -webkit-backdrop-filter: blur(20px) saturate(110%);
+  border: 1px solid rgba(138, 43, 226, 0.12);
+  box-shadow: 0 15px 50px rgba(138, 43, 226, 0.08);
+}
+
+.knoux-gradient-text {
+  background: linear-gradient(135deg, #8A2BE2 0%, #B026FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.knoux-shimmer-fast {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.knoux-float-subtle {
+  animation: float-subtle 3s ease-in-out infinite;
+}

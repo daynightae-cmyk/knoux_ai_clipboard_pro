@@ -1,152 +1,164 @@
-import React, { useState, useEffect } from 'react';
-import { ClipboardCopy, Zap, Shield, Cpu, CheckCircle } from 'lucide-react';
-import knouxLogo from '../../../assets/icons/icon.png';
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Cpu, ShieldCheck, Zap } from "lucide-react";
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
-interface LoadingStep {
-  id: string;
-  label: string;
-  labelAr: string;
-  icon: React.ComponentType<any>;
-  duration: number;
-}
-
-const loadingSteps: LoadingStep[] = [
-  {
-    id: 'init',
-    label: 'Initializing KNOUX core...',
-    labelAr: 'تهيئة نواة KNOUX...',
-    icon: ClipboardCopy,
-    duration: 700
-  },
-  {
-    id: 'services',
-    label: 'Loading clipboard intelligence...',
-    labelAr: 'تحميل ذكاء الحافظة...',
-    icon: Zap,
-    duration: 650
-  },
-  {
-    id: 'security',
-    label: 'Securing local data...',
-    labelAr: 'تأمين البيانات المحلية...',
-    icon: Shield,
-    duration: 550
-  },
-  {
-    id: 'ai',
-    label: 'Activating AI workspace...',
-    labelAr: 'تفعيل مساحة الذكاء الاصطناعي...',
-    icon: Cpu,
-    duration: 650
-  },
-  {
-    id: 'complete',
-    label: 'Ready for productivity.',
-    labelAr: 'جاهز للإنتاجية.',
-    icon: CheckCircle,
-    duration: 350
-  }
+const STEPS = [
+  { label: "Initializing secure local vault...", icon: ShieldCheck },
+  { label: "Starting smart clipboard observer...", icon: Zap },
+  { label: "Injecting global command interface...", icon: Cpu },
+  { label: "Deploying server-side Knoux AI cores...", icon: Cpu },
+  { label: "System secure. Welcome Sadek.", icon: ShieldCheck },
 ];
 
-const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
-  const [currentStep, setCurrentStep] = useState(0);
+export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    let progressInterval: ReturnType<typeof setInterval> | undefined;
-    let stepTimeout: ReturnType<typeof setTimeout> | undefined;
+    const totalDuration = 2200; // ms
+    const intervalTime = 40;
+    const increment = 100 / (totalDuration / intervalTime);
 
-    const startStep = (stepIndex: number) => {
-      if (stepIndex >= loadingSteps.length) {
-        setIsComplete(true);
-        stepTimeout = setTimeout(onComplete, 450);
-        return;
-      }
-
-      const step = loadingSteps[stepIndex];
-      setCurrentStep(stepIndex);
-      let stepProgress = 0;
-      const stepIncrement = 100 / (step.duration / 16);
-
-      progressInterval = setInterval(() => {
-        stepProgress += stepIncrement;
-        const totalProgress = (stepIndex * 100 + Math.min(stepProgress, 100)) / loadingSteps.length;
-        setProgress(Math.min(totalProgress, 100));
-
-        if (stepProgress >= 100 && progressInterval) {
-          clearInterval(progressInterval);
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + increment;
+        if (next >= 100) {
+          clearInterval(timer);
+          setIsExiting(true);
+          setTimeout(() => {
+            onComplete();
+          }, 450); // wait for exit animation
+          return 100;
         }
-      }, 16);
+        return next;
+      });
+    }, intervalTime);
 
-      stepTimeout = setTimeout(() => startStep(stepIndex + 1), step.duration);
-    };
-
-    startStep(0);
-
-    return () => {
-      if (progressInterval) clearInterval(progressInterval);
-      if (stepTimeout) clearTimeout(stepTimeout);
-    };
+    return () => clearInterval(timer);
   }, [onComplete]);
 
-  const currentStepData = loadingSteps[currentStep] || loadingSteps[0];
-  const Icon = currentStepData.icon;
-  const isArabic = document.documentElement.lang === 'ar' || document.documentElement.dir === 'rtl';
+  useEffect(() => {
+    const stepIndex = Math.min(
+      Math.floor((progress / 100) * STEPS.length),
+      STEPS.length - 1
+    );
+    setCurrentStep(stepIndex);
+  }, [progress]);
+
+  const CurrentIcon = STEPS[currentStep].icon;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#12051f] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(138,43,226,0.38),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(166,120,221,0.24),transparent_32%),linear-gradient(135deg,#090014_0%,#1a0630_45%,#05040a_100%)]" />
-      <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)', backgroundSize: '42px 42px' }} />
+    <AnimatePresence>
+      {!isExiting && (
+        <motion.div
+          id="splash-container"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-gradient-to-tr from-[#FCFAFF] via-[#F7F2FF] to-[#FCFAFF] p-8 select-none"
+        >
+          {/* Top aesthetic accent line */}
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-knoux-purple/40 to-transparent mt-4" />
 
-      <div className="relative z-10 w-[min(92vw,520px)] rounded-[32px] border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl backdrop-blur-2xl">
-        <div className="mx-auto mb-7 flex h-28 w-28 items-center justify-center rounded-[30px] border border-white/15 bg-gradient-to-br from-[#8A2BE2] via-[#6F2DBD] to-[#262626] shadow-[0_0_48px_rgba(138,43,226,.5)]">
-          <img src={knouxLogo} alt="KNOUX" className={`h-20 w-20 rounded-2xl object-contain transition-all duration-500 ${isComplete ? 'scale-110 rotate-6' : 'scale-100'}`} />
-          <div className="absolute h-28 w-28 animate-ping rounded-[30px] border border-[#A678DD]/40" />
-        </div>
+          {/* Main Core Center Area */}
+          <div className="flex flex-col items-center justify-center flex-1 max-w-lg text-center">
+            {/* Pulsing visual glow ring around logo */}
+            <div className="relative mb-8 flex items-center justify-center">
+              {/* Pulse rings */}
+              <motion.div
+                animate={{ scale: [1, 1.25, 1], opacity: [0.15, 0.05, 0.15] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 -m-8 rounded-full bg-gradient-to-r from-knoux-purple to-knoux-neon blur-xl"
+              />
+              <motion.div
+                animate={{ scale: [1.1, 1.35, 1.1], opacity: [0.1, 0, 0.1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute inset-0 -m-16 rounded-full bg-knoux-magenta-glow/20 blur-2xl"
+              />
 
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.36em] text-[#D8B8EC]">
-          A KNOUX PRODUCT
-        </p>
-        <h1 className="mb-3 bg-gradient-to-r from-white via-[#D8B8EC] to-[#A678DD] bg-clip-text text-4xl font-black text-transparent">
-          Knoux AI Clipboard Pro
-        </h1>
-        <p className="mx-auto mb-8 max-w-sm text-sm leading-6 text-white/70">
-          {isArabic ? 'مدير حافظة ذكي، آمن، وسريع — مبني للإنتاجية اليومية.' : 'A secure, intelligent clipboard workspace engineered for daily productivity.'}
-        </p>
+              {/* Central Approved Circular Medallion Logo */}
+              <motion.div
+                initial={{ scale: 0.94, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative z-10 w-44 h-44 rounded-full border-2 border-knoux-purple/20 bg-white/90 p-1 shadow-knoux-glow-lg overflow-hidden flex items-center justify-center"
+              >
+                <img
+                  id="splash-logo-img"
+                  src="https://i.postimg.cc/63Ld4Hhg/Chat-GPT-Image-3-ywlyw-2026-06-19-54-m.png"
+                  alt="Knoux AI Clipboard Pro Master Logo"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </motion.div>
+            </div>
 
-        <div className={`mb-5 flex items-center justify-center gap-3 ${isArabic ? 'flex-row-reverse' : 'flex-row'}`}>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#8A2BE2]/25 text-[#D8B8EC] ring-1 ring-[#A678DD]/30">
-            <Icon className="h-5 w-5" />
+            {/* Typography brand layout exactly matching Approved Logo guidelines */}
+            <motion.h1
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="text-2xl sm:text-3xl font-bold tracking-tight text-knoux-dark-text mt-4"
+            >
+              Knoux <span className="text-knoux-purple font-extrabold">AI Clipboard Pro</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+              className="text-sm font-medium text-knoux-muted-text/80 tracking-wider mt-2 uppercase"
+            >
+              Your clipboard. Upgraded by AI.
+            </motion.p>
+
+            {/* Loading step and Progress Indicators */}
+            <div className="w-64 mt-12 space-y-4">
+              {/* Progress Bar */}
+              <div className="h-[4px] w-full bg-knoux-purple/10 rounded-full overflow-hidden relative">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-knoux-purple via-knoux-neon to-knoux-magenta-glow rounded-full"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              {/* Active Step Label with dynamic Icon */}
+              <div className="flex items-center justify-center gap-2 h-6 text-xs text-knoux-dark-text font-medium">
+                <CurrentIcon className="w-3.5 h-3.5 text-knoux-purple animate-pulse" />
+                <span className="transition-all duration-300">
+                  {STEPS[currentStep].label}
+                </span>
+                <span className="font-mono text-knoux-purple text-[10px]">
+                  ({Math.round(progress)}%)
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="text-sm font-medium text-white/90">
-            {isArabic ? currentStepData.labelAr : currentStepData.label}
-          </span>
-        </div>
 
-        <div className="mx-auto h-2 w-full max-w-sm overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-gradient-to-r from-[#8A2BE2] via-[#A678DD] to-[#D8B8EC] transition-all duration-300" style={{ width: `${progress}%` }} />
-        </div>
-
-        <div className="mt-3 text-xs text-white/50">{Math.round(progress)}%</div>
-
-        <div className="mt-8 grid grid-cols-2 gap-3 text-xs text-white/70">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">AI Clipboard</div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">Local Security</div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">Fast Search</div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">KNOUX Brand</div>
-        </div>
-
-        <div className="mt-7 text-[11px] text-white/40">
-          v1.0.0 · knoux.store · Eng. Sadek Elgazar
-        </div>
-      </div>
-    </div>
+          {/* Elegant Footer Credits */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.8 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex flex-col items-center text-[11px] text-knoux-muted-text/70 mt-auto font-mono tracking-wide"
+          >
+            <span>A Knoux Product</span>
+            <span className="text-[10px] mt-0.5 opacity-80">
+              Developed by Eng. Sadek Elgazar (Knoux)
+            </span>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
-};
-
-export default SplashScreen;
+}

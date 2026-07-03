@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+﻿import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
@@ -17,7 +17,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, '.'),
       '@app': path.resolve(__dirname, 'app'),
       '@shared': path.resolve(__dirname, 'app/shared'),
-      // ❌ @backend removed - renderer must use IPC only
+      // âŒ @backend removed - renderer must use IPC only
       '@renderer': path.resolve(__dirname, 'app/renderer'),
       '@components': path.resolve(__dirname, 'app/renderer/components'),
       '@hooks': path.resolve(__dirname, 'app/renderer/hooks'),
@@ -67,7 +67,8 @@ export default defineConfig({
     __VERSION__: JSON.stringify(process.env.npm_package_version),
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'lucide-react'],
+    include: ['react', 'react-dom', 'lucide-react', 'motion'],
     exclude: ['electron'],
   }
 })
+

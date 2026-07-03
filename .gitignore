@@ -321,3 +321,9 @@ scan-output/
 
 
 
+.env.local
+.env.development
+.env.production
+*.env
+
+knoux_backup_before_ai_studio_ui_*/
