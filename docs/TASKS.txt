@@ -1,0 +1,4 @@
+1. Run Actions.
+2. Fix build.
+3. Improve dashboard.
+4. Package EXE.
