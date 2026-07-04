@@ -13,34 +13,42 @@
     "electron:dev": "concurrently -k -n renderer,electron \"npm run dev:renderer\" \"npm run dev:main\"",
     "start": "electron .",
     "build:renderer": "vite build",
-    "build:main": "echo \"Skipping TypeScript main build (using JavaScript Electron entries)\"",
+    "build:main": "tsc -p tsconfig.electron.json",
     "build": "npm run build:renderer && npm run build:main",
     "dist": "npm run build && electron-builder --win --dir",
     "dist:installer": "npm run build && electron-builder --win nsis portable",
     "pack": "npm run build && electron-builder --dir",
     "doctor": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-production-doctor.ps1",
     "knoux:build-local": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-build-local.ps1",
-    "test": "npm run doctor"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@types/diff-match-patch": "^1.0.36",
     "@types/sqlite3": "^3.1.11",
     "@xenova/transformers": "^2.17.2",
     "@zxing/browser": "^0.1.5",
+    "date-fns": "^3.6.0",
     "diff-match-patch": "^1.0.5",
     "express": "^4.18.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.563.0",
     "motion": "^12.23.24",
     "postcss": "^8.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.13.0",
+    "redux": "^5.0.1",
+    "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "ws": "^8.14.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20.5.7",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.23",
@@ -48,11 +56,14 @@
     "electron": "^25.9.8",
     "electron-builder": "^26.4.0",
     "electron-packager": "^17.1.2",
+    "jsdom": "^24.1.1",
     "tailwindcss": "^4.1.18",
+    "tailwindcss-animate": "^1.0.7",
     "terser": "^5.46.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vite": "^5.0.0",
+    "vitest": "^2.0.5",
     "wait-on": "^8.0.1"
   },
   "build": {
@@ -89,7 +100,10 @@
     ],
     "win": {
       "icon": "assets/icons/icon.ico",
-      "target": ["nsis", "portable"],
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "artifactName": "Knoux-AI-Clipboard-Pro-${version}-${arch}.${ext}"
     },
     "nsis": {
