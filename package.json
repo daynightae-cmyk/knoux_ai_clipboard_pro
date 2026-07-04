@@ -26,6 +26,7 @@
     "@types/diff-match-patch": "^1.0.36",
     "@types/sqlite3": "^3.1.11",
     "@xenova/transformers": "^2.17.2",
+    "@zxing/browser": "^0.1.5",
     "diff-match-patch": "^1.0.5",
     "express": "^4.18.2",
     "lucide-react": "^0.563.0",
@@ -88,10 +89,7 @@
     ],
     "win": {
       "icon": "assets/icons/icon.ico",
-      "target": [
-        "nsis",
-        "portable"
-      ],
+      "target": ["nsis", "portable"],
       "artifactName": "Knoux-AI-Clipboard-Pro-${version}-${arch}.${ext}"
     },
     "nsis": {
