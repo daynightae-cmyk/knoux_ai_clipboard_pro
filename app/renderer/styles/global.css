@@ -1,32 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 @import "./knoux-theme.css";
+@import "./theme-knoux-premium.css";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Custom Knoux Brand Colors */
-  --color-knoux-purple: #8A2BE2;
-  --color-knoux-deep-purple: #6F2DBD;
-  --color-knoux-accent: #A678DD;
-  --color-knoux-soft-purple: #D8B8EC;
-  --color-knoux-neon: #B026FF;
-  --color-knoux-magenta-glow: #D946EF;
+  --color-knoux-purple: #8226EE;
+  --color-knoux-deep-purple: #500FC8;
+  --color-knoux-accent: #A74CE7;
+  --color-knoux-soft-purple: #C17CEB;
+  --color-knoux-neon: #8226EE;
+  --color-knoux-magenta-glow: #A74CE7;
   --color-knoux-white: #FFFFFF;
   --color-knoux-soft-white: #FCFAFF;
-  --color-knoux-lavender-white: #F7F2FF;
-  --color-knoux-soft-lavender: #F1E8FF;
-  --color-knoux-pale-purple: #EBDDFF;
-  --color-knoux-dark-accent: #151027;
-  --color-knoux-deep-contrast: #0B0714;
+  --color-knoux-lavender-white: #F3E6FB;
+  --color-knoux-soft-lavender: #F3E6FB;
+  --color-knoux-pale-purple: #CFB4EA;
+  --color-knoux-dark-accent: #1C0B4E;
+  --color-knoux-deep-contrast: #0D0527;
   --color-knoux-muted-text: #6E6487;
-  --color-knoux-dark-text: #241B39;
+  --color-knoux-dark-text: #1A1225;
 
   /* Custom shadows and borders */
-  --shadow-knoux-glow: 0 10px 40px rgba(138, 43, 226, 0.15);
-  --shadow-knoux-glow-lg: 0 20px 60px rgba(138, 43, 226, 0.25);
-  --shadow-knoux-glow-magenta: 0 10px 40px rgba(217, 70, 239, 0.2);
+  --shadow-knoux-glow: 0 8px 32px rgba(130, 38, 238, 0.08), 0 2px 8px rgba(130, 38, 238, 0.04);
+  --shadow-knoux-glow-lg: 0 20px 60px rgba(130, 38, 238, 0.15);
+  --shadow-knoux-glow-magenta: 0 8px 24px rgba(130, 38, 238, 0.35);
 }
 
 /* Base resets & scrollbars */
@@ -47,12 +48,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(138, 43, 226, 0.15);
+  background: rgba(130, 38, 238, 0.15);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(138, 43, 226, 0.3);
+  background: rgba(130, 38, 238, 0.3);
 }
 
 /* Custom shimmer animations */
@@ -66,7 +67,7 @@ body {
 }
 
 .knoux-shimmer {
-  background: linear-gradient(90deg, rgba(247, 242, 255, 0.6) 25%, rgba(216, 184, 236, 0.4) 50%, rgba(247, 242, 255, 0.6) 75%);
+  background: linear-gradient(90deg, rgba(252, 250, 255, 0.6) 25%, rgba(193, 124, 235, 0.24) 50%, rgba(252, 250, 255, 0.6) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -92,8 +93,8 @@ body {
 
 .knoux-card-hover:hover {
   transform: translateY(-2px) scale(1.008);
-  box-shadow: 0 12px 30px rgba(138, 43, 226, 0.1), 0 4px 12px rgba(0, 0, 0, 0.02);
-  border-color: rgba(138, 43, 226, 0.2) !important;
+  box-shadow: 0 20px 60px rgba(130, 38, 238, 0.15);
+  border-color: rgba(130, 38, 238, 0.28) !important;
   background-color: #ffffff !important;
 }
 
