@@ -16,6 +16,8 @@ import {
   Info,
   Menu,
   ChevronLeft,
+  QrCode,
+  Code2,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -24,7 +26,10 @@ interface SidebarProps {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
   privacyMode: boolean;
+  language?: "en" | "ar";
 }
+
+const LOGO_URL = "https://i.postimg.cc/XJv5b0ZR/cropped-circle-image-(1).png";
 
 export default function Sidebar({
   activeTab,
@@ -32,204 +37,123 @@ export default function Sidebar({
   collapsed,
   setCollapsed,
   privacyMode,
+  language = "en",
 }: SidebarProps) {
+  const ar = language === "ar";
+
   const menuItems = [
-    { id: "overview" as NavTab, label: "Overview", icon: LayoutDashboard },
-    { id: "clipboard" as NavTab, label: "Clipboard Hub", icon: Clipboard },
-    { id: "search" as NavTab, label: "Deep Search", icon: Search },
-    { id: "ai" as NavTab, label: "AI Co-Pilot", icon: Sparkles },
-    { id: "security" as NavTab, label: "Security & Trust", icon: ShieldCheck },
-    { id: "settings" as NavTab, label: "Preferences", icon: Settings },
+    { id: "overview" as NavTab, label: ar ? "لوحة التحكم" : "Overview", icon: LayoutDashboard },
+    { id: "clipboard" as NavTab, label: ar ? "مركز الحافظة" : "Clipboard Hub", icon: Clipboard },
+    { id: "search" as NavTab, label: ar ? "بحث عميق" : "Deep Search", icon: Search },
+    { id: "ai" as NavTab, label: ar ? "مساعد الذكاء" : "AI Co-Pilot", icon: Sparkles },
+    { id: "barcode" as NavTab, label: ar ? "ماسح الباركود" : "Barcode Scanner", icon: QrCode },
+    { id: "security" as NavTab, label: ar ? "الأمان والخزنة" : "Security & Trust", icon: ShieldCheck },
+    { id: "settings" as NavTab, label: ar ? "الإعدادات" : "Preferences", icon: Settings },
   ];
 
   const experimentalItems = [
-    { id: "labs" as NavTab, label: "Experimental Labs", icon: FlaskConical },
-    { id: "about" as NavTab, label: "About Knoux", icon: Info },
+    { id: "developer" as NavTab, label: ar ? "استوديو المطورين" : "Developer Studio", icon: Code2 },
+    { id: "labs" as NavTab, label: ar ? "مختبرات متقدمة" : "Experimental Labs", icon: FlaskConical },
+    { id: "about" as NavTab, label: ar ? "عن كنوكس" : "About Knoux", icon: Info },
   ];
-
-  const handleTabClick = (tabId: NavTab) => {
-    setActiveTab(tabId);
-  };
 
   return (
     <motion.aside
       id="shell-sidebar-container"
-      animate={{ width: collapsed ? 76 : 260 }}
+      animate={{ width: collapsed ? 78 : 280 }}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-      className="h-screen sticky top-0 flex flex-col justify-between border-r border-knoux-purple/10 bg-white/70 backdrop-blur-md select-none shrink-0 z-20"
+      className="h-screen sticky top-0 flex flex-col justify-between border-r border-white/10 bg-[#12081F]/75 backdrop-blur-2xl select-none shrink-0 z-20 shadow-[18px_0_70px_rgba(0,0,0,0.34)]"
     >
-      {/* Top Header Logo Area */}
       <div>
-        <div className="h-16 flex items-center justify-between px-4 border-b border-knoux-purple/5">
+        <div className="h-20 flex items-center justify-between px-4 border-b border-white/10 bg-white/[0.03]">
           <div className="flex items-center gap-3 overflow-hidden">
             <motion.div
-              whileHover={{ rotate: 360 }}
+              whileHover={{ rotate: 360, scale: 1.05 }}
               transition={{ duration: 0.8 }}
-              className="w-9 h-9 rounded-full border border-knoux-purple/20 shadow-knoux-glow overflow-hidden flex items-center justify-center bg-white"
+              className="w-11 h-11 rounded-full border border-[#D8B8EC]/30 shadow-[0_0_35px_rgba(138,43,226,0.45)] overflow-hidden flex items-center justify-center bg-black/30"
             >
-              <img
-                src="https://i.postimg.cc/63Ld4Hhg/Chat-GPT-Image-3-ywlyw-2026-06-19-54-m.png"
-                alt="Knoux AI Logo"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
+              <img src={LOGO_URL} alt="Official KNOUX Logo" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
             </motion.div>
             {!collapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex flex-col"
-              >
-                <span className="text-sm font-bold tracking-tight text-knoux-dark-text leading-none">
-                  KNOUX
-                </span>
-                <span className="text-[10px] text-knoux-purple font-semibold uppercase tracking-wider mt-0.5 font-mono">
-                  Clipboard Pro
-                </span>
+              <motion.div initial={{ opacity: 0, x: ar ? 10 : -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col">
+                <span className="text-base font-black tracking-tight text-white leading-none">KNOUX</span>
+                <span className="text-[10px] text-[#D8B8EC] font-bold uppercase tracking-[0.26em] mt-1 font-mono">AI Clipboard Pro</span>
               </motion.div>
             )}
           </div>
-
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-knoux-muted-text hover:text-knoux-purple hover:bg-knoux-purple/5 transition-colors cursor-pointer"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-[#BFA7DB] hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-white/10"
           >
             {collapsed ? <Menu className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Primary Navigation list */}
-        <nav className="p-3 space-y-1">
+        <nav className="p-3 space-y-1.5">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
-                onClick={() => handleTabClick(item.id)}
-                className={`w-full relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer group ${
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${
                   isActive
-                    ? "text-knoux-purple bg-knoux-purple/5 font-semibold"
-                    : "text-knoux-muted-text hover:text-knoux-dark-text hover:bg-knoux-purple/5"
+                    ? "text-white bg-gradient-to-r from-[#8A2BE2]/35 to-[#D946EF]/18 border-[#D8B8EC]/25 shadow-[0_0_34px_rgba(138,43,226,0.22)]"
+                    : "text-[#BFA7DB] border-transparent hover:text-white hover:bg-white/[0.06] hover:border-white/10"
                 }`}
               >
-                {/* Active left glowing bar indicator */}
-                {isActive && (
-                  <motion.div
-                    layoutId="active-nav-bar-shell"
-                    className="absolute left-0 top-2 bottom-2 w-[4px] rounded-r-full bg-knoux-purple"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-
-                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-                  isActive ? "text-knoux-purple" : "text-knoux-muted-text"
-                }`} />
-
-                {!collapsed && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="truncate"
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-
-                {/* Badge for quick visual assistance */}
-                {item.id === "ai" && !collapsed && (
-                  <span className="ml-auto text-[9px] bg-gradient-to-r from-knoux-purple to-knoux-neon text-white px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider scale-90">
-                    Live
-                  </span>
-                )}
+                {isActive && <motion.div layoutId="active-nav-bar-shell" className="absolute left-0 top-3 bottom-3 w-[4px] rounded-r-full bg-[#D8B8EC]" />}
+                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#D8B8EC]" : "text-[#BFA7DB]"}`} />
+                {!collapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="truncate">{item.label}</motion.span>}
+                {item.id === "ai" && !collapsed && <span className="ml-auto text-[9px] bg-gradient-to-r from-[#8A2BE2] to-[#D946EF] text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider">Live</span>}
               </button>
             );
           })}
         </nav>
 
-        {/* Experimental/Separated Divider */}
         <div className="px-6 py-2">
-          <div className="h-[1px] bg-knoux-purple/10" />
-          {!collapsed && (
-            <div className="text-[10px] font-bold text-knoux-muted-text/40 tracking-wider uppercase mt-2 select-none">
-              Experiments & Lab
-            </div>
-          )}
+          <div className="h-[1px] bg-white/10" />
+          {!collapsed && <div className="text-[10px] font-black text-[#BFA7DB]/55 tracking-wider uppercase mt-3">{ar ? "الأدوات المتقدمة" : "Advanced Workspace"}</div>}
         </div>
 
-        <nav className="p-3 space-y-1">
+        <nav className="p-3 space-y-1.5">
           {experimentalItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
-                onClick={() => handleTabClick(item.id)}
-                className={`w-full relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer group ${
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${
                   isActive
-                    ? "text-knoux-purple bg-knoux-purple/5 font-semibold"
-                    : "text-knoux-muted-text hover:text-knoux-dark-text hover:bg-knoux-purple/5"
+                    ? "text-white bg-white/[0.08] border-[#D8B8EC]/25"
+                    : "text-[#BFA7DB] border-transparent hover:text-white hover:bg-white/[0.06] hover:border-white/10"
                 }`}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="active-nav-bar-shell"
-                    className="absolute left-0 top-2 bottom-2 w-[4px] rounded-r-full bg-knoux-purple"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-
-                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-                  isActive ? "text-knoux-purple" : "text-knoux-muted-text"
-                }`} />
-
-                {!collapsed && (
-                  <motion.span
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="truncate"
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-
-                {item.id === "labs" && !collapsed && (
-                  <span className="ml-auto text-[9px] border border-knoux-accent/30 text-knoux-accent px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider scale-90">
-                    Beta
-                  </span>
-                )}
+                {isActive && <motion.div layoutId="active-nav-bar-shell" className="absolute left-0 top-3 bottom-3 w-[4px] rounded-r-full bg-[#A678DD]" />}
+                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#D8B8EC]" : "text-[#BFA7DB]"}`} />
+                {!collapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="truncate">{item.label}</motion.span>}
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Footer workspace privacy metadata */}
-      <div className="p-3 border-t border-knoux-purple/5 bg-gradient-to-b from-transparent to-knoux-purple/5">
-        <div className={`flex items-center gap-3 ${collapsed ? "justify-center" : "px-3 py-2"} rounded-xl bg-white/40 border border-knoux-purple/5`}>
+      <div className="p-3 border-t border-white/10 bg-gradient-to-b from-transparent to-[#8A2BE2]/10">
+        <div className={`flex items-center gap-3 ${collapsed ? "justify-center" : "px-3 py-3"} rounded-2xl bg-white/[0.05] border border-white/10`}>
           <div className="relative flex items-center justify-center shrink-0">
-            {/* Green glowing status ping */}
-            <span className={`absolute inline-flex h-2 w-2 rounded-full ${privacyMode ? "bg-amber-500 animate-pulse" : "bg-emerald-500 animate-pulse"} opacity-75`} />
-            <span className={`relative inline-flex rounded-full h-2 w-2 ${privacyMode ? "bg-amber-500" : "bg-emerald-500"}`} />
+            <span className={`absolute inline-flex h-2.5 w-2.5 rounded-full ${privacyMode ? "bg-amber-400" : "bg-emerald-400"} animate-ping opacity-60`} />
+            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${privacyMode ? "bg-amber-400" : "bg-emerald-400"}`} />
           </div>
-
           {!collapsed && (
             <div className="flex flex-col text-[10px] overflow-hidden leading-snug">
-              <span className="font-bold text-knoux-dark-text truncate">
-                {privacyMode ? "Privacy Locked" : "Secure Environment"}
-              </span>
-              <span className="text-knoux-muted-text truncate">
-                Local Vault Active
-              </span>
+              <span className="font-black text-white truncate">{privacyMode ? (ar ? "وضع الخصوصية" : "Privacy Locked") : (ar ? "بيئة آمنة" : "Secure Environment")}</span>
+              <span className="text-[#BFA7DB] truncate">{ar ? "الخزنة المحلية نشطة" : "Local Vault Active"}</span>
             </div>
           )}
         </div>
-
-        {!collapsed && (
-          <div className="text-[9px] text-center text-knoux-muted-text/50 mt-3 font-mono">
-            Knoux v1.0.0
-          </div>
-        )}
+        {!collapsed && <div className="text-[9px] text-center text-[#BFA7DB]/55 mt-3 font-mono">A Knoux Product · v1.0.0</div>}
       </div>
     </motion.aside>
   );
