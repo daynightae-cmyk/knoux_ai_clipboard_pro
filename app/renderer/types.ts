@@ -9,16 +9,16 @@ export interface ClipboardItem {
   id: string;
   content: string;
   type: ClipboardType;
-  timestamp: string; // ISO String
+  timestamp: string;
   pinned: boolean;
   favorite: boolean;
   tags: string[];
   aiSummarized?: string | null;
   aiTags?: string[];
-  source: string; // e.g. "Chrome", "VS Code", "Slack", "System"
+  source: string;
   isSecure: boolean;
-  language?: string; // For code snippets
-  folder?: string; // User-defined folder category
+  language?: string;
+  folder?: string;
 }
 
 export type NavTab =
@@ -29,6 +29,8 @@ export type NavTab =
   | "security"
   | "settings"
   | "labs"
+  | "developer"
+  | "barcode"
   | "about";
 
 export interface AppSettings {
@@ -38,6 +40,7 @@ export interface AppSettings {
   autoAnalyze: boolean;
   maxHistorySize: number;
   syncToCloud: boolean;
+  language?: "en" | "ar";
 }
 
 export interface LabModule {
