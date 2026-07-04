@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { KNOUX_BRAND } from "../constants/brand";
 
 export default function AboutPage() {
   const contactLinks = [
@@ -43,7 +44,7 @@ export default function AboutPage() {
           />
           <div className="w-40 h-40 rounded-full border-2 border-knoux-purple/10 bg-white p-1 shadow-knoux-glow-lg overflow-hidden knoux-float">
             <img
-              src="https://i.postimg.cc/63Ld4Hhg/Chat-GPT-Image-3-ywlyw-2026-06-19-54-m.png"
+              src={KNOUX_BRAND.logoUrl}
               alt="Knoux AI Clipboard Pro Master Seal"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover rounded-full"

@@ -26,6 +26,7 @@ import {
   FileText,
   Activity,
 } from "lucide-react";
+import { KNOUX_BRAND } from "../constants/brand";
 
 interface OverviewDashboardProps {
   items: ClipboardItem[];
@@ -219,7 +220,7 @@ export default function OverviewDashboard({
           <div className="absolute inset-0 -m-6 rounded-full bg-gradient-to-r from-knoux-purple/20 to-knoux-neon/20 blur-xl animate-pulse" />
           <div className="w-32 h-32 md:w-36 md:h-36 rounded-full bg-white p-1 border-2 border-knoux-purple/20 shadow-knoux-glow overflow-hidden knoux-float">
             <img
-              src="https://i.postimg.cc/63Ld4Hhg/Chat-GPT-Image-3-ywlyw-2026-06-19-54-m.png"
+              src={KNOUX_BRAND.logoUrl}
               alt="Knoux AI Medal logo"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover rounded-full"
