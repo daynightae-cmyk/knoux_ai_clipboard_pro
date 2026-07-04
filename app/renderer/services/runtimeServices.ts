@@ -1,0 +1,92 @@
+import { ClipboardItem } from "../types";
+
+export interface StorageHealth {
+  bytes: number;
+  kb: number;
+  mb: number;
+  usagePct: number;
+  records: number;
+}
+
+export interface GuardScanResult {
+  sensitive: boolean;
+  types: string[];
+  message: string;
+}
+
+export function getStoredClips(): ClipboardItem[] {
+  try {
+    const raw = localStorage.getItem("knoux_clips");
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function getStorageHealth(items: ClipboardItem[] = getStoredClips()): StorageHealth {
+  const payload = JSON.stringify(items);
+  const bytes = new Blob([payload]).size;
+  const mb = bytes / 1024 / 1024;
+  return {
+    bytes,
+    kb: Number((bytes / 1024).toFixed(2)),
+    mb: Number(mb.toFixed(3)),
+    usagePct: Math.min(100, Number(((mb / 10) * 100).toFixed(1))),
+    records: items.length,
+  };
+}
+
+export function compactLocalStore(items: ClipboardItem[]): StorageHealth {
+  const compacted = items
+    .filter((item) => item && item.id && typeof item.content === "string")
+    .map((item) => ({
+      ...item,
+      content: item.content.trim(),
+      tags: Array.from(new Set(item.tags || [])).slice(0, 12),
+    }));
+
+  localStorage.setItem("knoux_clips", JSON.stringify(compacted));
+  return getStorageHealth(compacted);
+}
+
+export function detectSensitiveTypes(value: string): string[] {
+  const text = String(value || "");
+  const checks = [
+    { type: "credential-like", matched: /(credential|password|bearer|private|access)/i.test(text) },
+    { type: "email", matched: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(text) },
+    { type: "phone", matched: /\+?\d[\d\s().-]{7,}/.test(text) },
+    { type: "card-like", matched: /\b(?:\d[ -]*?){13,16}\b/.test(text) },
+  ];
+  return checks.filter((check) => check.matched).map((check) => check.type);
+}
+
+export function scanText(value: string): GuardScanResult {
+  const types = detectSensitiveTypes(value);
+  return {
+    sensitive: types.length > 0,
+    types,
+    message: types.length
+      ? `Sensitive classes detected: ${types.join(", ")}. Keep Privacy Enforcer active before reusing this content.`
+      : "No credential-like, email, phone, or card-like patterns were detected in the active text buffer.",
+  };
+}
+
+export async function readSystemClipboard(): Promise<string> {
+  if (!navigator.clipboard?.readText) return "";
+  try {
+    return await navigator.clipboard.readText();
+  } catch {
+    return "";
+  }
+}
+
+export async function writeSystemClipboard(value: string): Promise<boolean> {
+  if (!navigator.clipboard?.writeText) return false;
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
