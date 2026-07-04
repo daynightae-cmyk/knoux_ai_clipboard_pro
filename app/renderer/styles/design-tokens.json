@@ -1,0 +1,59 @@
+{
+  "$schema": "knoux-design-tokens/v1",
+  "brand": {
+    "name": "Knoux AI Clipboard Pro",
+    "tagline": "Smarter Clipboard. Limitless Possibilities.",
+    "credit": "Crafted by Eng. Sadek Elgazar (Knoux)"
+  },
+  "color": {
+    "brand": {
+      "purple500": "#8226EE",
+      "purple700": "#500FC8",
+      "violet900": "#381584",
+      "indigo950": "#1C0B4E",
+      "blackPurple": "#0D0527",
+      "orchid400": "#A74CE7",
+      "lilac300": "#C17CEB",
+      "lavender100": "#CFB4EA",
+      "lavenderWhite": "#F3E6FB",
+      "white": "#FFFFFF",
+      "softWhite": "#FCFAFF"
+    },
+    "text": {
+      "light": {
+        "primary": "#1A1225",
+        "secondary": "#6E6487",
+        "muted": "#9B93AE",
+        "inverted": "#FFFFFF"
+      },
+      "dark": {
+        "primary": "#FFFFFF",
+        "secondary": "#C9BFE0",
+        "muted": "#8A7FA8"
+      }
+    },
+    "border": {
+      "light": {
+        "subtle": "rgba(130,38,238,0.12)",
+        "strong": "rgba(130,38,238,0.28)"
+      },
+      "dark": {
+        "subtle": "rgba(199,145,240,0.15)",
+        "strong": "rgba(199,145,240,0.30)"
+      }
+    }
+  },
+  "radius": {
+    "sm": "8px",
+    "md": "12px",
+    "lg": "16px",
+    "xl": "20px",
+    "2xl": "28px"
+  },
+  "shadow": {
+    "glass": "0 8px 32px rgba(130,38,238,0.08), 0 2px 8px rgba(130,38,238,0.04)",
+    "glassElevated": "0 20px 60px rgba(130,38,238,0.15)",
+    "glowPrimary": "0 8px 24px rgba(130,38,238,0.35)",
+    "glowLarge": "0 0 40px rgba(130,38,238,0.4)"
+  }
+}
