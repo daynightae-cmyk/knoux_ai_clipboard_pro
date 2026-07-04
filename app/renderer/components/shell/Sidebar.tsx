@@ -19,6 +19,7 @@ import {
   QrCode,
   Code2,
 } from "lucide-react";
+import { KNOUX_BRAND } from "../../constants/brand";
 
 interface SidebarProps {
   activeTab: NavTab;
@@ -29,7 +30,6 @@ interface SidebarProps {
   language?: "en" | "ar";
 }
 
-const LOGO_URL = "https://i.postimg.cc/63Ld4Hhg/Chat-GPT-Image-3-ywlyw-2026-06-19-54-m.png";
 
 export default function Sidebar({
   activeTab,
@@ -63,7 +63,7 @@ export default function Sidebar({
         <div className="h-20 flex items-center justify-between px-4 border-b border-white/10 bg-white/[0.03]">
           <div className="flex items-center gap-3 overflow-hidden">
             <motion.div whileHover={{ rotate: 360, scale: 1.05 }} transition={{ duration: 0.8 }} className="w-11 h-11 rounded-full border border-[#D8B8EC]/30 shadow-[0_0_35px_rgba(138,43,226,0.45)] overflow-hidden flex items-center justify-center bg-black/30">
-              <img src={LOGO_URL} alt="Knoux AI Clipboard Pro emblem" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+              <img src={KNOUX_BRAND.logoUrl} alt="Knoux AI Clipboard Pro emblem" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
             </motion.div>
             {!collapsed && <motion.div initial={{ opacity: 0, x: ar ? 10 : -10 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col"><span className="text-base font-black tracking-tight text-white leading-none">KNOUX</span><span className="text-[10px] text-[#D8B8EC] font-bold uppercase tracking-[0.26em] mt-1 font-mono">AI Clipboard Pro</span></motion.div>}
           </div>
