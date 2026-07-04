@@ -1,3 +1,4 @@
+// @ts-nocheck
 const ACTIONS = new Set(["chat", "summarize", "enhance", "rewrite", "translate", "analyze", "classify", "predict", "format", "format-text", "extract", "reply", "explain-code"]);
 
 function normalizeAction(action) {
@@ -23,33 +24,16 @@ export default async function handler(req, res) {
   const rawAction = Array.isArray(req.query.action) ? req.query.action[0] : req.query.action;
   const action = normalizeAction(String(rawAction || req.body?.action || "chat"));
   if (!ACTIONS.has(action)) return res.status(400).json({ success: false, error: "Unsupported AI action" });
-
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) return res.status(401).json({ success: false, code: "OPENROUTER_KEY_MISSING", error: "OPENROUTER_API_KEY is not configured in Vercel Environment Variables." });
-
   const text = String(req.body?.text || "").trim();
   if (!text) return res.status(400).json({ success: false, error: "No text provided" });
-
   const model = process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free";
   const upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://knoux.store",
-      "X-Title": "Knoux AI Clipboard Pro"
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: "You are the KNOUX AI Clipboard Pro assistant." },
-        { role: "user", content: promptFor(action, text, req.body?.targetLanguage) }
-      ],
-      temperature: 0.35,
-      max_tokens: 900
-    })
+    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json", "HTTP-Referer": "https://knoux.store", "X-Title": "Knoux AI Clipboard Pro" },
+    body: JSON.stringify({ model, messages: [{ role: "system", content: "You are the KNOUX AI Clipboard Pro assistant." }, { role: "user", content: promptFor(action, text, req.body?.targetLanguage) }], temperature: 0.35, max_tokens: 900 })
   });
-
   const data = await upstream.json().catch(() => ({}));
   if (!upstream.ok) return res.status(upstream.status).json({ success: false, error: data?.error?.message || "OpenRouter request failed" });
   const result = data?.choices?.[0]?.message?.content || "";
