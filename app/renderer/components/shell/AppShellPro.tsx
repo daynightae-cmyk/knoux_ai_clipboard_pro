@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "./Sidebar";
 import TopCommandBar from "./TopCommandBar";
 import { NavTab } from "../../types";
+import DarkVisualRuntime from "../common/DarkVisualRuntime";
 
 interface AppShellProProps {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ interface AppShellProProps {
 export default function AppShellPro(props: AppShellProProps) {
   return (
     <div className={`relative flex h-screen overflow-hidden bg-[#07030E] text-white ${props.language === "ar" ? "lang-ar" : ""}`}>
+      <DarkVisualRuntime />
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-28 -left-24 h-96 w-96 rounded-full bg-[#8A2BE2]/25 blur-3xl" />
         <div className="absolute top-24 right-0 h-96 w-96 rounded-full bg-[#D946EF]/15 blur-3xl" />
