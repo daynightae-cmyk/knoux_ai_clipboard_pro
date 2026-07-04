@@ -1,0 +1,105 @@
+/**
+ * KNOUX AI Clipboard Pro — Premium Design System Theme
+ * Source: uploaded files.zip design-system pack.
+ * Intent: restore the premium white/lavender glass language without dark runtime overrides.
+ */
+
+:root {
+  --knoux-purple-500: #8226ee;
+  --knoux-purple-700: #500fc8;
+  --knoux-violet-900: #381584;
+  --knoux-indigo-950: #1c0b4e;
+  --knoux-black-purple: #0d0527;
+  --knoux-orchid-400: #a74ce7;
+  --knoux-lilac-300: #c17ceb;
+  --knoux-lavender-100: #cfb4ea;
+  --knoux-lavender-white: #f3e6fb;
+  --knoux-soft-white: #fcfaff;
+  --knoux-text-primary: #1a1225;
+  --knoux-text-secondary: #6e6487;
+  --knoux-text-muted: #9b93ae;
+  --knoux-border-subtle: rgba(130, 38, 238, 0.12);
+  --knoux-border-strong: rgba(130, 38, 238, 0.28);
+  --gradient-brand: linear-gradient(135deg, #8226ee 0%, #500fc8 100%);
+  --gradient-brand-soft: linear-gradient(135deg, #a74ce7 0%, #8226ee 100%);
+  --gradient-glow: linear-gradient(135deg, #c17ceb 0%, #8226ee 60%, #500fc8 100%);
+  --gradient-page-bg: radial-gradient(circle at 20% 0%, #f3e6fb 0%, #fcfaff 45%, #ffffff 100%);
+  --shadow-glass: 0 8px 32px rgba(130, 38, 238, 0.08), 0 2px 8px rgba(130, 38, 238, 0.04);
+  --shadow-glass-elevated: 0 20px 60px rgba(130, 38, 238, 0.15);
+  --shadow-glow-primary: 0 8px 24px rgba(130, 38, 238, 0.35);
+}
+
+html, body, #root { min-height: 100%; }
+
+body {
+  background: var(--gradient-page-bg);
+  color: var(--knoux-text-primary);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(130, 38, 238, 0.11), transparent 30%),
+    radial-gradient(circle at 84% 14%, rgba(193, 124, 235, 0.13), transparent 32%),
+    radial-gradient(circle at 48% 100%, rgba(80, 15, 200, 0.08), transparent 36%);
+}
+
+#root { position: relative; z-index: 1; }
+
+.knoux-page-shell {
+  background: var(--gradient-page-bg);
+}
+
+.knoux-premium-card,
+.knoux-glass-card,
+.knoux-glass-panel,
+.knoux-glass-lavender {
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  border: 1px solid var(--knoux-border-subtle);
+  box-shadow: var(--shadow-glass);
+}
+
+.knoux-glass-lavender {
+  background: rgba(243, 230, 251, 0.72);
+}
+
+.knoux-premium-card:hover,
+.knoux-card-hover:hover {
+  transform: translateY(-2px) scale(1.006);
+  border-color: var(--knoux-border-strong) !important;
+  box-shadow: var(--shadow-glass-elevated);
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+.knoux-gradient-text,
+.text-gradient-primary {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.knoux-premium-button {
+  background: var(--gradient-brand);
+  color: #ffffff;
+  border-radius: 16px;
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.knoux-dark-badge {
+  background: linear-gradient(135deg, #1c0b4e 0%, #381584 100%);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 40px rgba(28, 11, 78, 0.25);
+}
+
+[class*="bg-[#140b25]"],
+[class*="bg-\[\#140b25\]"] {
+  background: linear-gradient(135deg, #1c0b4e 0%, #0d0527 100%) !important;
+}
