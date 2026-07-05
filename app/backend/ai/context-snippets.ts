@@ -97,7 +97,7 @@ class ContextAwareSnippets {
       if (triggerMatch) score += 0.4;
       
       // Context matching
-      const contextScore = this.calculateContextScore(snippet, currentContext);
+      const contextScore = await this.calculateContextScore(snippet, currentContext);
       score += contextScore * 0.3;
       
       // Usage frequency
@@ -188,18 +188,50 @@ class ContextAwareSnippets {
   }
 
   private async evaluateCondition(condition: string, context: SnippetContext): Promise<boolean> {
-    // Simple condition evaluation
     try {
-      // Replace context variables in condition
-      let evaluableCondition = condition
-        .replace(/\$app/g, `"${context.app}"`)
-        .replace(/\$timeOfDay/g, `"${context.timeOfDay}"`)
-        .replace(/\$dayOfWeek/g, `"${context.dayOfWeek}"`)
-        .replace(/\$workMode/g, `"${context.workMode}"`)
-        .replace(/\$language/g, `"${context.language}"`);
-      
-      // Safe evaluation (in real implementation, use a proper expression evaluator)
-      return eval(evaluableCondition);
+      const contextVars: Record<string, string> = {
+        '$app': context.app,
+        '$timeOfDay': context.timeOfDay,
+        '$dayOfWeek': context.dayOfWeek,
+        '$workMode': context.workMode,
+        '$language': context.language,
+        '$projectType': context.projectType,
+        '$userMood': context.userMood,
+      };
+
+      // $var === "literal"
+      const eqMatch = condition.match(/^(\$\w+)\s*===?\s*"([^"]*)"$/);
+      if (eqMatch) {
+        const value = contextVars[eqMatch[1]];
+        return value !== undefined && value === eqMatch[2];
+      }
+
+      // $var.includes("literal")
+      const includesMatch = condition.match(/^(\$\w+)\.includes\("([^"]*)"\)$/);
+      if (includesMatch) {
+        const value = contextVars[includesMatch[1]];
+        return value !== undefined && value.includes(includesMatch[2]);
+      }
+
+      // expr1 || expr2  (one level of OR)
+      if (condition.includes(' || ')) {
+        const parts = condition.split(' || ');
+        for (const part of parts) {
+          if (await this.evaluateCondition(part.trim(), context)) return true;
+        }
+        return false;
+      }
+
+      // expr1 && expr2  (one level of AND)
+      if (condition.includes(' && ')) {
+        const parts = condition.split(' && ');
+        for (const part of parts) {
+          if (!(await this.evaluateCondition(part.trim(), context))) return false;
+        }
+        return true;
+      }
+
+      return false;
     } catch (error) {
       console.warn('Failed to evaluate condition:', condition, error);
       return false;
@@ -510,11 +542,11 @@ app.{methodLower}('{endpoint}', async (req, res) => {
     return template;
   }
 
-  private calculateContextScore(snippet: SmartSnippet, context: SnippetContext): number {
+  private async calculateContextScore(snippet: SmartSnippet, context: SnippetContext): Promise<number> {
     let score = 0;
     
     for (const rule of snippet.contexts) {
-      if (this.evaluateCondition(rule.condition, context)) {
+      if (await this.evaluateCondition(rule.condition, context)) {
         score += rule.priority * 0.1;
       }
     }

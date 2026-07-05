@@ -154,8 +154,14 @@ async function runAllTests() {
   return { results, summary };
 }
 
-// Register IPC handler
+// Register IPC handler — only in development mode
 function registerTestIPC() {
+  const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev');
+  if (!isDev) {
+    console.log('⏭️  Test IPC handlers skipped (production mode)');
+    return;
+  }
+
   ipcMain.handle('test:run-all', async () => {
     return await runAllTests();
   });
@@ -183,7 +189,7 @@ function registerTestIPC() {
     }
   });
 
-  console.log('✅ Test IPC handlers registered');
+  console.log('✅ Test IPC handlers registered (dev only)');
 }
 
 module.exports = { registerTestIPC, runAllTests };

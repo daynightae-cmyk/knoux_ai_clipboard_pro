@@ -103,7 +103,8 @@ async function runAI(action, text, options = {}) {
   }
 }
 
-function deriveKey(password = 'knoux-local-vault') {
+function deriveKey(password) {
+  if (!password) throw new Error('Vault password is required — never use a hardcoded default.');
   return crypto.createHash('sha256').update(String(password)).digest();
 }
 
