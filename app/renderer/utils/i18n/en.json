@@ -25,7 +25,9 @@
       "statusSecureEnvironment": "Secure Environment",
       "statusLocalVaultActive": "Local Vault Active",
       "productTag": "A Knoux Product",
-      "version": "v1.0.0"
+      "version": "v1.0.0",
+      "aiReadyBadge": "Ready",
+      "toggleInspectorTitle": "Toggle system metrics panel"
     },
     "topbar": {
       "searchPlaceholder": "Search clip history, code snippets, secure vaults (Ctrl+K)...",
@@ -37,7 +39,7 @@
       "openSettings": "Open Preferences",
       "themeTitle": "Theme",
       "aiGuarded": "AI Provider Guarded",
-      "systemCore": "KNOUX_SYSTEM_CORE // honest status",
+      "systemCore": "KNOUX_SYSTEM_CORE",
       "pageTitles": {
         "overview": "Workspace Overview",
         "clipboard": "Clipboard Hub",
@@ -62,7 +64,71 @@
     "recentClipsTitle": "Recent Clipboard Clips",
     "recentActivityTitle": "Recent AI-Processed Actions",
     "emptyState": "Your clipboard is currently clean",
-    "emptyDescription": "Copy any text or code on your system to register records."
+    "emptyDescription": "Copy any text or code on your system to register records.",
+    "seeCompleteHub": "See complete hub",
+    "timelineLog": "Timeline Log",
+    "metrics": {
+      "activeHistory": "Active History",
+      "pinnedSnippets": "Pinned Snippets",
+      "aiEnhancements": "AI Enhancements",
+      "guardedItems": "Guarded Items",
+      "productivityBoost": "Productivity Boost"
+    },
+    "quickActions": {
+      "formatCode": {
+        "title": "Format as Code",
+        "desc": "Wraps and formats the latest text as a clean executable TypeScript snippet.",
+        "button": "Format Clip"
+      },
+      "extractText": {
+        "title": "Extract Text",
+        "desc": "Opens the real barcode scanner. OCR text extraction is not claimed in this build.",
+        "button": "Open Scanner"
+      },
+      "secureNote": {
+        "title": "Secure Note",
+        "desc": "Stores a local privacy-guarded note and marks it for sensitive-content review.",
+        "button": "Commit Secret"
+      }
+    },
+    "health": {
+      "title": "System Service Health",
+      "diagnostics": "Diagnostics",
+      "scanning": "Scanning...",
+      "healthy": "All on-device Knoux processes checked out healthy.",
+      "aiEngine": {
+        "name": "AI Engine",
+        "desc": "OpenRouter local/cloud inference interface"
+      },
+      "clipboardMonitor": {
+        "name": "Clipboard Monitor",
+        "desc": "Electron monitor guarded; web runtime uses manual import"
+      },
+      "localStorage": {
+        "name": "Local Storage",
+        "desc": "Renderer localStorage plus guarded Electron IPC where available"
+      }
+    },
+    "storage": {
+      "title": "Storage Health",
+      "localActive": "Local Active",
+      "cacheSize": "Local Cache Size:",
+      "capacityUsed": "% Capacity used",
+      "localStore": "Local renderer store",
+      "maintenanceSuccess": "Maintenance Success",
+      "maintenanceNote": "Local renderer store compacted. No database vacuum is claimed for the web runtime.",
+      "runMaintenance": "Run Maintenance",
+      "optimizing": "Optimizing & Vacuuming..."
+    },
+    "privacy": {
+      "title": "Your privacy is non-negotiable",
+      "desc": "Knoux never streams clipboard logs or keystrokes to external trackers. AI requests are strictly anonymized."
+    },
+    "copy": "Copy",
+    "ai": "AI",
+    "copyItemTitle": "Copy item again",
+    "sendToAiTitle": "Send to Knoux AI",
+    "sourceLabel": "• Source:"
   },
   "clipboard": {
     "title": "Clipboard History",
@@ -208,7 +274,10 @@
       "status": "Web Build Ready",
       "vercel": "Vercel",
       "electron": "Electron",
-      "fallback": "Fallback"
+      "fallback": "Fallback",
+      "vercelDesc": "uses web-only renderer build and /api/ai/[action].",
+      "electronDesc": "uses preload-safe IPC channels and OpenRouter helper.",
+      "fallbackDesc": "explicit local deterministic result, never fake live success."
     },
     "cards": {
       "actionAvailable": "Action available",
@@ -217,14 +286,78 @@
       "active": "Active",
       "planned": "Planned",
       "missing": "Missing",
-      "disabled": "Disabled"
-    }
+      "disabled": "Disabled",
+      "on": "On",
+      "standby": "Standby",
+      "internal": "internal"
+    },
+    "scores": {
+      "aiCore": "AI Core",
+      "aiCoreNote": "Live API + Electron helper + fallback",
+      "storagePath": "Storage Path",
+      "storagePathNote": "Memory adapter ready; SQLite hard persistence next",
+      "experienceLayer": "Experience Layer",
+      "experienceLayerNote": "Clear status instead of placeholder success"
+    },
+    "services": "services"
   },
   "studio": {
     "heroTitle": "KNOUX Developer Studio",
     "heroDescription": "Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.",
     "statusLabel": "Developer Control Deck",
     "reportTitle": "Developer handoff exported",
+    "metrics": {
+      "readiness": "Readiness",
+      "tools": "Tools",
+      "workers": "Workers",
+      "aiRoute": "AI Route"
+    },
+    "utilsSection": {
+      "badge": "19 Developer Utilities",
+      "heading": "Every developer card has three specific actions.",
+      "desc": "Run the local utility, load a valid service-specific sample, or copy the last output. Worker-backed tools reduce main-thread blocking for large inputs.",
+      "lastStatus": "Last status:"
+    },
+    "toolBench": {
+      "title": "Active Tool Bench",
+      "output": "Output",
+      "run": "Run",
+      "running": "Running",
+      "sample": "Sample",
+      "copy": "Copy"
+    },
+    "handoff": {
+      "title": "Handoff Report",
+      "download": "Download JSON",
+      "copy": "Copy JSON"
+    },
+    "aiRoute": {
+      "title": "AI Route Diagnostics",
+      "checkNow": "Check Now",
+      "provider": "Provider",
+      "model": "Model",
+      "status": "Status"
+    },
+    "matrix": {
+      "title": "Service Reality Matrix",
+      "runtime": "Runtime:",
+      "config": "Config:",
+      "implemented": "Implemented:",
+      "handler": "Handler:",
+      "fallback": "Fallback:",
+      "yes": "Yes",
+      "no": "No",
+      "required": "Required",
+      "none": "None"
+    },
+    "commands": {
+      "title": "Build & Packaging Commands"
+    },
+    "liveReport": "Live Report",
+    "active": "Active",
+    "ready": "Ready",
+    "guarded": "Guarded",
+    "workerBadge": "Worker",
     "jsonFormatter": {
       "title": "JSON Formatter",
       "description": "Paste your JSON data to format it beautifully.",
@@ -261,6 +394,9 @@
     "gamified": "Gamified Experience",
     "analytics": "Analytics Dashboard",
     "predictions": "AI Predictions",
+    "errors": {
+      "unexpected": "An unexpected network anomaly has halted the AI request."
+    },
     "status": {
       "label": "AI status",
       "guard": "Sensitive content detected. AI actions are guarded."
@@ -324,6 +460,89 @@
     }
   },
   "security": {
+    "hero": {
+      "badge": "Advanced Security Dashboard",
+      "title": "Security & Vault Command Center",
+      "desc": "Local scanner, redaction engine, AI upload guard, vault visibility window, high-contrast audit logs, and explicit Electron IPC boundaries. Web storage is local-first, not advertised as encrypted."
+    },
+    "metrics": {
+      "score": "Score",
+      "risk": "Risk",
+      "records": "Records",
+      "classes": "Classes"
+    },
+    "risk": {
+      "high": "High",
+      "medium": "Medium",
+      "clean": "Clean"
+    },
+    "toggles": {
+      "title": "Interactive Guard Toggles",
+      "guarded": "Guarded",
+      "active": "Active",
+      "off": "Off"
+    },
+    "detection": {
+      "title": "Detection Controls"
+    },
+    "storage": {
+      "title": "Runtime Storage Metrics",
+      "webLayer": "Web layer:",
+      "webValue": "local-first storage",
+      "electronLayer": "Electron layer:",
+      "electronValue": "IPC guarded bridge",
+      "secureClips": "Secure clips loaded:",
+      "aiUploadGuard": "AI upload guard:",
+      "active": "Active",
+      "off": "Off"
+    },
+    "liveClasses": {
+      "title": "Live Guard Classes"
+    },
+    "credentialShield": {
+      "title": "Credential Shield Scanner",
+      "desc": "Run a deterministic local scan, generate a redacted preview, then copy only safe output.",
+      "runScan": "Run Guard Scan",
+      "scanning": "Scanning...",
+      "redactPreview": "Redact Preview",
+      "copyRedacted": "Copy Redacted",
+      "activeBuffer": "Active secure buffer",
+      "redactedOutput": "Redacted safe output"
+    },
+    "actionCards": {
+      "aiFirewall": "AI Upload Firewall",
+      "aiFirewallDesc": "Risk threshold {threshold}%. {status}",
+      "aiFirewallActive": "Guard is active.",
+      "aiFirewallOff": "Guard is disabled.",
+      "redactionEngine": "Local Redaction Engine",
+      "redactionEngineDesc": "Strictness {strictness}%. Output is generated locally.",
+      "auditExport": "Audit Export",
+      "auditExportDesc": "Retention keeps last {retention} security events.",
+      "checkAiGuard": "Check AI guard",
+      "buildRedaction": "Build redaction",
+      "exportAudit": "Export audit"
+    },
+    "vault": {
+      "title": "Secure Password-Protected Vault",
+      "desc": "This is a guarded temporary visibility window. Electron encryption/decryption requires a trusted IPC bridge; web storage remains local-first only.",
+      "passphrasePlaceholder": "Enter 6+ character passphrase...",
+      "openVault": "Open Vault",
+      "tempWindow": "TEMPORARY VISIBILITY WINDOW",
+      "lock": "Lock"
+    },
+    "audit": {
+      "title": "Security Operations Audit Trail",
+      "filterAll": "all",
+      "exportLog": "Export Security Log JSON",
+      "copyLatest": "Copy Latest Audit",
+      "clearLogs": "Clear Session Logs",
+      "noEntries": "No audit entries match this filter."
+    },
+    "productionNote": {
+      "title": "Production Security Note",
+      "desc": "Client-side secrets are never required. OpenRouter keys belong in Vercel/Electron environment variables only. Local web storage is not described as encrypted.",
+      "badge": "Hardened Local Guard"
+    },
     "scanner": {
       "title": "Sensitive Data Scanner",
       "description": "Scan text for potential secrets like API keys, private keys, or credit card numbers.",
