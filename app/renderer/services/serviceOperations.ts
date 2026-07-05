@@ -109,9 +109,21 @@ export async function runServiceOperation(service: ProductionService, input: str
 }
 
 export function serviceActionLabels(service: ProductionService) {
-  if (!service.implemented || service.status === "Planned" || service.status === "Disabled") return ["Show Status"];
-  if (service.category === "AI" || service.requiresConfig) return ["Run AI", "Copy Payload"];
-  if (service.category === "Packaging") return ["Check", "Copy Command"];
-  if (service.category === "Barcode") return ["Open/Test", "Copy Sample"];
-  return ["Run", "Copy Result"];
+  if (!service.implemented || service.status === "Planned" || service.status === "Disabled") return ["Show status", "View fallback", "Copy reason"];
+  if (service.id.includes("clipboard-import")) return ["Import now", "Use paste sample", "Copy result"];
+  if (service.id.includes("deduplication")) return ["Find duplicates", "Load duplicate sample", "Copy report"];
+  if (service.id.includes("backup") || service.id.includes("export")) return ["Generate file", "Load export sample", "Copy manifest"];
+  if (service.id.includes("search")) return ["Search vault", "Load search text", "Copy matches"];
+  if (service.id.includes("summary")) return ["Build summary", "Load day sample", "Copy summary"];
+  if (service.id.includes("cleaner")) return ["Clean text", "Load messy sample", "Copy cleaned"];
+  if (service.id.includes("link")) return ["Extract links", "Load URL sample", "Copy domains"];
+  if (service.id.includes("code") || service.id.includes("api")) return ["Analyze code", "Load code sample", "Copy output"];
+  if (service.id.includes("entity") || service.id.includes("address")) return ["Extract entities", "Load contact sample", "Copy entities"];
+  if (service.id.includes("reply")) return ["Draft reply", "Load customer case", "Copy reply"];
+  if (service.category === "AI" || service.requiresConfig) return ["Run AI", "Load AI sample", "Copy payload"];
+  if (service.category === "Security") return ["Scan risk", "Load secret sample", "Copy audit"];
+  if (service.category === "Barcode") return ["Open scanner", "Load QR sample", "Copy barcode"];
+  if (service.category === "Developer") return ["Run tool", "Load dev sample", "Copy handoff"];
+  if (service.category === "Packaging") return ["Check package", "Load command", "Copy command"];
+  return ["Run service", "Use sample", "Copy result"];
 }
