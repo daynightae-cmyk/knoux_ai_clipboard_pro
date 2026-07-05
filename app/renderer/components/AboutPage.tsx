@@ -33,92 +33,47 @@ export default function AboutPage() {
 
   return (
     <div id="about-workspace-container" className="p-6 space-y-8 max-w-4xl mx-auto select-none">
-      {/* 1. Main Logo and Brand layout exactly matching Sadek's requirements */}
       <div className="text-center space-y-5">
-        {/* Large Master Medallion Logo */}
         <div className="relative inline-flex items-center justify-center">
-          <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.1, 0.2] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 -m-8 bg-knoux-purple/15 rounded-full blur-2xl"
-          />
+          <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.1, 0.2] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute inset-0 -m-8 bg-knoux-purple/15 rounded-full blur-2xl" />
           <div className="w-40 h-40 rounded-full border-2 border-knoux-purple/10 bg-white p-1 shadow-knoux-glow-lg overflow-hidden knoux-float">
-            <img
-              src={KNOUX_BRAND.logoUrl}
-              alt="Knoux AI Clipboard Pro Master Seal"
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-cover rounded-full"
-            />
+            <img src={KNOUX_BRAND.logoUrl} alt="Knoux AI Clipboard Pro Master Seal" referrerPolicy="no-referrer" className="w-full h-full object-cover rounded-full" />
           </div>
         </div>
 
-        {/* Brand details */}
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-knoux-dark-text tracking-tight">
-            Knoux <span className="text-knoux-purple">AI Clipboard Pro</span>
-          </h1>
-          <p className="text-sm font-semibold text-knoux-muted-text uppercase tracking-widest font-mono">
-            Your clipboard. Upgraded by AI.
-          </p>
-          <span className="inline-block text-[10px] text-knoux-purple bg-knoux-purple/5 border border-knoux-purple/10 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
-            Stable Release v1.0.0
-          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-knoux-dark-text tracking-tight">Knoux <span className="text-knoux-purple">AI Clipboard Pro</span></h1>
+          <p className="text-sm font-semibold text-knoux-muted-text uppercase tracking-widest font-mono">Your clipboard. Upgraded by AI.</p>
+          <span className="inline-block text-[10px] text-knoux-purple bg-knoux-purple/5 border border-knoux-purple/10 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Stable Release v1.0.0</span>
         </div>
       </div>
 
       <hr className="border-knoux-purple/5 max-w-xl mx-auto" />
 
-      {/* 2. Developer & Brand credits */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-        {/* Developer Credit & Store card */}
-        <div className="p-6 rounded-3xl border border-knoux-purple/5 bg-gradient-to-tr from-white to-knoux-lavender-white shadow-sm space-y-4">
-          <div className="space-y-1">
-            <span className="text-[10px] text-knoux-purple font-extrabold uppercase tracking-wider block font-mono">Creative Director</span>
-            <h3 className="text-base font-bold text-knoux-dark-text tracking-tight">
-              Eng. Sadek Elgazar (Knoux)
-            </h3>
+        <div className="relative overflow-hidden p-6 rounded-3xl border border-[#c17ceb]/30 bg-[radial-gradient(circle_at_12%_0%,rgba(255,255,255,.24),transparent_30%),linear-gradient(135deg,#1c0b4e_0%,#381584_42%,#8226ee_100%)] shadow-knoux-glow-lg space-y-4 text-white">
+          <div className="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-white/20 blur-2xl" />
+          <div className="absolute -left-10 bottom-0 w-32 h-32 rounded-full bg-[#c17ceb]/25 blur-2xl" />
+          <div className="relative space-y-1">
+            <span className="text-[10px] text-[#d8b8ec] font-extrabold uppercase tracking-wider block font-mono">Creative Director</span>
+            <h3 className="text-lg font-black tracking-tight text-white">Eng. Sadek Elgazar (Knoux)</h3>
           </div>
-          <p className="text-xs text-knoux-muted-text leading-relaxed">
-            Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.
-          </p>
-
-          <div className="pt-2 border-t border-knoux-purple/5 flex items-center justify-between text-xs">
-            <span className="text-knoux-muted-text">Official Knoux Store:</span>
-            <a
-              href="https://knoux.store"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-extrabold text-knoux-purple hover:underline"
-            >
-              https://knoux.store
-            </a>
+          <p className="relative text-sm text-[#f3e6fb] leading-relaxed">Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.</p>
+          <div className="relative pt-3 border-t border-white/20 flex items-center justify-between text-xs">
+            <span className="text-[#cfb4ea]">Official Knoux Store:</span>
+            <a href="https://knoux.store" target="_blank" rel="noopener noreferrer" className="font-black text-white hover:text-[#d8b8ec] hover:underline">https://knoux.store</a>
           </div>
         </div>
 
-        {/* Contacts Grid links */}
-        <div className="p-6 rounded-3xl border border-knoux-purple/5 bg-white shadow-sm space-y-4">
-          <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider">
-            Direct Developer Connections
-          </h3>
-
+        <div className="p-6 rounded-3xl border border-knoux-purple/10 bg-[color:var(--knoux-card-elevated)] shadow-knoux-glow space-y-4">
+          <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider">Direct Developer Connections</h3>
           <div className="space-y-2">
             {contactLinks.map((link) => {
               const Icon = link.icon;
               return (
-                <a
-                  key={link.label}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center justify-between p-2 rounded-xl border border-knoux-purple/5 bg-[#FCFAFF] transition-all text-xs ${link.color}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-3.5 h-3.5" />
-                    <span className="font-semibold text-knoux-dark-text">{link.label}</span>
-                  </div>
-                  <span className="font-mono text-knoux-muted-text text-[11px]">
-                    {link.value}
-                  </span>
+                <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer" className={`flex items-center justify-between p-2 rounded-xl border border-knoux-purple/5 bg-[#FCFAFF] transition-all text-xs ${link.color}`}>
+                  <div className="flex items-center gap-2"><Icon className="w-3.5 h-3.5" /><span className="font-semibold text-knoux-dark-text">{link.label}</span></div>
+                  <span className="font-mono text-knoux-muted-text text-[11px]">{link.value}</span>
                 </a>
               );
             })}
@@ -126,39 +81,23 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* 3. High quality core features info cards */}
       <div className="space-y-3 pt-4">
-        <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider text-center">
-          Platform Engineering Philosophy
-        </h3>
-
+        <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider text-center">Platform Engineering Philosophy</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {features.map((feat, i) => {
             const Icon = feat.icon;
             return (
-              <div
-                key={i}
-                className="p-4 rounded-2xl border border-knoux-purple/5 bg-white shadow-sm text-center space-y-2"
-              >
-                <div className="w-8 h-8 rounded-xl bg-knoux-purple/5 text-knoux-purple flex items-center justify-center mx-auto">
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="text-xs font-bold text-knoux-dark-text block">
-                  {feat.title}
-                </span>
-                <p className="text-[11px] text-knoux-muted-text leading-relaxed">
-                  {feat.desc}
-                </p>
+              <div key={i} className="knoux-premium-card p-4 text-center space-y-2">
+                <div className="w-8 h-8 rounded-xl bg-knoux-purple/5 text-knoux-purple flex items-center justify-center mx-auto"><Icon className="w-4 h-4" /></div>
+                <span className="text-xs font-bold text-knoux-dark-text block">{feat.title}</span>
+                <p className="text-[11px] text-knoux-muted-text leading-relaxed">{feat.desc}</p>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Footer legal credits */}
-      <div className="text-center text-[10px] text-knoux-muted-text/50 font-mono py-4">
-        © 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.
-      </div>
+      <div className="text-center text-[10px] text-knoux-muted-text/50 font-mono py-4">© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.</div>
     </div>
   );
 }
