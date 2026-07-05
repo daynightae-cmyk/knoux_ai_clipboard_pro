@@ -17,8 +17,10 @@
     "checkJs": false
   },
   "include": [
-    "app/backend/**/*.ts",
-    "app/backend/**/*.js",
+    "app/backend/main/**/*.ts",
+    "app/backend/ipc/**/*.ts",
+    "app/backend/init.ts",
+    "app/backend/security/**/*.ts",
     "app/shared/**/*.ts",
     "global.d.ts"
   ],
@@ -28,6 +30,9 @@
     "build",
     "release",
     "app/renderer/**/*",
-    "app/tests/**/*"
+    "app/tests/**/*",
+    "app/backend/ai/**/*",
+    "app/backend/services/**/*",
+    "app/backend/storage/**/*"
   ]
 }

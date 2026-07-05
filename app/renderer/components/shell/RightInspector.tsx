@@ -69,16 +69,16 @@ export default function RightInspector({
                 System Diagnostics
               </span>
 
-              {/* SQLite Health */}
+              {/* Local storage health */}
               <div className="p-4 rounded-2xl border border-knoux-purple/5 bg-white shadow-sm space-y-2">
                 <div className="flex items-center gap-2 text-xs font-bold text-knoux-dark-text">
                   <Database className="w-3.5 h-3.5 text-knoux-purple" />
-                  <span>SQLite Core Vault</span>
+                  <span>Local Store</span>
                 </div>
                 <div className="space-y-1.5 text-[11px] leading-normal font-mono">
                   <div className="flex justify-between">
                     <span className="text-knoux-muted-text">Status:</span>
-                    <span className="text-emerald-600 font-bold">ONLINE</span>
+                    <span className="text-emerald-600 font-bold">LOCAL</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-knoux-muted-text">Allocated Space:</span>
@@ -120,7 +120,7 @@ export default function RightInspector({
                 <div className="space-y-1.5 text-[11px] leading-normal font-mono">
                   <div className="flex justify-between">
                     <span className="text-knoux-muted-text">Protocol:</span>
-                    <span className="text-knoux-dark-text font-bold">AES-256-GCM</span>
+                    <span className="text-knoux-dark-text font-bold">Electron IPC scoped</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-knoux-muted-text">IPC Isolation:</span>
@@ -129,8 +129,8 @@ export default function RightInspector({
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-knoux-muted-text">Secure Sync:</span>
-                    <span className="text-knoux-dark-text font-bold">Zero-Knowledge</span>
+                    <span className="text-knoux-muted-text">Cloud Sync:</span>
+                    <span className="text-knoux-dark-text font-bold">Disabled</span>
                   </div>
                 </div>
               </div>
@@ -144,7 +144,7 @@ export default function RightInspector({
               <span>Systems Secured</span>
             </div>
             <p className="text-[10px] text-knoux-muted-text/60 leading-normal">
-              Knoux telemetry updates dynamically over SQLite stream injection. Created by Sadek.
+              Knoux telemetry reflects local renderer state and guarded Electron capabilities. Created by Sadek.
             </p>
           </div>
         </motion.aside>

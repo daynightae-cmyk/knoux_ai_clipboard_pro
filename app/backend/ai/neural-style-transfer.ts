@@ -450,3 +450,4 @@ export class NeuralStyleTransfer {
     console.log(`✅ Advanced style learning complete: ${learnedStyle.learningConfidence}% confidence`);
     return learnedStyle;
   }
+}

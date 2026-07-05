@@ -81,9 +81,9 @@ export default function OverviewDashboard({
   // System Diagnostics / Health check state
   const [isScanningHealth, setIsScanningHealth] = useState<boolean>(false);
   const [healthScores, setHealthScores] = useState({
-    aiEngine: "ACTIVE",
-    clipboardMonitor: "MONITORING",
-    localStorage: "ENCRYPTED",
+    aiEngine: "Ready",
+    clipboardMonitor: "Active",
+    localStorage: "Active",
   });
   const [diagnosticsRun, setDiagnosticsRun] = useState<boolean>(false);
 
@@ -93,12 +93,12 @@ export default function OverviewDashboard({
     { id: "act-2", title: "Compiled TypeScript snippet logic", type: "Code Optimization", time: "15m ago", iconName: "code", color: "text-blue-500 bg-blue-50 border-blue-100" },
     { id: "act-3", title: "Translated German README text block", type: "Translation", time: "42m ago", iconName: "globe", color: "text-purple-500 bg-purple-50 border-purple-100" },
     { id: "act-4", title: "Indexed metadata schema parameters", type: "Data Extraction", time: "1h ago", iconName: "cpu", color: "text-indigo-500 bg-indigo-50 border-indigo-100" },
-    { id: "act-5", title: "Secured SQLite local credential string", type: "Security Masking", time: "2h ago", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
+    { id: "act-5", title: "Flagged local credential-like string for privacy review", type: "Security Masking", time: "2h ago", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
   ]);
 
   // --- NEW WORKSPACE HANDLERS ---
 
-  // Maintenance SQLite Optimizer
+  // Maintenance local-store optimizer
   const handleRunMaintenance = () => {
     setIsMaintenanceRunning(true);
     setMaintenanceSuccess(false);
@@ -120,9 +120,9 @@ export default function OverviewDashboard({
       setIsScanningHealth(false);
       setDiagnosticsRun(true);
       setHealthScores({
-        aiEngine: "ACTIVE",
-        clipboardMonitor: "MONITORING",
-        localStorage: "ENCRYPTED",
+        aiEngine: "Ready",
+        clipboardMonitor: "Active",
+        localStorage: "Active",
       });
       setTimeout(() => setDiagnosticsRun(false), 3000);
     }, 1200);
@@ -153,7 +153,7 @@ export default function OverviewDashboard({
 
       const newActivity: ActivityItem = {
         id: `act-${Date.now()}`,
-        title: "Extracted high-precision text block from simulated image scan",
+        title: "Prepared image text extraction workflow for the Barcode Scanner page",
         type: "Text Extraction",
         time: "Just now",
         iconName: "cpu",
@@ -161,12 +161,12 @@ export default function OverviewDashboard({
       };
       setActivities((prev) => [newActivity, ...prev].slice(0, 5));
     } else if (actionType === "secure") {
-      const text = "🔒 SECURED: Knoux Secure Note containing sensitive local credentials, key sequence: [AES-256-VAULT-TOKEN]";
+      const text = "PRIVACY-GUARDED: Knoux local note containing sensitive credential-like text. Keep Privacy Enforcer enabled before reuse.";
       onAddNewItem(text, "note", "Secure Vault");
 
       const newActivity: ActivityItem = {
         id: `act-${Date.now()}`,
-        title: "Saved highly sensitive encrypted note directly in SQLite database",
+        title: "Saved privacy-guarded note to local history for review",
         type: "Security Masking",
         time: "Just now",
         iconName: "lock",
@@ -197,7 +197,7 @@ export default function OverviewDashboard({
             Elevate Your Flow with <span className="text-knoux-purple">Knoux AI</span>
           </h1>
           <p className="text-sm text-knoux-muted-text/90 leading-relaxed">
-            Your clipboard history is now encrypted locally and augmented by OpenRouter AI. Summarize, rewrite, translate, and secure any copied snippet instantly.
+            Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
             <button
@@ -235,7 +235,7 @@ export default function OverviewDashboard({
           { label: "Active History", value: totalClips, icon: Clipboard, color: "text-knoux-purple bg-knoux-purple/5 border-knoux-purple/10" },
           { label: "Pinned Snippets", value: pinnedClips, icon: Pin, color: "text-knoux-neon bg-knoux-neon/5 border-knoux-neon/10" },
           { label: "AI Enhancements", value: aiActions, icon: Sparkles, color: "text-amber-600 bg-amber-50 border-amber-100" },
-          { label: "Encrypted Items", value: secureClips, icon: Lock, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
+          { label: "Guarded Items", value: secureClips, icon: Lock, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
           { label: "Productivity Boost", value: `${Math.round(timeSavedMinutes)}m`, icon: TrendingUp, color: "text-indigo-600 bg-indigo-50 border-indigo-100", full: true },
         ].map((stat, i) => {
           const Icon = stat.icon;
@@ -290,7 +290,7 @@ export default function OverviewDashboard({
             },
             {
               title: "Secure Note",
-              desc: "Encrypts and stores a protected on-device note directly in the SQLite database.",
+              desc: "Stores a local privacy-guarded note and marks it for sensitive-content review.",
               action: () => handleQuickAction("secure"),
               icon: ShieldAlert,
               color: "text-emerald-600 bg-emerald-50 border-emerald-100 hover:border-emerald-300",
@@ -456,7 +456,7 @@ export default function OverviewDashboard({
 
         </div>
 
-        {/* Right column: System Telemetry, Health, and SQLite Storage */}
+        {/* Right column: System Telemetry, Health, and Local Storage */}
         <div className="space-y-6">
           
           {/* System Service Health Card */}
@@ -491,7 +491,7 @@ export default function OverviewDashboard({
                 {
                   name: "AI Engine",
                   desc: "OpenRouter local/cloud inference interface",
-                  status: isScanningHealth ? "SCANNING" : healthScores.aiEngine,
+                  status: isScanningHealth ? "Guarded" : healthScores.aiEngine,
                   pillStatus: (isScanningHealth ? "warning" : "brand") as "warning" | "brand",
                   icon: Sparkles,
                   colorClass: "bg-knoux-purple text-white border-knoux-purple/10",
@@ -499,15 +499,15 @@ export default function OverviewDashboard({
                 {
                   name: "Clipboard Monitor",
                   desc: "Auto background monitoring daemon",
-                  status: isScanningHealth ? "SCANNING" : healthScores.clipboardMonitor,
+                  status: isScanningHealth ? "Guarded" : healthScores.clipboardMonitor,
                   pillStatus: (isScanningHealth ? "warning" : "info") as "warning" | "info",
                   icon: Clipboard,
                   colorClass: "bg-indigo-600 text-white border-indigo-100",
                 },
                 {
                   name: "Local Storage",
-                  desc: "AES-256 encrypted SQLite data vault",
-                  status: isScanningHealth ? "SCANNING" : healthScores.localStorage,
+                  desc: "Renderer localStorage plus guarded Electron IPC where available",
+                  status: isScanningHealth ? "Guarded" : healthScores.localStorage,
                   pillStatus: (isScanningHealth ? "warning" : "success") as "warning" | "success",
                   icon: Database,
                   colorClass: "bg-emerald-600 text-white border-emerald-100",
@@ -539,14 +539,14 @@ export default function OverviewDashboard({
                 <Database className="w-4 h-4 text-knoux-purple" /> Storage Health
               </h3>
               <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
-                SQLite Active
+                Local Active
               </span>
             </div>
 
             <div className="space-y-3">
               <div className="p-3 bg-gradient-to-tr from-knoux-lavender-white to-white border border-knoux-purple/5 rounded-xl space-y-2">
                 <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-semibold text-knoux-dark-text">SQLite Cache Size:</span>
+                  <span className="font-semibold text-knoux-dark-text">Local Cache Size:</span>
                   <span className="font-mono text-knoux-purple font-extrabold">{dbSize.toFixed(2)} MB / 10.0 MB</span>
                 </div>
                 
@@ -560,7 +560,7 @@ export default function OverviewDashboard({
                 </div>
                 <div className="flex justify-between text-[10px] text-knoux-muted-text">
                   <span>{dbUsagePct.toFixed(1)}% Capacity used</span>
-                  <span>Local SQLite DB</span>
+                  <span>Local renderer store</span>
                 </div>
               </div>
 

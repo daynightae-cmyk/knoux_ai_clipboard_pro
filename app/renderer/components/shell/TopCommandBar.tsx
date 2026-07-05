@@ -5,7 +5,8 @@
 
 import { NavTab } from "../../types";
 import { useState, useEffect } from "react";
-import { Search, RefreshCw, Lock, Unlock, Sparkles, Settings, Activity, Clock } from "lucide-react";
+import { Search, RefreshCw, Lock, Unlock, Sparkles, Settings, Activity, Clock, Sun, Moon, Monitor } from "lucide-react";
+import { AppSettings } from "../../types";
 
 interface TopCommandBarProps {
   activeTab: NavTab;
@@ -18,6 +19,8 @@ interface TopCommandBarProps {
   isRefreshing: boolean;
   onToggleInspector?: () => void;
   isInspectorOpen?: boolean;
+  themeMode?: AppSettings["themeMode"];
+  setThemeMode?: (themeMode: AppSettings["themeMode"]) => void;
 }
 
 export default function TopCommandBar({
@@ -31,6 +34,8 @@ export default function TopCommandBar({
   isRefreshing,
   onToggleInspector,
   isInspectorOpen = false,
+  themeMode = "system",
+  setThemeMode,
 }: TopCommandBarProps) {
   const [currentTime, setCurrentTime] = useState("");
 
@@ -74,6 +79,13 @@ export default function TopCommandBar({
       setActiveTab("search");
     }
   };
+
+  const cycleTheme = () => {
+    if (!setThemeMode) return;
+    setThemeMode(themeMode === "day" ? "night" : themeMode === "night" ? "system" : "day");
+  };
+
+  const ThemeIcon = themeMode === "day" ? Sun : themeMode === "night" ? Moon : Monitor;
 
   return (
     <header className="h-16 border-b border-knoux-purple/10 bg-white/70 backdrop-blur-md px-6 flex items-center justify-between gap-4 select-none sticky top-0 z-40">
@@ -121,8 +133,16 @@ export default function TopCommandBar({
         {/* Server Health Status Pill */}
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-knoux-purple/5 bg-white/40 text-[11px] font-medium text-emerald-600">
           <Activity className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
-          <span className="hidden sm:inline">AI Node Active</span>
+          <span className="hidden sm:inline">AI Node Guarded</span>
         </div>
+
+        <button
+          onClick={cycleTheme}
+          title={`Theme: ${themeMode}`}
+          className="w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer"
+        >
+          <ThemeIcon className="w-4 h-4" />
+        </button>
 
         {/* Refresh Action Trigger */}
         <button

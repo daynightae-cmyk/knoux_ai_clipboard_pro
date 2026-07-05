@@ -1,13 +1,13 @@
-import { initializeEnhancedHandlers } from "./enhanced-handlers";
+import { initializeEnhancedHandlers } from "../ipc/enhanced-handlers";
 import {
   registerRealClipboardHandlers,
   registerRealAIHandlers,
   registerRealStorageHandlers,
   initializeRealServices,
-} from "./real-handlers";
-import { setupCreativeStudioIPC } from "./creative-handlers";
+} from "../ipc/real-handlers";
+import { setupCreativeStudioIPC } from "../ipc/creative-handlers";
 import { ipcMain } from "electron";
-import { secureHandler } from "../security/ipc-guard";
+import { secureHandler } from "./ipc-guard";
 import { createLogger } from "../../shared/logger";
 
 const logger = createLogger({ module: "ipc-registry" });

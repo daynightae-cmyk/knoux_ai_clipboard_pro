@@ -1,6 +1,4 @@
 import { ipcMain, IpcMainInvokeEvent } from "electron";
-import { permissionGuard } from "./permission-guard";
-import { securityManager } from "./security-manager";
 import { createLogger } from "../../shared/logger";
 
 const logger = createLogger({ module: "ipc-guard" });

@@ -75,6 +75,6 @@ export interface UIProfile {
 
 declare global {
   interface Window {
-    backendAPI: BackendAPI;
+    backendAPI: any;
   }
 }

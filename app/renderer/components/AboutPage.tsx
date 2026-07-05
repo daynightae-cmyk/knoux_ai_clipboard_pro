@@ -27,7 +27,7 @@ export default function AboutPage() {
 
   const features = [
     { title: "Circular UI Design Language", desc: "Crafted strictly following the circular medallion design system to match Sadek's approved visual guides.", icon: ShieldCheck },
-    { title: "Privacy local-first sandboxing", desc: "No clipboard logs are stored or compiled on external cloud engines. Full AES-256 local database.", icon: Zap },
+    { title: "Privacy local-first sandboxing", desc: "Clipboard records stay local in the renderer unless you explicitly use a guarded AI action. Electron vault encryption is scoped to its IPC bridge.", icon: Zap },
     { title: "Server-side OpenRouter proxying", desc: "Harnesses server-side OpenRouter models to format, analyze, translate, and explain clipboard logs safely.", icon: Sparkles },
   ];
 
@@ -79,7 +79,7 @@ export default function AboutPage() {
             </h3>
           </div>
           <p className="text-xs text-knoux-muted-text leading-relaxed">
-            Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with zero-knowledge encryption protocols.
+            Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.
           </p>
 
           <div className="pt-2 border-t border-knoux-purple/5 flex items-center justify-between text-xs">
