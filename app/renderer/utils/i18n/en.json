@@ -126,6 +126,7 @@
   },
   "settings": {
     "title": "Preferences",
+    "productionBadge": "KNOUX Production Settings",
     "heroTitle": "Operational controls for AI, storage, security, and deployment readiness.",
     "heroSubtitle": "Language / اللغة",
     "appearance": "Appearance",
@@ -157,10 +158,40 @@
     "backupImported": "Imported {count} records.",
     "invalidBackup": "Invalid KNOUX backup file.",
     "confirmClearHint": "Press Clear History again to confirm.",
-    "providerNotChecked": "provider_not_checked",
-    "providerServerOnly": "server-route-only",
+    "providerNotChecked": "Provider Not Checked",
+    "providerServerOnly": "Server Route Only",
     "cloudGuarded": "Cloud Sync: Guarded",
-    "guardedNotice": "Cloud sync is disabled until a real sync backend exists."
+    "guardedNotice": "Cloud sync is disabled until a real sync backend exists.",
+    "backupNotice": "Provider runtime configuration is excluded from backup exports.",
+    "metrics": {
+      "readiness": "Readiness",
+      "clips": "Clips",
+      "aiItems": "AI Items",
+      "secure": "Secure"
+    },
+    "nav": {
+      "overview": "Overview",
+      "aiProvider": "AI Provider",
+      "clipboard": "Clipboard",
+      "barcode": "Barcode",
+      "security": "Security",
+      "labs": "Labs"
+    },
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "densities": {
+      "compact": "Compact",
+      "comfortable": "Comfortable",
+      "spacious": "Spacious"
+    },
+    "glows": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
   },
   "labs": {
     "badge": "KNOUX Production Control Deck",
@@ -182,14 +213,47 @@
     "cards": {
       "actionAvailable": "Action available",
       "ready": "Ready",
-      "guarded": "Guarded"
+      "guarded": "Guarded",
+      "active": "Active",
+      "planned": "Planned",
+      "missing": "Missing",
+      "disabled": "Disabled"
     }
   },
   "studio": {
     "heroTitle": "KNOUX Developer Studio",
     "heroDescription": "Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.",
     "statusLabel": "Developer Control Deck",
-    "reportTitle": "Developer handoff exported"
+    "reportTitle": "Developer handoff exported",
+    "jsonFormatter": {
+      "title": "JSON Formatter",
+      "description": "Paste your JSON data to format it beautifully.",
+      "inputLabel": "Input",
+      "outputLabel": "Formatted Output",
+      "placeholder": "Paste JSON here...",
+      "format": "Format",
+      "error": "Invalid JSON format."
+    },
+    "base64": {
+      "title": "Base64 Encoder / Decoder",
+      "description": "Encode text to Base64 or decode Base64 back to text.",
+      "plainLabel": "Plain Text",
+      "base64Label": "Base64",
+      "encode": "Encode",
+      "decode": "Decode",
+      "error": "Invalid Base64 string for decoding."
+    }
+    "jwtViewer": {
+      "title": "JWT Viewer",
+      "description": "Decode and inspect JSON Web Tokens locally.",
+      "inputLabel": "JWT Token",
+      "placeholder": "Paste your JWT here...",
+      "headerLabel": "Header",
+      "payloadLabel": "Payload",
+      "signatureNotice": "Signature verification is a guarded action and requires a secret key. This tool only decodes the token.",
+      "errorInvalid": "Invalid JWT structure. It must have 3 parts separated by dots.",
+      "errorDecode": "Failed to decode or parse JWT. Check if it is a valid token."
+    }
   },
   "ai": {
     "title": "AI Features",
@@ -234,7 +298,64 @@
       "format-text": { "label": "Format Markdown", "desc": "Beautify unstructured raw text" }
     }
   },
+  "barcode": {
+    "title": "Barcode & QR Code Scanner",
+    "description": "Scan codes using your device camera, an image file, or by pasting content.",
+    "controlsTitle": "Controls",
+    "startCamera": "Start Camera",
+    "stopCamera": "Stop Camera",
+    "scanImage": "Scan Image",
+    "pasteLabel": "Or paste content to scan",
+    "pastePlaceholder": "Paste a URL to an image or barcode data",
+    "scan": "Scan",
+    "resultTitle": "Scan Result",
+    "noResult": "Start the camera or upload an image to begin scanning.",
+    "noResultShort": "No code detected.",
+    "copied": "Result copied to clipboard!",
+    "saved": "Result saved to Clipboard Hub!",
+    "error": {
+      "noCamera": "Camera not available or permission denied.",
+      "scanFailed": "Could not decode barcode from the source.",
+      "generic": "An unexpected error occurred."
+    },
+    "status": {
+      "requestingPermission": "Requesting camera permission...",
+      "scanning": "Scanning..."
+    }
+  },
+  "security": {
+    "scanner": {
+      "title": "Sensitive Data Scanner",
+      "description": "Scan text for potential secrets like API keys, private keys, or credit card numbers.",
+      "inputLabel": "Text to Scan",
+      "placeholder": "Paste text here to scan for sensitive data...",
+      "scan": "Scan Text",
+      "results": "Scan Results",
+      "noData": "No sensitive data found.",
+      "found": "Found {count} potential issue(s).",
+      "issueType": "Type",
+      "issueValue": "Matched Value",
+      "issueLocation": "Location"
+    },
+    "types": {
+      "api_key": "API Key",
+      "credit_card": "Credit Card",
+      "private_key": "Private Key",
+      "jwt": "JWT Token"
+    }
+  },
+  "export": {
+    "clips": {
+      "title": "Export Clips",
+      "description": "Export your selected clipboard items to various formats.",
+      "toMarkdown": "Export to Markdown",
+      "toPdf": "Export to PDF (Planned)",
+      "toJson": "Export to JSON"
+    }
+  },
   "common": {
+    "running": "Running...",
+    "execute": "Execute",
     "loading": "Loading...",
     "error": "Error occurred",
     "retry": "Retry",
@@ -243,6 +364,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
-    "close": "Close"
+    "close": "Close",
+    "clear": "Clear",
+    "copy": "Copy"
   }
 }

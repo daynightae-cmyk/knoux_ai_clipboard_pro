@@ -1,28 +1,31 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import i18n from '../renderer/utils/i18n';
+import en from '../renderer/utils/i18n/en.json';
+import ar from '../renderer/utils/i18n/ar.json';
 
-describe('i18n translation coverage', () => {
-  beforeEach(() => {
-    i18n.setLanguage('en');
+const getKeys = (obj: object, prefix = ''): string[] =>
+  Object.keys(obj).reduce((acc: string[], key) => {
+    const pre = prefix.length ? prefix + '.' : '';
+    if (typeof (obj as any)[key] === 'object' && (obj as any)[key] !== null) {
+      acc.push(...getKeys((obj as any)[key], pre + key));
+    } else {
+      acc.push(pre + key);
+    }
+    return acc;
+  }, []);
+
+describe('i18n dictionary integrity', () => {
+  it('English and Arabic dictionaries have matching keys', () => {
+    const enKeys = getKeys(en).sort();
+    const arKeys = getKeys(ar).sort();
+    expect(enKeys).toEqual(arKeys);
   });
 
-  it('returns shell labels for the active English locale', () => {
-    expect(i18n.t('shell.sidebar.ai')).toBe('AI Co-Pilot');
-    expect(i18n.t('shell.topbar.searchPlaceholder')).toContain('Search');
-  });
-
-  it('returns overview labels from the shared dictionaries', () => {
-    expect(i18n.t('overview.quickActionsTitle')).toBe('One-Tap Quick Clipboard Actions');
-  });
-
-  it('returns settings labels from the shared dictionaries', () => {
-    expect(i18n.t('settings.title')).toBe('Preferences');
-  });
-
-  it('returns Arabic strings when Arabic is selected', () => {
-    i18n.setLanguage('ar');
-    expect(i18n.t('shell.sidebar.ai')).toBe('مساعد الذكاء');
-    expect(i18n.t('shell.topbar.searchPlaceholder')).toContain('البحث');
-    expect(i18n.t('overview.quickActionsTitle')).toBe('إجراءات الحافظة السريعة بنقرة واحدة');
+  it('All keys have non-empty values in both languages', () => {
+    const keys = getKeys(en);
+    for (const key of keys) {
+      expect(i18n.t(key, '', {}, 'en')).not.toBe('');
+      expect(i18n.t(key, '', {}, 'ar')).not.toBe('');
+    }
   });
 });

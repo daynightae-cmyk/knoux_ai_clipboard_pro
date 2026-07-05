@@ -37,7 +37,7 @@
       "openSettings": "فتح الإعدادات",
       "themeTitle": "السمة",
       "aiGuarded": "المزود محمي",
-      "systemCore": "KNOUX_SYSTEM_CORE // حالة صادقة",
+      "systemCore": "نواة نظام كنوكس // حالة صادقة",
       "pageTitles": {
         "overview": "نظرة عامة على العمل",
         "clipboard": "مركز الحافظة",
@@ -126,6 +126,7 @@
   },
   "settings": {
     "title": "الإعدادات",
+    "productionBadge": "إعدادات إنتاج كنوكس",
     "heroTitle": "تحكم تشغيلي كامل للذكاء والحافظة والأمان والتغليف.",
     "heroSubtitle": "Language / اللغة",
     "appearance": "المظهر",
@@ -158,9 +159,39 @@
     "invalidBackup": "ملف KNOUX غير صحيح.",
     "confirmClearHint": "اضغط مسح مرة أخرى للتأكيد.",
     "providerNotChecked": "غير مفحوص",
-    "providerServerOnly": "خادم فقط",
+    "providerServerOnly": "مسار الخادم فقط",
     "cloudGuarded": "المزامنة السحابية: محجوبة",
-    "guardedNotice": "المزامنة السحابية معطلة حتى يوجد مزود مزامنة حقيقي."
+    "guardedNotice": "المزامنة السحابية معطلة حتى يوجد مزود مزامنة حقيقي.",
+    "backupNotice": "تكوين وقت تشغيل المزود مستبعد من تصدير النسخ الاحتياطي.",
+    "metrics": {
+      "readiness": "الجاهزية",
+      "clips": "العناصر",
+      "aiItems": "ذكاء",
+      "secure": "آمن"
+    },
+    "nav": {
+      "overview": "الرئيسية",
+      "aiProvider": "مزود الذكاء",
+      "clipboard": "الحافظة",
+      "barcode": "الباركود",
+      "security": "الأمان",
+      "labs": "المختبرات"
+    },
+    "themes": {
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "النظام"
+    },
+    "densities": {
+      "compact": "مضغوط",
+      "comfortable": "مريح",
+      "spacious": "واسع"
+    },
+    "glows": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي"
+    }
   },
   "labs": {
     "badge": "لوحة تحكم إنتاج كنوكس",
@@ -182,14 +213,47 @@
     "cards": {
       "actionAvailable": "إجراء متاح",
       "ready": "جاهز",
-      "guarded": "محمية"
+      "guarded": "محمية",
+      "active": "نشط",
+      "planned": "مخطط له",
+      "missing": "مفقود",
+      "disabled": "معطل"
     }
   },
   "studio": {
     "heroTitle": "استوديو مطوري كنوكس",
     "heroDescription": "مساحة إنتاج كاملة للتشخيصات و19 أداة تطوير قابلة للتنفيذ وإجراءات خدمة حقيقية واختبارات API محمية وأوامر بناء وتقارير تسليم قابلة للتصدير. تستخدم الأدوات الثقيلة عمالًا خلفيين عند الدعم.",
     "statusLabel": "لوحة تحكم المطور",
-    "reportTitle": "تم تصدير تقرير التسليم"
+    "reportTitle": "تم تصدير تقرير التسليم",
+    "jsonFormatter": {
+      "title": "منسق JSON",
+      "description": "الصق بيانات JSON الخاصة بك لتنسيقها بشكل جميل.",
+      "inputLabel": "الإدخال",
+      "outputLabel": "المخرجات المنسقة",
+      "placeholder": "الصق JSON هنا...",
+      "format": "تنسيق",
+      "error": "تنسيق JSON غير صالح."
+    },
+    "base64": {
+      "title": "تشفير / فك تشفير Base64",
+      "description": "قم بتشفير النص إلى Base64 أو فك تشفير Base64 إلى نص.",
+      "plainLabel": "نص عادي",
+      "base64Label": "Base64",
+      "encode": "تشفير",
+      "decode": "فك التشفير",
+      "error": "سلسلة Base64 غير صالحة للفك."
+    }
+    "jwtViewer": {
+      "title": "عارض JWT",
+      "description": "فك تشفير وفحص رموز الويب JSON محليًا.",
+      "inputLabel": "رمز JWT",
+      "placeholder": "الصق رمز JWT هنا...",
+      "headerLabel": "الرأس",
+      "payloadLabel": "الحمولة",
+      "signatureNotice": "التحقق من التوقيع هو إجراء محمي ويتطلب مفتاحًا سريًا. هذه الأداة تفك تشفير الرمز فقط.",
+      "errorInvalid": "بنية JWT غير صالحة. يجب أن تتكون من 3 أجزاء مفصولة بنقاط.",
+      "errorDecode": "فشل فك تشفير أو تحليل JWT. تحقق مما إذا كان رمزًا صالحًا."
+    }
   },
   "ai": {
     "title": "ميزات الذكاء الاصطناعي",
@@ -234,7 +298,64 @@
       "format-text": { "label": "تنسيق Markdown", "desc": "تجميل النصوص غير المنظمة" }
     }
   },
+  "barcode": {
+    "title": "ماسح الباركود ورمز الاستجابة السريعة",
+    "description": "امسح الرموز باستخدام كاميرا جهازك، أو ملف صورة، أو عن طريق لصق المحتوى.",
+    "controlsTitle": "أدوات التحكم",
+    "startCamera": "بدء الكاميرا",
+    "stopCamera": "إيقاف الكاميرا",
+    "scanImage": "مسح صورة",
+    "pasteLabel": "أو الصق محتوى للمسح",
+    "pastePlaceholder": "الصق رابط صورة أو بيانات باركود",
+    "scan": "مسح",
+    "resultTitle": "نتيجة المسح",
+    "noResult": "لم يتم اكتشاف أي رمز بعد. ابدأ الكاميرا أو حمّل صورة لبدء المسح.",
+    "noResultShort": "لم يتم اكتشاف رمز.",
+    "copied": "تم نسخ النتيجة إلى الحافظة!",
+    "saved": "تم حفظ النتيجة في مركز الحافظة!",
+    "error": {
+      "noCamera": "الكاميرا غير متاحة أو تم رفض الإذن.",
+      "scanFailed": "تعذر فك تشفير الباركود من المصدر.",
+      "generic": "حدث خطأ غير متوقع."
+    },
+    "status": {
+      "requestingPermission": "جاري طلب إذن الكاميرا...",
+      "scanning": "جاري المسح..."
+    }
+  },
+  "security": {
+    "scanner": {
+      "title": "ماسح البيانات الحساسة",
+      "description": "امسح النص بحثًا عن أسرار محتملة مثل مفاتيح API أو المفاتيح الخاصة أو أرقام بطاقات الائتمان.",
+      "inputLabel": "النص للمسح",
+      "placeholder": "الصق النص هنا لمسحه بحثًا عن بيانات حساسة...",
+      "scan": "مسح النص",
+      "results": "نتائج المسح",
+      "noData": "لم يتم العثور على بيانات حساسة.",
+      "found": "تم العثور على {count} مشكلة محتملة.",
+      "issueType": "النوع",
+      "issueValue": "القيمة المطابقة",
+      "issueLocation": "الموقع"
+    },
+    "types": {
+      "api_key": "مفتاح API",
+      "credit_card": "بطاقة ائتمان",
+      "private_key": "مفتاح خاص",
+      "jwt": "رمز JWT"
+    }
+  },
+  "export": {
+    "clips": {
+      "title": "تصدير المقاطع",
+      "description": "تصدير عناصر الحافظة المحددة إلى تنسيقات مختلفة.",
+      "toMarkdown": "تصدير إلى Markdown",
+      "toPdf": "تصدير إلى PDF (مخطط له)",
+      "toJson": "تصدير إلى JSON"
+    }
+  },
   "common": {
+    "running": "جاري التشغيل...",
+    "execute": "تنفيذ",
     "loading": "جاري التحميل...",
     "error": "حدث خطأ",
     "retry": "إعادة المحاولة",
@@ -243,6 +364,8 @@
     "delete": "حذف",
     "edit": "تعديل",
     "add": "إضافة",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "clear": "مسح",
+    "copy": "نسخ"
   }
 }
