@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { AppSettings, ClipboardItem } from "../types";
 import {
   Activity,
@@ -19,6 +19,7 @@ import {
   KeyRound,
   Layers3,
   Link2,
+  Palette,
   Network,
   PackageCheck,
   Play,
@@ -47,7 +48,7 @@ import { LivePreviewPanel, type PreviewRun } from "./studio/LivePreviewPanel";
 import i18n from "../utils/i18n";
 import { copyToClipboard } from "../../shared/clipboard-utils";
 import { downloadText, downloadJson } from "../../shared/download-utils";
-import { useStudioExecutor } from "../hooks/useStudioExecutor";
+import { useStudioExecutor } from "../useStudioExecutor";
 
 interface Props {
   items?: ClipboardItem[];
@@ -98,6 +99,7 @@ const toolIcon = (id: DeveloperToolId) => {
     "test-plan": CheckCircle2,
     "i18n-audit": Activity,
     "redaction-map": ShieldCheck,
+    "color-converter": Palette,
   };
   return icons[id] || Wrench;
 };
@@ -251,7 +253,7 @@ export default function StudioPage({ items = [], settings }: Props) {
         subtitle={t("studio.heroSubtitle", "Premium local-first developer workspace")}
         description={t(
           "studio.heroDesc",
-          "Run real developer utilities, inspect AI route health, and export a truthful handoff report. Every tool executes locally and streams results into the live preview — no fake states."
+          "Run real developer utilities, inspect AI route health, and export a truthful handoff report. Every tool executes locally and streams results into the live preview â€” no fake states."
         )}
         badges={[
           {
@@ -311,7 +313,7 @@ export default function StudioPage({ items = [], settings }: Props) {
             value={items.length}
             icon={Database}
             tone="amber"
-            hint={`${secure} ${t("studio.secure", "secure")} · ${pinned} ${t("studio.pinned", "pinned")}`}
+            hint={`${secure} ${t("studio.secure", "secure")} Â· ${pinned} ${t("studio.pinned", "pinned")}`}
           />
         </div>
       </WorkspaceHero>
@@ -337,7 +339,7 @@ export default function StudioPage({ items = [], settings }: Props) {
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <h3 className="font-black text-knoux-dark-text flex items-center gap-2">
               <Wand2 className="w-5 h-5 text-knoux-purple" />{" "}
-              {t("studio.activeBench", "Active Tool Bench")} — {currentTool.title}
+              {t("studio.activeBench", "Active Tool Bench")} â€” {currentTool.title}
             </h3>
             <span className={`knoux-badge ${badgeClass(currentTool.status)}`}>
               {currentTool.status}
@@ -428,6 +430,8 @@ export default function StudioPage({ items = [], settings }: Props) {
                 setCurrentRun(null);
                 setHistory([]);
               }}
+              onClear={() => setCurrentRun(null)}
+              onClearHistory={() => setHistory([])}
               onSelectHistory={(run) => setCurrentRun(run)}
               emptyHint={t(
                 "studio.previewEmpty",
@@ -592,3 +596,4 @@ export default function StudioPage({ items = [], settings }: Props) {
     </div>
   );
 }
+
