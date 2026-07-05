@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./knoux-theme.css";
+@import "./theme-knoux-premium.css";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
