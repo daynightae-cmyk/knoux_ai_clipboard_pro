@@ -362,7 +362,7 @@ export function registerDatabaseHandlers() {
     try {
       const changed = await databaseService.toggleFavorite(id);
       if (!changed) {
-        return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
+        return { success: false, error: 'Failed to toggle favorite' };
       }
       const item = await databaseService.getClipboardItemById(id);
       return { success: true, data: Boolean(item?.isFavorite) };
@@ -376,7 +376,7 @@ export function registerDatabaseHandlers() {
     try {
       const changed = await databaseService.toggleFavorite(id);
       if (!changed) {
-        return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
+        return { success: false, error: 'Failed to toggle favorite' };
       }
       const item = await databaseService.getClipboardItemById(id);
       return { success: true, data: Boolean(item?.isFavorite) };
