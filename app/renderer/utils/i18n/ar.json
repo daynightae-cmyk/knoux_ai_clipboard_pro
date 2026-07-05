@@ -1,371 +1,620 @@
 {
-  "app": {
-    "title": "KNOUX AI الحافظة الذكية",
-    "tagline": "حافظة ذكية مع ذكاء اصطناعي"
-  },
-  "shell": {
-    "sidebar": {
-      "overview": "لوحة التحكم",
-      "clipboard": "مركز الحافظة",
-      "search": "بحث عميق",
-      "ai": "مساعد الذكاء",
-      "barcode": "ماسح الباركود",
-      "security": "الأمان والثقة",
-      "preferences": "الإعدادات",
-      "developer": "استوديو المطورين",
-      "labs": "مختبرات تجريبية",
-      "about": "عن كنوكس",
-      "advancedWorkspace": "مساحة عمل متقدمة",
-      "ready": "جاهز",
-      "privacyLocked": "الوضع الخاص مفعل",
-      "secureEnvironment": "بيئة آمنة",
-      "localVaultActive": "الخزنة المحلية نشطة",
-      "statusReady": "جاهز",
-      "statusPrivacyLocked": "الوضع الخاص مفعل",
-      "statusSecureEnvironment": "بيئة آمنة",
-      "statusLocalVaultActive": "الخزنة المحلية نشطة",
-      "productTag": "منتج من كنوكس",
-      "version": "v1.0.0"
-    },
-    "topbar": {
-      "searchPlaceholder": "البحث في سجل الحافظة والمقتطفات والسرية (Ctrl+K)...",
-      "clear": "مسح",
-      "refreshTitle": "تحديث تدفق الحافظة",
-      "togglePrivacy": "تفعيل قفل الخصوصية",
-      "disablePrivacy": "إلغاء قفل الخصوصية",
-      "openAi": "فتح مساعد الذكاء",
-      "openSettings": "فتح الإعدادات",
-      "themeTitle": "السمة",
-      "aiGuarded": "المزود محمي",
-      "systemCore": "نواة نظام كنوكس // حالة صادقة",
-      "pageTitles": {
-        "overview": "نظرة عامة على العمل",
-        "clipboard": "مركز الحافظة",
-        "search": "بحث شامل",
-        "ai": "مساعد كنوكس الذكي",
-        "security": "الأمان والخزنة المحلية",
-        "settings": "الإعدادات",
-        "labs": "مختبرات تجريبية",
-        "developer": "استوديو المطورين",
-        "barcode": "ماسح الباركود",
-        "about": "عن كنوكس",
-        "default": "KNOUX AI الحافظة الذكية"
-      }
-    }
-  },
-  "overview": {
-    "heroTitle": "ارفع تدفقك مع كنوكس AI",
-    "heroDescription": "سجل الحافظة المحلي الخاص بك مدعوم بممرات ذكاء اصطناعي محمية. قم بتلخيص النصوص وإعادة كتابتها وترجمتها ومراجعتها دون كشف أسرار المزود.",
-    "launchClipboard": "افتح مركز الحافظة",
-    "deployAi": "شغّل مساعد الذكاء",
-    "quickActionsTitle": "إجراءات الحافظة السريعة بنقرة واحدة",
-    "recentClipsTitle": "أحدث المقاطع",
-    "recentActivityTitle": "آخر الإجراءات المعالجة بالذكاء",
-    "emptyState": "الحافظة فارغة حاليًا",
-    "emptyDescription": "انسخ أي نص أو كود لتسجيل العناصر."
-  },
-  "clipboard": {
-    "title": "سجل الحافظة",
-    "search": "ابحث في عناصر الحافظة...",
-    "noItems": "لم يتم العثور على عناصر في الحافظة",
-    "copy": "نسخ",
-    "delete": "حذف",
-    "pin": "تثبيت",
-    "unpin": "إلغاء التثبيت",
-    "clearAll": "مسح الكل",
-    "smartInbox": "صندوق الحافظة الذكي",
-    "serviceNotice": "الخزنة المحلية جاهزة."
-  },
-  "search": {
-    "title": "النواة البحثية الدلالية",
-    "placeholder": "اكتب كلمات البحث أو أسماء المصادر أو العلامات أو امتدادات الملفات...",
-    "recommended": "عمليات بحث مقترحة:",
-    "queryMatches": "النتائج ({count} عنصرًا)",
-    "awaitingQuery": "في انتظار إدخال البحث",
-    "emptyStateTitle": "جاهز للبحث",
-    "emptyStateDescription": "اكتب في شريط البحث أعلاه أو اختر مصطلحًا مقترحًا لمسح سجلات الحافظة المحلية.",
-    "noMatchesTitle": "لا توجد نتائج في قاعدة البيانات المحلية",
-    "noMatchesDescription": "جرب كلمات بحث أوسع أو امسح الفلاتر. فحص كنوكس {count} عنصرًا في الذاكرة المؤقتة.",
-    "copy": "نسخ",
-    "copied": "تم النسخ",
-    "dateAtTime": "{date} في {time}",
-    "sourcePrefix": "• {source}"
-  },
   "about": {
-    "heroTitle": "Knoux AI Clipboard Pro",
-    "heroTagline": "حافظتك. محسّنة بالذكاء الاصطناعي.",
-    "creativeDirector": "المدير الإبداعي",
-    "developerConnections": "روابط المطور المباشرة",
-    "philosophy": "فلسفة الهندسة البرمجية",
-    "footer": "© 2026 Knoux. جميع الحقوق محفوظة. تم إنشاؤه باستخدام Electron وReact وTailwind CSS.",
-    "stableRelease": "الإصدار المستقر v1.0.0",
-    "officialStore": "متجر كنوكس الرسمي:",
-    "creatorTitle": "المهندس صادق الجزار (Knoux)",
-    "creatorDescription": "يقود نظام كنوكس البصري ويطور حلول إنتاجية متميزة تتوافق بين الجماليات النظيفة وحدود الأمان المحلية الصادقة.",
     "contact": {
-      "website": "الموقع",
+      "email": "دعم البريد",
       "github": "غيت هاب",
       "instagram": "إنستغرام",
-      "whatsapp": "واتساب",
-      "email": "دعم البريد"
+      "website": "الموقع",
+      "whatsapp": "واتساب"
     },
+    "creativeDirector": "المدير الإبداعي",
+    "creatorDescription": "يقود نظام كنوكس البصري ويطور حلول إنتاجية متميزة تتوافق بين الجماليات النظيفة وحدود الأمان المحلية الصادقة.",
+    "creatorTitle": "المهندس صادق الجزار (Knoux)",
+    "developerConnections": "روابط المطور المباشرة",
     "features": {
       "circularUI": {
-        "title": "لغة واجهة دائرية",
-        "desc": "مصممة بدقة وفق نظام الميدالية الدائرية ليطابق أدلة Sadek المعتمدة بصريًا."
+        "desc": "مصممة بدقة وفق نظام الميدالية الدائرية ليطابق أدلة Sadek المعتمدة بصريًا.",
+        "title": "لغة واجهة دائرية"
       },
       "privacyLocal": {
-        "title": "عزل الخصوصية المحلي أولًا",
-        "desc": "تظل سجلات الحافظة محلية في الواجهة ما لم تستخدم إجراء ذكاء اصطناعي محمي صراحةً. وتقتصر التشفير على جسر IPC الخاص بالـ Electron."
+        "desc": "تظل سجلات الحافظة محلية في الواجهة ما لم تستخدم إجراء ذكاء اصطناعي محمي صراحةً. وتقتصر التشفير على جسر IPC الخاص بالـ Electron.",
+        "title": "عزل الخصوصية المحلي أولًا"
       },
       "serverProxy": {
-        "title": "وكيل OpenRouter على الخادم",
-        "desc": "يستفيد من نماذج OpenRouter على الخادم لتنسيق وتحليل وترجمة وشرح سجلات الحافظة بأمان."
+        "desc": "يستفيد من نماذج OpenRouter على الخادم لتنسيق وتحليل وترجمة وشرح سجلات الحافظة بأمان.",
+        "title": "وكيل OpenRouter على الخادم"
       }
+    },
+    "footer": "© 2026 Knoux. جميع الحقوق محفوظة. تم إنشاؤه باستخدام Electron وReact وTailwind CSS.",
+    "heroTagline": "حافظتك. محسّنة بالذكاء الاصطناعي.",
+    "heroTitle": "Knoux AI Clipboard Pro",
+    "officialStore": "متجر كنوكس الرسمي:",
+    "philosophy": "فلسفة الهندسة البرمجية",
+    "stableRelease": "الإصدار المستقر v1.0.0"
+  },
+  "ai": {
+    "analytics": "لوحة التحليلات",
+    "errors": {
+      "unexpected": "An unexpected network anomaly has halted the AI request."
+    },
+    "gamified": "التجربة التفاعلية",
+    "operations": {
+      "analyze": {
+        "desc": "الحصول على رؤى هيكلية ومفاهيم",
+        "label": "تحليل عميق"
+      },
+      "classify": {
+        "desc": "تصنيف وسوم فئات منطقية",
+        "label": "اقتراح وسوم"
+      },
+      "enhance": {
+        "desc": "رفع جودة القراءة والقواعد",
+        "label": "تحسين النص"
+      },
+      "explain-code": {
+        "desc": "شرح النصوص وتحسين الكود",
+        "label": "شرح الكود"
+      },
+      "extract": {
+        "desc": "استخرج القوائم والإجراءات والتفاصيل",
+        "label": "استخراج النقاط"
+      },
+      "format-text": {
+        "desc": "تجميل النصوص غير المنظمة",
+        "label": "تنسيق Markdown"
+      },
+      "reply": {
+        "desc": "إنشاء رسائل رد احترافية",
+        "label": "رد ذكي"
+      },
+      "rewrite": {
+        "desc": "إعادة صياغة بأسلوب إداري",
+        "label": "إعادة كتابة"
+      },
+      "summarize": {
+        "desc": "استخراج ملخصات نقطية أساسية",
+        "label": "تلخيص"
+      },
+      "translate": {
+        "desc": "ترجمة المعاني بدقة",
+        "label": "ترجمة"
+      }
+    },
+    "patternRecognition": "التعرف على الأنماط",
+    "predictions": "تنبؤات الذكاء الاصطناعي",
+    "status": {
+      "guard": "تم اكتشاف محتوى حساس. إجراءات الذكاء محجوبة.",
+      "label": "حالة الذكاء"
+    },
+    "title": "ميزات الذكاء الاصطناعي",
+    "workspace": {
+      "auditTitle": "سجل عمليات مساحة ذكاء كنوكس",
+      "clearInput": "مسح الإدخال",
+      "commitLabel": "إلحاق بطاقة مقتطف",
+      "copyLabel": "نسخ إلى حافظة النظام",
+      "copySuccess": "تم النسخ بنجاح",
+      "emptyDescription": "اختر أي إجراء من قائمة عوامل الذكاء على اليسار لتجميع مخرجات OpenRouter الحقيقية.",
+      "emptyTitle": "جاهز للطلب",
+      "guardNotice": "محجوب حتى يتم إزالة المحتوى الحساس",
+      "operatorTitle": "اختر عامل الذكاء",
+      "outputTitle": "مخرجات OpenRouter المعالجة",
+      "placeholder": "الصق أي سجلات أو رسائل أو محتوى إبداعي أو أكواد هنا...",
+      "stats": {
+        "targetLanguage": "اللغة الهدف",
+        "volume": "حجم الأحرف",
+        "words": "الكلمات"
+      },
+      "title": "كتلة نص الحافظة المستهدفة",
+      "working": "Knoux OpenRouter يعمل..."
     }
   },
-  "settings": {
-    "title": "الإعدادات",
-    "productionBadge": "إعدادات إنتاج كنوكس",
-    "heroTitle": "تحكم تشغيلي كامل للذكاء والحافظة والأمان والتغليف.",
-    "heroSubtitle": "Language / اللغة",
-    "appearance": "المظهر",
-    "themeMode": "وضع السمة",
-    "uiDensity": "كثافة الواجهة",
-    "glowAccent": "إبراز الوهج / الشفافية",
-    "providerDiagnostics": "تشخيص مزود الذكاء",
-    "providerDescription": "يتم توجيه تنفيذ الذكاء عبر نقطة الخادم فقط.",
-    "providerStatus": "الحالة",
-    "providerModel": "النموذج",
-    "providerRuntime": "الوقت التشغيلي",
-    "providerCheck": "تحقق من مزود الخادم",
-    "providerChecking": "جاري الفحص...",
-    "aiStorage": "الذكاء والتخزين",
-    "autoAnalyze": "التحليل التلقائي",
-    "cloudSync": "المزامنة السحابية",
-    "historyLimit": "حد السجل",
-    "backup": "النسخ الاحتياطي",
-    "exportJson": "تصدير JSON",
-    "importJson": "استيراد JSON",
-    "dangerZone": "منطقة الخطر",
-    "resetPreferences": "إعادة الإعدادات الافتراضية",
-    "clearHistory": "مسح السجل",
-    "confirmClear": "تأكيد المسح",
-    "defaultsRestored": "تمت استعادة الافتراضي.",
-    "historyCleared": "تم مسح السجل.",
-    "settingsUpdated": "تم تحديث الإعدادات.",
-    "backupExported": "تم تصدير النسخة الاحتياطية.",
-    "backupImported": "تم استيراد {count} عنصر.",
-    "invalidBackup": "ملف KNOUX غير صحيح.",
-    "confirmClearHint": "اضغط مسح مرة أخرى للتأكيد.",
-    "providerNotChecked": "غير مفحوص",
-    "providerServerOnly": "مسار الخادم فقط",
-    "cloudGuarded": "المزامنة السحابية: محجوبة",
-    "guardedNotice": "المزامنة السحابية معطلة حتى يوجد مزود مزامنة حقيقي.",
-    "backupNotice": "تكوين وقت تشغيل المزود مستبعد من تصدير النسخ الاحتياطي.",
-    "metrics": {
-      "readiness": "الجاهزية",
-      "clips": "العناصر",
-      "aiItems": "ذكاء",
-      "secure": "آمن"
+  "app": {
+    "tagline": "حافظة ذكية مع ذكاء اصطناعي",
+    "title": "KNOUX AI الحافظة الذكية"
+  },
+  "barcode": {
+    "controlsTitle": "أدوات التحكم",
+    "copied": "تم نسخ النتيجة إلى الحافظة!",
+    "description": "امسح الرموز باستخدام كاميرا جهازك، أو ملف صورة، أو عن طريق لصق المحتوى.",
+    "error": {
+      "generic": "حدث خطأ غير متوقع.",
+      "noCamera": "الكاميرا غير متاحة أو تم رفض الإذن.",
+      "scanFailed": "تعذر فك تشفير الباركود من المصدر."
     },
-    "nav": {
-      "overview": "الرئيسية",
-      "aiProvider": "مزود الذكاء",
-      "clipboard": "الحافظة",
-      "barcode": "الباركود",
-      "security": "الأمان",
-      "labs": "المختبرات"
+    "noResult": "لم يتم اكتشاف أي رمز بعد. ابدأ الكاميرا أو حمّل صورة لبدء المسح.",
+    "noResultShort": "لم يتم اكتشاف رمز.",
+    "pasteLabel": "أو الصق محتوى للمسح",
+    "pastePlaceholder": "الصق رابط صورة أو بيانات باركود",
+    "resultTitle": "نتيجة المسح",
+    "saved": "تم حفظ النتيجة في مركز الحافظة!",
+    "scan": "مسح",
+    "scanImage": "مسح صورة",
+    "startCamera": "بدء الكاميرا",
+    "status": {
+      "requestingPermission": "جاري طلب إذن الكاميرا...",
+      "scanning": "جاري المسح..."
     },
-    "themes": {
-      "light": "فاتح",
-      "dark": "داكن",
-      "system": "النظام"
-    },
-    "densities": {
-      "compact": "مضغوط",
-      "comfortable": "مريح",
-      "spacious": "واسع"
-    },
-    "glows": {
-      "low": "منخفض",
-      "medium": "متوسط",
-      "high": "عالي"
+    "stopCamera": "إيقاف الكاميرا",
+    "title": "ماسح الباركود ورمز الاستجابة السريعة"
+  },
+  "clipboard": {
+    "clearAll": "مسح الكل",
+    "copy": "نسخ",
+    "delete": "حذف",
+    "noItems": "لم يتم العثور على عناصر في الحافظة",
+    "pin": "تثبيت",
+    "search": "ابحث في عناصر الحافظة...",
+    "serviceNotice": "الخزنة المحلية جاهزة.",
+    "smartInbox": "صندوق الحافظة الذكي",
+    "title": "سجل الحافظة",
+    "unpin": "إلغاء التثبيت"
+  },
+  "common": {
+    "add": "إضافة",
+    "cancel": "إلغاء",
+    "clear": "مسح",
+    "close": "إغلاق",
+    "copy": "نسخ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "error": "حدث خطأ",
+    "execute": "تنفيذ",
+    "loading": "جاري التحميل...",
+    "retry": "إعادة المحاولة",
+    "running": "جاري التشغيل...",
+    "save": "حفظ"
+  },
+  "export": {
+    "clips": {
+      "description": "تصدير عناصر الحافظة المحددة إلى تنسيقات مختلفة.",
+      "title": "تصدير المقاطع",
+      "toJson": "تصدير إلى JSON",
+      "toMarkdown": "تصدير إلى Markdown",
+      "toPdf": "تصدير إلى PDF (مخطط له)"
     }
   },
   "labs": {
     "badge": "لوحة تحكم إنتاج كنوكس",
-    "heroTitle": "تم تحويل مختبرات الخدمات إلى سجل إنتاجي منظم.",
-    "heroDescription": "تُظهر هذه الصفحة فقط حالة التسجيل للخدمات النشطة والمحمية والمخططة. تبقى القدرات المخططة معطلة حتى يتم التحقق من المعالجات والتغليف الحقيقيين.",
-    "metrics": {
-      "readiness": "الجاهزية",
-      "activeServices": "الخدمات النشطة",
-      "openRouter": "OpenRouter",
-      "security": "الأمان"
-    },
-    "deployment": {
-      "title": "إشارة النشر",
-      "status": "جاهز لبناء الويب",
-      "vercel": "Vercel",
-      "electron": "Electron",
-      "fallback": "احتياطي"
-    },
     "cards": {
       "actionAvailable": "إجراء متاح",
-      "ready": "جاهز",
-      "guarded": "محمية",
       "active": "نشط",
-      "planned": "مخطط له",
+      "disabled": "معطل",
+      "guarded": "محمية",
+      "internal": "internal",
       "missing": "مفقود",
-      "disabled": "معطل"
-    }
+      "on": "On",
+      "planned": "مخطط له",
+      "ready": "جاهز",
+      "standby": "Standby"
+    },
+    "deployment": {
+      "electron": "Electron",
+      "electronDesc": "uses preload-safe IPC channels and OpenRouter helper.",
+      "fallback": "احتياطي",
+      "fallbackDesc": "explicit local deterministic result, never fake live success.",
+      "status": "جاهز لبناء الويب",
+      "title": "إشارة النشر",
+      "vercel": "Vercel",
+      "vercelDesc": "uses web-only renderer build and /api/ai/[action]."
+    },
+    "heroDescription": "تُظهر هذه الصفحة فقط حالة التسجيل للخدمات النشطة والمحمية والمخططة. تبقى القدرات المخططة معطلة حتى يتم التحقق من المعالجات والتغليف الحقيقيين.",
+    "heroTitle": "تم تحويل مختبرات الخدمات إلى سجل إنتاجي منظم.",
+    "metrics": {
+      "activeServices": "الخدمات النشطة",
+      "openRouter": "OpenRouter",
+      "readiness": "الجاهزية",
+      "security": "الأمان"
+    },
+    "scores": {
+      "aiCore": "AI Core",
+      "aiCoreNote": "Live API + Electron helper + fallback",
+      "experienceLayer": "Experience Layer",
+      "experienceLayerNote": "Clear status instead of placeholder success",
+      "storagePath": "Storage Path",
+      "storagePathNote": "Memory adapter ready; SQLite hard persistence next"
+    },
+    "services": "services"
   },
-  "studio": {
-    "heroTitle": "استوديو مطوري كنوكس",
-    "heroDescription": "مساحة إنتاج كاملة للتشخيصات و19 أداة تطوير قابلة للتنفيذ وإجراءات خدمة حقيقية واختبارات API محمية وأوامر بناء وتقارير تسليم قابلة للتصدير. تستخدم الأدوات الثقيلة عمالًا خلفيين عند الدعم.",
-    "statusLabel": "لوحة تحكم المطور",
-    "reportTitle": "تم تصدير تقرير التسليم",
-    "jsonFormatter": {
-      "title": "منسق JSON",
-      "description": "الصق بيانات JSON الخاصة بك لتنسيقها بشكل جميل.",
-      "inputLabel": "الإدخال",
-      "outputLabel": "المخرجات المنسقة",
-      "placeholder": "الصق JSON هنا...",
-      "format": "تنسيق",
-      "error": "تنسيق JSON غير صالح."
-    },
-    "base64": {
-      "title": "تشفير / فك تشفير Base64",
-      "description": "قم بتشفير النص إلى Base64 أو فك تشفير Base64 إلى نص.",
-      "plainLabel": "نص عادي",
-      "base64Label": "Base64",
-      "encode": "تشفير",
-      "decode": "فك التشفير",
-      "error": "سلسلة Base64 غير صالحة للفك."
-    },
-    "jwtViewer": {
-      "title": "عارض JWT",
-      "description": "فك تشفير وفحص رموز الويب JSON محليًا.",
-      "inputLabel": "رمز JWT",
-      "placeholder": "الصق رمز JWT هنا...",
-      "headerLabel": "الرأس",
-      "payloadLabel": "الحمولة",
-      "signatureNotice": "التحقق من التوقيع هو إجراء محمي ويتطلب مفتاحًا سريًا. هذه الأداة تفك تشفير الرمز فقط.",
-      "errorInvalid": "بنية JWT غير صالحة. يجب أن تتكون من 3 أجزاء مفصولة بنقاط.",
-      "errorDecode": "فشل فك تشفير أو تحليل JWT. تحقق مما إذا كان رمزًا صالحًا."
-    }
-  },
-  "ai": {
-    "title": "ميزات الذكاء الاصطناعي",
-    "patternRecognition": "التعرف على الأنماط",
-    "gamified": "التجربة التفاعلية",
-    "analytics": "لوحة التحليلات",
-    "predictions": "تنبؤات الذكاء الاصطناعي",
-    "status": {
-      "label": "حالة الذكاء",
-      "guard": "تم اكتشاف محتوى حساس. إجراءات الذكاء محجوبة."
-    },
-    "workspace": {
-      "title": "كتلة نص الحافظة المستهدفة",
-      "clearInput": "مسح الإدخال",
-      "placeholder": "الصق أي سجلات أو رسائل أو محتوى إبداعي أو أكواد هنا...",
-      "guardNotice": "محجوب حتى يتم إزالة المحتوى الحساس",
-      "stats": {
-        "volume": "حجم الأحرف",
-        "words": "الكلمات",
-        "targetLanguage": "اللغة الهدف"
+  "overview": {
+    "ai": "AI",
+    "copy": "Copy",
+    "copyItemTitle": "Copy item again",
+    "deployAi": "شغّل مساعد الذكاء",
+    "emptyDescription": "انسخ أي نص أو كود لتسجيل العناصر.",
+    "emptyState": "الحافظة فارغة حاليًا",
+    "health": {
+      "aiEngine": {
+        "desc": "OpenRouter local/cloud inference interface",
+        "name": "AI Engine"
       },
-      "operatorTitle": "اختر عامل الذكاء",
-      "outputTitle": "مخرجات OpenRouter المعالجة",
-      "working": "Knoux OpenRouter يعمل...",
-      "emptyTitle": "جاهز للطلب",
-      "emptyDescription": "اختر أي إجراء من قائمة عوامل الذكاء على اليسار لتجميع مخرجات OpenRouter الحقيقية.",
-      "copyLabel": "نسخ إلى حافظة النظام",
-      "copySuccess": "تم النسخ بنجاح",
-      "commitLabel": "إلحاق بطاقة مقتطف",
-      "auditTitle": "سجل عمليات مساحة ذكاء كنوكس"
+      "clipboardMonitor": {
+        "desc": "Electron monitor guarded; web runtime uses manual import",
+        "name": "Clipboard Monitor"
+      },
+      "diagnostics": "Diagnostics",
+      "healthy": "All on-device Knoux processes checked out healthy.",
+      "localStorage": {
+        "desc": "Renderer localStorage plus guarded Electron IPC where available",
+        "name": "Local Storage"
+      },
+      "scanning": "Scanning...",
+      "title": "System Service Health"
     },
-    "operations": {
-      "summarize": { "label": "تلخيص", "desc": "استخراج ملخصات نقطية أساسية" },
-      "enhance": { "label": "تحسين النص", "desc": "رفع جودة القراءة والقواعد" },
-      "rewrite": { "label": "إعادة كتابة", "desc": "إعادة صياغة بأسلوب إداري" },
-      "translate": { "label": "ترجمة", "desc": "ترجمة المعاني بدقة" },
-      "analyze": { "label": "تحليل عميق", "desc": "الحصول على رؤى هيكلية ومفاهيم" },
-      "classify": { "label": "اقتراح وسوم", "desc": "تصنيف وسوم فئات منطقية" },
-      "extract": { "label": "استخراج النقاط", "desc": "استخرج القوائم والإجراءات والتفاصيل" },
-      "reply": { "label": "رد ذكي", "desc": "إنشاء رسائل رد احترافية" },
-      "explain-code": { "label": "شرح الكود", "desc": "شرح النصوص وتحسين الكود" },
-      "format-text": { "label": "تنسيق Markdown", "desc": "تجميل النصوص غير المنظمة" }
-    }
+    "heroDescription": "سجل الحافظة المحلي الخاص بك مدعوم بممرات ذكاء اصطناعي محمية. قم بتلخيص النصوص وإعادة كتابتها وترجمتها ومراجعتها دون كشف أسرار المزود.",
+    "heroTitle": "ارفع تدفقك مع كنوكس AI",
+    "launchClipboard": "افتح مركز الحافظة",
+    "metrics": {
+      "activeHistory": "Active History",
+      "aiEnhancements": "AI Enhancements",
+      "guardedItems": "Guarded Items",
+      "pinnedSnippets": "Pinned Snippets",
+      "productivityBoost": "Productivity Boost"
+    },
+    "privacy": {
+      "desc": "Knoux never streams clipboard logs or keystrokes to external trackers. AI requests are strictly anonymized.",
+      "title": "Your privacy is non-negotiable"
+    },
+    "quickActions": {
+      "extractText": {
+        "button": "Open Scanner",
+        "desc": "Opens the real barcode scanner. OCR text extraction is not claimed in this build.",
+        "title": "Extract Text"
+      },
+      "formatCode": {
+        "button": "Format Clip",
+        "desc": "Wraps and formats the latest text as a clean executable TypeScript snippet.",
+        "title": "Format as Code"
+      },
+      "secureNote": {
+        "button": "Commit Secret",
+        "desc": "Stores a local privacy-guarded note and marks it for sensitive-content review.",
+        "title": "Secure Note"
+      }
+    },
+    "quickActionsTitle": "إجراءات الحافظة السريعة بنقرة واحدة",
+    "recentActivityTitle": "آخر الإجراءات المعالجة بالذكاء",
+    "recentClipsTitle": "أحدث المقاطع",
+    "seeCompleteHub": "See complete hub",
+    "sendToAiTitle": "Send to Knoux AI",
+    "sourceLabel": "• Source:",
+    "storage": {
+      "cacheSize": "Local Cache Size:",
+      "capacityUsed": "% Capacity used",
+      "localActive": "Local Active",
+      "localStore": "Local renderer store",
+      "maintenanceNote": "Local renderer store compacted. No database vacuum is claimed for the web runtime.",
+      "maintenanceSuccess": "Maintenance Success",
+      "optimizing": "Optimizing & Vacuuming...",
+      "runMaintenance": "Run Maintenance",
+      "title": "Storage Health"
+    },
+    "timelineLog": "Timeline Log"
   },
-  "barcode": {
-    "title": "ماسح الباركود ورمز الاستجابة السريعة",
-    "description": "امسح الرموز باستخدام كاميرا جهازك، أو ملف صورة، أو عن طريق لصق المحتوى.",
-    "controlsTitle": "أدوات التحكم",
-    "startCamera": "بدء الكاميرا",
-    "stopCamera": "إيقاف الكاميرا",
-    "scanImage": "مسح صورة",
-    "pasteLabel": "أو الصق محتوى للمسح",
-    "pastePlaceholder": "الصق رابط صورة أو بيانات باركود",
-    "scan": "مسح",
-    "resultTitle": "نتيجة المسح",
-    "noResult": "لم يتم اكتشاف أي رمز بعد. ابدأ الكاميرا أو حمّل صورة لبدء المسح.",
-    "noResultShort": "لم يتم اكتشاف رمز.",
-    "copied": "تم نسخ النتيجة إلى الحافظة!",
-    "saved": "تم حفظ النتيجة في مركز الحافظة!",
-    "error": {
-      "noCamera": "الكاميرا غير متاحة أو تم رفض الإذن.",
-      "scanFailed": "تعذر فك تشفير الباركود من المصدر.",
-      "generic": "حدث خطأ غير متوقع."
-    },
-    "status": {
-      "requestingPermission": "جاري طلب إذن الكاميرا...",
-      "scanning": "جاري المسح..."
-    }
+  "search": {
+    "awaitingQuery": "في انتظار إدخال البحث",
+    "copied": "تم النسخ",
+    "copy": "نسخ",
+    "dateAtTime": "{date} في {time}",
+    "emptyStateDescription": "اكتب في شريط البحث أعلاه أو اختر مصطلحًا مقترحًا لمسح سجلات الحافظة المحلية.",
+    "emptyStateTitle": "جاهز للبحث",
+    "noMatchesDescription": "جرب كلمات بحث أوسع أو امسح الفلاتر. فحص كنوكس {count} عنصرًا في الذاكرة المؤقتة.",
+    "noMatchesTitle": "لا توجد نتائج في قاعدة البيانات المحلية",
+    "placeholder": "اكتب كلمات البحث أو أسماء المصادر أو العلامات أو امتدادات الملفات...",
+    "queryMatches": "النتائج ({count} عنصرًا)",
+    "recommended": "عمليات بحث مقترحة:",
+    "sourcePrefix": "• {source}",
+    "title": "النواة البحثية الدلالية"
   },
   "security": {
+    "actionCards": {
+      "aiFirewall": "AI Upload Firewall",
+      "aiFirewallActive": "Guard is active.",
+      "aiFirewallDesc": "Risk threshold {threshold}%. {status}",
+      "aiFirewallOff": "Guard is disabled.",
+      "auditExport": "Audit Export",
+      "auditExportDesc": "Retention keeps last {retention} security events.",
+      "buildRedaction": "Build redaction",
+      "checkAiGuard": "Check AI guard",
+      "exportAudit": "Export audit",
+      "redactionEngine": "Local Redaction Engine",
+      "redactionEngineDesc": "Strictness {strictness}%. Output is generated locally."
+    },
+    "audit": {
+      "clearLogs": "Clear Session Logs",
+      "copyLatest": "Copy Latest Audit",
+      "exportLog": "Export Security Log JSON",
+      "filterAll": "all",
+      "noEntries": "No audit entries match this filter.",
+      "title": "Security Operations Audit Trail"
+    },
+    "credentialShield": {
+      "activeBuffer": "Active secure buffer",
+      "copyRedacted": "Copy Redacted",
+      "desc": "Run a deterministic local scan, generate a redacted preview, then copy only safe output.",
+      "redactPreview": "Redact Preview",
+      "redactedOutput": "Redacted safe output",
+      "runScan": "Run Guard Scan",
+      "scanning": "Scanning...",
+      "title": "Credential Shield Scanner"
+    },
+    "detection": {
+      "title": "Detection Controls"
+    },
+    "hero": {
+      "badge": "Advanced Security Dashboard",
+      "desc": "Local scanner, redaction engine, AI upload guard, vault visibility window, high-contrast audit logs, and explicit Electron IPC boundaries. Web storage is local-first, not advertised as encrypted.",
+      "title": "Security & Vault Command Center"
+    },
+    "liveClasses": {
+      "title": "Live Guard Classes"
+    },
+    "metrics": {
+      "classes": "Classes",
+      "records": "Records",
+      "risk": "Risk",
+      "score": "Score"
+    },
+    "productionNote": {
+      "badge": "Hardened Local Guard",
+      "desc": "Client-side secrets are never required. OpenRouter keys belong in Vercel/Electron environment variables only. Local web storage is not described as encrypted.",
+      "title": "Production Security Note"
+    },
+    "risk": {
+      "clean": "Clean",
+      "high": "High",
+      "medium": "Medium"
+    },
     "scanner": {
-      "title": "ماسح البيانات الحساسة",
       "description": "امسح النص بحثًا عن أسرار محتملة مثل مفاتيح API أو المفاتيح الخاصة أو أرقام بطاقات الائتمان.",
-      "inputLabel": "النص للمسح",
-      "placeholder": "الصق النص هنا لمسحه بحثًا عن بيانات حساسة...",
-      "scan": "مسح النص",
-      "results": "نتائج المسح",
-      "noData": "لم يتم العثور على بيانات حساسة.",
       "found": "تم العثور على {count} مشكلة محتملة.",
+      "inputLabel": "النص للمسح",
+      "issueLocation": "الموقع",
       "issueType": "النوع",
       "issueValue": "القيمة المطابقة",
-      "issueLocation": "الموقع"
+      "noData": "لم يتم العثور على بيانات حساسة.",
+      "placeholder": "الصق النص هنا لمسحه بحثًا عن بيانات حساسة...",
+      "results": "نتائج المسح",
+      "scan": "مسح النص",
+      "title": "ماسح البيانات الحساسة"
+    },
+    "storage": {
+      "active": "Active",
+      "aiUploadGuard": "AI upload guard:",
+      "electronLayer": "Electron layer:",
+      "electronValue": "IPC guarded bridge",
+      "off": "Off",
+      "secureClips": "Secure clips loaded:",
+      "title": "Runtime Storage Metrics",
+      "webLayer": "Web layer:",
+      "webValue": "local-first storage"
+    },
+    "toggles": {
+      "active": "Active",
+      "guarded": "Guarded",
+      "off": "Off",
+      "title": "Interactive Guard Toggles"
     },
     "types": {
       "api_key": "مفتاح API",
       "credit_card": "بطاقة ائتمان",
-      "private_key": "مفتاح خاص",
-      "jwt": "رمز JWT"
+      "jwt": "رمز JWT",
+      "private_key": "مفتاح خاص"
+    },
+    "vault": {
+      "desc": "This is a guarded temporary visibility window. Electron encryption/decryption requires a trusted IPC bridge; web storage remains local-first only.",
+      "lock": "Lock",
+      "openVault": "Open Vault",
+      "passphrasePlaceholder": "Enter 6+ character passphrase...",
+      "tempWindow": "TEMPORARY VISIBILITY WINDOW",
+      "title": "Secure Password-Protected Vault"
     }
   },
-  "export": {
-    "clips": {
-      "title": "تصدير المقاطع",
-      "description": "تصدير عناصر الحافظة المحددة إلى تنسيقات مختلفة.",
-      "toMarkdown": "تصدير إلى Markdown",
-      "toPdf": "تصدير إلى PDF (مخطط له)",
-      "toJson": "تصدير إلى JSON"
+  "settings": {
+    "aiStorage": "الذكاء والتخزين",
+    "appearance": "المظهر",
+    "autoAnalyze": "التحليل التلقائي",
+    "backup": "النسخ الاحتياطي",
+    "backupExported": "تم تصدير النسخة الاحتياطية.",
+    "backupImported": "تم استيراد {count} عنصر.",
+    "backupNotice": "تكوين وقت تشغيل المزود مستبعد من تصدير النسخ الاحتياطي.",
+    "clearHistory": "مسح السجل",
+    "cloudGuarded": "المزامنة السحابية: محجوبة",
+    "cloudSync": "المزامنة السحابية",
+    "confirmClear": "تأكيد المسح",
+    "confirmClearHint": "اضغط مسح مرة أخرى للتأكيد.",
+    "dangerZone": "منطقة الخطر",
+    "defaultsRestored": "تمت استعادة الافتراضي.",
+    "densities": {
+      "comfortable": "مريح",
+      "compact": "مضغوط",
+      "spacious": "واسع"
+    },
+    "exportJson": "تصدير JSON",
+    "glowAccent": "إبراز الوهج / الشفافية",
+    "glows": {
+      "high": "عالي",
+      "low": "منخفض",
+      "medium": "متوسط"
+    },
+    "guardedNotice": "المزامنة السحابية معطلة حتى يوجد مزود مزامنة حقيقي.",
+    "heroSubtitle": "Language / اللغة",
+    "heroTitle": "تحكم تشغيلي كامل للذكاء والحافظة والأمان والتغليف.",
+    "historyCleared": "تم مسح السجل.",
+    "historyLimit": "حد السجل",
+    "importJson": "استيراد JSON",
+    "invalidBackup": "ملف KNOUX غير صحيح.",
+    "metrics": {
+      "aiItems": "ذكاء",
+      "clips": "العناصر",
+      "readiness": "الجاهزية",
+      "secure": "آمن"
+    },
+    "nav": {
+      "aiProvider": "مزود الذكاء",
+      "barcode": "الباركود",
+      "clipboard": "الحافظة",
+      "labs": "المختبرات",
+      "overview": "الرئيسية",
+      "security": "الأمان"
+    },
+    "productionBadge": "إعدادات إنتاج كنوكس",
+    "providerCheck": "تحقق من مزود الخادم",
+    "providerChecking": "جاري الفحص...",
+    "providerDescription": "يتم توجيه تنفيذ الذكاء عبر نقطة الخادم فقط.",
+    "providerDiagnostics": "تشخيص مزود الذكاء",
+    "providerModel": "النموذج",
+    "providerNotChecked": "غير مفحوص",
+    "providerRuntime": "الوقت التشغيلي",
+    "providerServerOnly": "مسار الخادم فقط",
+    "providerStatus": "الحالة",
+    "resetPreferences": "إعادة الإعدادات الافتراضية",
+    "settingsUpdated": "تم تحديث الإعدادات.",
+    "themeMode": "وضع السمة",
+    "themes": {
+      "dark": "داكن",
+      "light": "فاتح",
+      "system": "النظام"
+    },
+    "title": "الإعدادات",
+    "uiDensity": "كثافة الواجهة"
+  },
+  "shell": {
+    "sidebar": {
+      "about": "عن كنوكس",
+      "advancedWorkspace": "مساحة عمل متقدمة",
+      "ai": "مساعد الذكاء",
+      "aiReadyBadge": "Ready",
+      "barcode": "ماسح الباركود",
+      "clipboard": "مركز الحافظة",
+      "developer": "استوديو المطورين",
+      "labs": "مختبرات تجريبية",
+      "localVaultActive": "الخزنة المحلية نشطة",
+      "overview": "لوحة التحكم",
+      "preferences": "الإعدادات",
+      "privacyLocked": "الوضع الخاص مفعل",
+      "productTag": "منتج من كنوكس",
+      "ready": "جاهز",
+      "search": "بحث عميق",
+      "secureEnvironment": "بيئة آمنة",
+      "security": "الأمان والثقة",
+      "statusLocalVaultActive": "الخزنة المحلية نشطة",
+      "statusPrivacyLocked": "الوضع الخاص مفعل",
+      "statusReady": "جاهز",
+      "statusSecureEnvironment": "بيئة آمنة",
+      "toggleInspectorTitle": "Toggle system metrics panel",
+      "version": "v1.0.0"
+    },
+    "topbar": {
+      "aiGuarded": "المزود محمي",
+      "clear": "مسح",
+      "disablePrivacy": "إلغاء قفل الخصوصية",
+      "openAi": "فتح مساعد الذكاء",
+      "openSettings": "فتح الإعدادات",
+      "pageTitles": {
+        "about": "عن كنوكس",
+        "ai": "مساعد كنوكس الذكي",
+        "barcode": "ماسح الباركود",
+        "clipboard": "مركز الحافظة",
+        "default": "KNOUX AI الحافظة الذكية",
+        "developer": "استوديو المطورين",
+        "labs": "مختبرات تجريبية",
+        "overview": "نظرة عامة على العمل",
+        "search": "بحث شامل",
+        "security": "الأمان والخزنة المحلية",
+        "settings": "الإعدادات"
+      },
+      "refreshTitle": "تحديث تدفق الحافظة",
+      "searchPlaceholder": "البحث في سجل الحافظة والمقتطفات والسرية (Ctrl+K)...",
+      "systemCore": "نواة نظام كنوكس // حالة صادقة",
+      "themeTitle": "السمة",
+      "togglePrivacy": "تفعيل قفل الخصوصية"
     }
   },
-  "common": {
-    "running": "جاري التشغيل...",
-    "execute": "تنفيذ",
-    "loading": "جاري التحميل...",
-    "error": "حدث خطأ",
-    "retry": "إعادة المحاولة",
-    "save": "حفظ",
-    "cancel": "إلغاء",
-    "delete": "حذف",
-    "edit": "تعديل",
-    "add": "إضافة",
-    "close": "إغلاق",
-    "clear": "مسح",
-    "copy": "نسخ"
+  "studio": {
+    "active": "Active",
+    "aiRoute": {
+      "checkNow": "Check Now",
+      "model": "Model",
+      "provider": "Provider",
+      "status": "Status",
+      "title": "AI Route Diagnostics"
+    },
+    "base64": {
+      "base64Label": "Base64",
+      "decode": "فك التشفير",
+      "description": "قم بتشفير النص إلى Base64 أو فك تشفير Base64 إلى نص.",
+      "encode": "تشفير",
+      "error": "سلسلة Base64 غير صالحة للفك.",
+      "plainLabel": "نص عادي",
+      "title": "تشفير / فك تشفير Base64"
+    },
+    "commands": {
+      "title": "Build & Packaging Commands"
+    },
+    "guarded": "Guarded",
+    "handoff": {
+      "copy": "Copy JSON",
+      "download": "Download JSON",
+      "title": "Handoff Report"
+    },
+    "heroDescription": "مساحة إنتاج كاملة للتشخيصات و19 أداة تطوير قابلة للتنفيذ وإجراءات خدمة حقيقية واختبارات API محمية وأوامر بناء وتقارير تسليم قابلة للتصدير. تستخدم الأدوات الثقيلة عمالًا خلفيين عند الدعم.",
+    "heroTitle": "استوديو مطوري كنوكس",
+    "jsonFormatter": {
+      "description": "الصق بيانات JSON الخاصة بك لتنسيقها بشكل جميل.",
+      "error": "تنسيق JSON غير صالح.",
+      "format": "تنسيق",
+      "inputLabel": "الإدخال",
+      "outputLabel": "المخرجات المنسقة",
+      "placeholder": "الصق JSON هنا...",
+      "title": "منسق JSON"
+    },
+    "jwtViewer": {
+      "description": "فك تشفير وفحص رموز الويب JSON محليًا.",
+      "errorDecode": "فشل فك تشفير أو تحليل JWT. تحقق مما إذا كان رمزًا صالحًا.",
+      "errorInvalid": "بنية JWT غير صالحة. يجب أن تتكون من 3 أجزاء مفصولة بنقاط.",
+      "headerLabel": "الرأس",
+      "inputLabel": "رمز JWT",
+      "payloadLabel": "الحمولة",
+      "placeholder": "الصق رمز JWT هنا...",
+      "signatureNotice": "التحقق من التوقيع هو إجراء محمي ويتطلب مفتاحًا سريًا. هذه الأداة تفك تشفير الرمز فقط.",
+      "title": "عارض JWT"
+    },
+    "liveReport": "Live Report",
+    "matrix": {
+      "config": "Config:",
+      "fallback": "Fallback:",
+      "handler": "Handler:",
+      "implemented": "Implemented:",
+      "no": "No",
+      "none": "None",
+      "required": "Required",
+      "runtime": "Runtime:",
+      "title": "Service Reality Matrix",
+      "yes": "Yes"
+    },
+    "metrics": {
+      "aiRoute": "AI Route",
+      "readiness": "Readiness",
+      "tools": "Tools",
+      "workers": "Workers"
+    },
+    "ready": "Ready",
+    "reportTitle": "تم تصدير تقرير التسليم",
+    "statusLabel": "لوحة تحكم المطور",
+    "toolBench": {
+      "copy": "Copy",
+      "output": "Output",
+      "run": "Run",
+      "running": "Running",
+      "sample": "Sample",
+      "title": "Active Tool Bench"
+    },
+    "utilsSection": {
+      "badge": "19 Developer Utilities",
+      "desc": "Run the local utility, load a valid service-specific sample, or copy the last output. Worker-backed tools reduce main-thread blocking for large inputs.",
+      "heading": "Every developer card has three specific actions.",
+      "lastStatus": "Last status:"
+    },
+    "workerBadge": "Worker"
   }
 }
