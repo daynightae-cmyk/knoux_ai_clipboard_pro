@@ -12,6 +12,7 @@ import SettingsPage from "./components/SettingsPageServerOnly";
 import LabsPage from "./components/LabsPage";
 import AboutPage from "./components/AboutPage";
 import StudioPage from "./components/StudioPage";
+import QALabPage from "./components/QALabPage";
 import BarcodeScannerPage from "./components/BarcodeScannerPage";
 import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
@@ -223,6 +224,7 @@ export default function App() {
       case "settings": return <SettingsPage settings={settings} setSettings={setSettings} onClearHistory={handleClearHistory} setActiveTab={setActiveTab} items={items} onUpdateItems={saveClips} />;
       case "labs": return <LabsPage />;
       case "developer": return <StudioPage items={items} />;
+      case "qa": return <QALabPage />;
       case "about": return <AboutPage />;
       default: return <OverviewDashboard items={items} onCopyItem={handleCopyItem} onTogglePin={handleTogglePin} onDeleteItem={handleDeleteItem} setActiveTab={setActiveTab} setAiInputText={setAiInputText} onAddNewItem={handleAddNewItem} />;
     }

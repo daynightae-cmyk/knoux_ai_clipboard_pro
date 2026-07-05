@@ -82,7 +82,7 @@ export default function ServiceControlPanel({ items, onStatus }: Props) {
         </div>
 
         <div className="grid grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_460px] gap-5">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">
             {visibleServices.map((service) => {
               const labels = serviceActionLabels(service);
               const Icon = categoryIcon(service.category);

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ClipboardItem, NavTab } from "../types";
-import { Command, Copy, Lock, Search, Shield, Sparkles, TerminalSquare, X } from "lucide-react";
+import { Beaker, Command, Copy, Lock, Search, Shield, Sparkles, TerminalSquare, X } from "lucide-react";
 import { triggerPanicMode } from "../security/vault";
 
 interface CommandPaletteProps {
@@ -45,6 +45,7 @@ export default function CommandPalette({ open, onOpenChange, items, activeTab, s
     { id: "open-search", label: "Open Universal Search", hint: "Search clips, tags, sources", icon: Search, run: () => { setActiveTab("search"); close(); } },
     { id: "open-ai", label: "Open AI Co-Pilot", hint: "Run guarded OpenRouter actions", icon: Sparkles, run: () => { setActiveTab("ai"); close(); } },
     { id: "open-dev", label: "Open Developer Studio", hint: "JSON, Regex, Markdown, PDF and handoff tools", icon: TerminalSquare, run: () => { setActiveTab("developer"); close(); } },
+    { id: "open-qa", label: "Open Testing / QA Lab", hint: "Run code-aware QA checks and reports", icon: Beaker, run: () => { setActiveTab("qa"); close(); } },
     { id: "open-security", label: "Open Security Vault", hint: "Vault, redaction and audit log", icon: Shield, run: () => { setActiveTab("security"); close(); } },
     { id: "open-settings", label: "Open Settings", hint: "Runtime, language, theme and AI diagnostics", icon: Command, run: () => { setActiveTab("settings"); close(); } },
     { id: "copy-latest", label: "Copy Latest Clip", hint: latest ? latest.content.slice(0, 80) : "No clipboard item available", icon: Copy, run: () => { if (latest) onCopyItem(latest); else onToast("No clipboard item available."); close(); } },
