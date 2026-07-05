@@ -19,10 +19,16 @@
       "ready": "جاهز",
       "privacyLocked": "الوضع الخاص مفعل",
       "secureEnvironment": "بيئة آمنة",
-      "localVaultActive": "الخزنة المحلية نشطة"
+      "localVaultActive": "الخزنة المحلية نشطة",
+      "statusReady": "جاهز",
+      "statusPrivacyLocked": "الوضع الخاص مفعل",
+      "statusSecureEnvironment": "بيئة آمنة",
+      "statusLocalVaultActive": "الخزنة المحلية نشطة",
+      "productTag": "منتج من كنوكس",
+      "version": "v1.0.0"
     },
     "topbar": {
-      "searchPlaceholder": "ابحث في سجل الحافظة والمقتطفات والسرية (Ctrl+K)...",
+      "searchPlaceholder": "البحث في سجل الحافظة والمقتطفات والسرية (Ctrl+K)...",
       "clear": "مسح",
       "refreshTitle": "تحديث تدفق الحافظة",
       "togglePrivacy": "تفعيل قفل الخصوصية",
@@ -31,6 +37,7 @@
       "openSettings": "فتح الإعدادات",
       "themeTitle": "السمة",
       "aiGuarded": "المزود محمي",
+      "systemCore": "KNOUX_SYSTEM_CORE // حالة صادقة",
       "pageTitles": {
         "overview": "نظرة عامة على العمل",
         "clipboard": "مركز الحافظة",
@@ -78,7 +85,11 @@
     "emptyStateTitle": "جاهز للبحث",
     "emptyStateDescription": "اكتب في شريط البحث أعلاه أو اختر مصطلحًا مقترحًا لمسح سجلات الحافظة المحلية.",
     "noMatchesTitle": "لا توجد نتائج في قاعدة البيانات المحلية",
-    "noMatchesDescription": "جرب كلمات بحث أوسع أو امسح الفلاتر. فحص كنوكس {count} عنصرًا في الذاكرة المؤقتة."
+    "noMatchesDescription": "جرب كلمات بحث أوسع أو امسح الفلاتر. فحص كنوكس {count} عنصرًا في الذاكرة المؤقتة.",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "dateAtTime": "{date} في {time}",
+    "sourcePrefix": "• {source}"
   },
   "about": {
     "heroTitle": "Knoux AI Clipboard Pro",
@@ -86,7 +97,93 @@
     "creativeDirector": "المدير الإبداعي",
     "developerConnections": "روابط المطور المباشرة",
     "philosophy": "فلسفة الهندسة البرمجية",
-    "footer": "© 2026 Knoux. جميع الحقوق محفوظة. تم إنشاؤه باستخدام Electron وReact وTailwind CSS."
+    "footer": "© 2026 Knoux. جميع الحقوق محفوظة. تم إنشاؤه باستخدام Electron وReact وTailwind CSS.",
+    "stableRelease": "الإصدار المستقر v1.0.0",
+    "officialStore": "متجر كنوكس الرسمي:",
+    "creatorTitle": "المهندس صادق الجزار (Knoux)",
+    "creatorDescription": "يقود نظام كنوكس البصري ويطور حلول إنتاجية متميزة تتوافق بين الجماليات النظيفة وحدود الأمان المحلية الصادقة.",
+    "contact": {
+      "website": "الموقع",
+      "github": "غيت هاب",
+      "instagram": "إنستغرام",
+      "whatsapp": "واتساب",
+      "email": "دعم البريد"
+    },
+    "features": {
+      "circularUI": {
+        "title": "لغة واجهة دائرية",
+        "desc": "مصممة بدقة وفق نظام الميدالية الدائرية ليطابق أدلة Sadek المعتمدة بصريًا."
+      },
+      "privacyLocal": {
+        "title": "عزل الخصوصية المحلي أولًا",
+        "desc": "تظل سجلات الحافظة محلية في الواجهة ما لم تستخدم إجراء ذكاء اصطناعي محمي صراحةً. وتقتصر التشفير على جسر IPC الخاص بالـ Electron."
+      },
+      "serverProxy": {
+        "title": "وكيل OpenRouter على الخادم",
+        "desc": "يستفيد من نماذج OpenRouter على الخادم لتنسيق وتحليل وترجمة وشرح سجلات الحافظة بأمان."
+      }
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "heroTitle": "تحكم تشغيلي كامل للذكاء والحافظة والأمان والتغليف.",
+    "heroSubtitle": "Language / اللغة",
+    "appearance": "المظهر",
+    "themeMode": "وضع السمة",
+    "uiDensity": "كثافة الواجهة",
+    "glowAccent": "إبراز الوهج / الشفافية",
+    "providerDiagnostics": "تشخيص مزود الذكاء",
+    "providerDescription": "يتم توجيه تنفيذ الذكاء عبر نقطة الخادم فقط.",
+    "providerStatus": "الحالة",
+    "providerModel": "النموذج",
+    "providerRuntime": "الوقت التشغيلي",
+    "providerCheck": "تحقق من مزود الخادم",
+    "providerChecking": "جاري الفحص...",
+    "aiStorage": "الذكاء والتخزين",
+    "autoAnalyze": "التحليل التلقائي",
+    "cloudSync": "المزامنة السحابية",
+    "historyLimit": "حد السجل",
+    "backup": "النسخ الاحتياطي",
+    "exportJson": "تصدير JSON",
+    "importJson": "استيراد JSON",
+    "dangerZone": "منطقة الخطر",
+    "resetPreferences": "إعادة الإعدادات الافتراضية",
+    "clearHistory": "مسح السجل",
+    "confirmClear": "تأكيد المسح",
+    "defaultsRestored": "تمت استعادة الافتراضي.",
+    "historyCleared": "تم مسح السجل.",
+    "settingsUpdated": "تم تحديث الإعدادات.",
+    "backupExported": "تم تصدير النسخة الاحتياطية.",
+    "backupImported": "تم استيراد {count} عنصر.",
+    "invalidBackup": "ملف KNOUX غير صحيح.",
+    "confirmClearHint": "اضغط مسح مرة أخرى للتأكيد.",
+    "providerNotChecked": "غير مفحوص",
+    "providerServerOnly": "خادم فقط",
+    "cloudGuarded": "المزامنة السحابية: محجوبة",
+    "guardedNotice": "المزامنة السحابية معطلة حتى يوجد مزود مزامنة حقيقي."
+  },
+  "labs": {
+    "badge": "لوحة تحكم إنتاج كنوكس",
+    "heroTitle": "تم تحويل مختبرات الخدمات إلى سجل إنتاجي منظم.",
+    "heroDescription": "تُظهر هذه الصفحة فقط حالة التسجيل للخدمات النشطة والمحمية والمخططة. تبقى القدرات المخططة معطلة حتى يتم التحقق من المعالجات والتغليف الحقيقيين.",
+    "metrics": {
+      "readiness": "الجاهزية",
+      "activeServices": "الخدمات النشطة",
+      "openRouter": "OpenRouter",
+      "security": "الأمان"
+    },
+    "deployment": {
+      "title": "إشارة النشر",
+      "status": "جاهز لبناء الويب",
+      "vercel": "Vercel",
+      "electron": "Electron",
+      "fallback": "احتياطي"
+    },
+    "cards": {
+      "actionAvailable": "إجراء متاح",
+      "ready": "جاهز",
+      "guarded": "محمية"
+    }
   },
   "studio": {
     "heroTitle": "استوديو مطوري كنوكس",
@@ -99,7 +196,43 @@
     "patternRecognition": "التعرف على الأنماط",
     "gamified": "التجربة التفاعلية",
     "analytics": "لوحة التحليلات",
-    "predictions": "تنبؤات الذكاء الاصطناعي"
+    "predictions": "تنبؤات الذكاء الاصطناعي",
+    "status": {
+      "label": "حالة الذكاء",
+      "guard": "تم اكتشاف محتوى حساس. إجراءات الذكاء محجوبة."
+    },
+    "workspace": {
+      "title": "كتلة نص الحافظة المستهدفة",
+      "clearInput": "مسح الإدخال",
+      "placeholder": "الصق أي سجلات أو رسائل أو محتوى إبداعي أو أكواد هنا...",
+      "guardNotice": "محجوب حتى يتم إزالة المحتوى الحساس",
+      "stats": {
+        "volume": "حجم الأحرف",
+        "words": "الكلمات",
+        "targetLanguage": "اللغة الهدف"
+      },
+      "operatorTitle": "اختر عامل الذكاء",
+      "outputTitle": "مخرجات OpenRouter المعالجة",
+      "working": "Knoux OpenRouter يعمل...",
+      "emptyTitle": "جاهز للطلب",
+      "emptyDescription": "اختر أي إجراء من قائمة عوامل الذكاء على اليسار لتجميع مخرجات OpenRouter الحقيقية.",
+      "copyLabel": "نسخ إلى حافظة النظام",
+      "copySuccess": "تم النسخ بنجاح",
+      "commitLabel": "إلحاق بطاقة مقتطف",
+      "auditTitle": "سجل عمليات مساحة ذكاء كنوكس"
+    },
+    "operations": {
+      "summarize": { "label": "تلخيص", "desc": "استخراج ملخصات نقطية أساسية" },
+      "enhance": { "label": "تحسين النص", "desc": "رفع جودة القراءة والقواعد" },
+      "rewrite": { "label": "إعادة كتابة", "desc": "إعادة صياغة بأسلوب إداري" },
+      "translate": { "label": "ترجمة", "desc": "ترجمة المعاني بدقة" },
+      "analyze": { "label": "تحليل عميق", "desc": "الحصول على رؤى هيكلية ومفاهيم" },
+      "classify": { "label": "اقتراح وسوم", "desc": "تصنيف وسوم فئات منطقية" },
+      "extract": { "label": "استخراج النقاط", "desc": "استخرج القوائم والإجراءات والتفاصيل" },
+      "reply": { "label": "رد ذكي", "desc": "إنشاء رسائل رد احترافية" },
+      "explain-code": { "label": "شرح الكود", "desc": "شرح النصوص وتحسين الكود" },
+      "format-text": { "label": "تنسيق Markdown", "desc": "تجميل النصوص غير المنظمة" }
+    }
   },
   "common": {
     "loading": "جاري التحميل...",

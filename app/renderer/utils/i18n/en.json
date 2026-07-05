@@ -19,7 +19,13 @@
       "ready": "Ready",
       "privacyLocked": "Privacy Locked",
       "secureEnvironment": "Secure Environment",
-      "localVaultActive": "Local Vault Active"
+      "localVaultActive": "Local Vault Active",
+      "statusReady": "Ready",
+      "statusPrivacyLocked": "Privacy Locked",
+      "statusSecureEnvironment": "Secure Environment",
+      "statusLocalVaultActive": "Local Vault Active",
+      "productTag": "A Knoux Product",
+      "version": "v1.0.0"
     },
     "topbar": {
       "searchPlaceholder": "Search clip history, code snippets, secure vaults (Ctrl+K)...",
@@ -31,6 +37,7 @@
       "openSettings": "Open Preferences",
       "themeTitle": "Theme",
       "aiGuarded": "AI Provider Guarded",
+      "systemCore": "KNOUX_SYSTEM_CORE // honest status",
       "pageTitles": {
         "overview": "Workspace Overview",
         "clipboard": "Clipboard Hub",
@@ -78,7 +85,11 @@
     "emptyStateTitle": "Ready for search retrieval",
     "emptyStateDescription": "Type inside the search bar above or click any suggested term to scan local clipboard records.",
     "noMatchesTitle": "No matches in local database",
-    "noMatchesDescription": "Try search expansion terms or clear active filters. Knoux has scanned {count} records in temporary memory."
+    "noMatchesDescription": "Try search expansion terms or clear active filters. Knoux has scanned {count} records in temporary memory.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "dateAtTime": "{date} at {time}",
+    "sourcePrefix": "• {source}"
   },
   "about": {
     "heroTitle": "Knoux AI Clipboard Pro",
@@ -86,7 +97,93 @@
     "creativeDirector": "Creative Director",
     "developerConnections": "Direct Developer Connections",
     "philosophy": "Platform Engineering Philosophy",
-    "footer": "© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS."
+    "footer": "© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.",
+    "stableRelease": "Stable Release v1.0.0",
+    "officialStore": "Official Knoux Store:",
+    "creatorTitle": "Eng. Sadek Elgazar (Knoux)",
+    "creatorDescription": "Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.",
+    "contact": {
+      "website": "Website",
+      "github": "GitHub",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "email": "Email Support"
+    },
+    "features": {
+      "circularUI": {
+        "title": "Circular UI Design Language",
+        "desc": "Crafted strictly following the circular medallion design system to match Sadek's approved visual guides."
+      },
+      "privacyLocal": {
+        "title": "Privacy local-first sandboxing",
+        "desc": "Clipboard records stay local in the renderer unless you explicitly use a guarded AI action. Electron vault encryption is scoped to its IPC bridge."
+      },
+      "serverProxy": {
+        "title": "Server-side OpenRouter proxying",
+        "desc": "Harnesses server-side OpenRouter models to format, analyze, translate, and explain clipboard logs safely."
+      }
+    }
+  },
+  "settings": {
+    "title": "Preferences",
+    "heroTitle": "Operational controls for AI, storage, security, and deployment readiness.",
+    "heroSubtitle": "Language / اللغة",
+    "appearance": "Appearance",
+    "themeMode": "Theme Mode",
+    "uiDensity": "UI Density",
+    "glowAccent": "Glow / Transparency Accent",
+    "providerDiagnostics": "AI Provider Diagnostics",
+    "providerDescription": "AI execution is routed through the server endpoint only.",
+    "providerStatus": "Status",
+    "providerModel": "Model",
+    "providerRuntime": "Runtime",
+    "providerCheck": "Check Server Provider",
+    "providerChecking": "Checking...",
+    "aiStorage": "AI & Storage",
+    "autoAnalyze": "Auto Analyze",
+    "cloudSync": "Cloud Sync",
+    "historyLimit": "History limit",
+    "backup": "Backup",
+    "exportJson": "Export JSON",
+    "importJson": "Import JSON",
+    "dangerZone": "Danger Zone",
+    "resetPreferences": "Reset Preferences",
+    "clearHistory": "Clear History",
+    "confirmClear": "Confirm Clear",
+    "defaultsRestored": "Defaults restored.",
+    "historyCleared": "History cleared.",
+    "settingsUpdated": "Settings updated.",
+    "backupExported": "Backup exported.",
+    "backupImported": "Imported {count} records.",
+    "invalidBackup": "Invalid KNOUX backup file.",
+    "confirmClearHint": "Press Clear History again to confirm.",
+    "providerNotChecked": "provider_not_checked",
+    "providerServerOnly": "server-route-only",
+    "cloudGuarded": "Cloud Sync: Guarded",
+    "guardedNotice": "Cloud sync is disabled until a real sync backend exists."
+  },
+  "labs": {
+    "badge": "KNOUX Production Control Deck",
+    "heroTitle": "Service Labs converted into a controlled production registry.",
+    "heroDescription": "This page only shows registry state for active, guarded, and planned services. Planned capabilities stay disabled until real handlers and packaging are verified.",
+    "metrics": {
+      "readiness": "Readiness",
+      "activeServices": "Active Services",
+      "openRouter": "OpenRouter",
+      "security": "Security"
+    },
+    "deployment": {
+      "title": "Deployment Signal",
+      "status": "Web Build Ready",
+      "vercel": "Vercel",
+      "electron": "Electron",
+      "fallback": "Fallback"
+    },
+    "cards": {
+      "actionAvailable": "Action available",
+      "ready": "Ready",
+      "guarded": "Guarded"
+    }
   },
   "studio": {
     "heroTitle": "KNOUX Developer Studio",
@@ -99,7 +196,43 @@
     "patternRecognition": "Pattern Recognition",
     "gamified": "Gamified Experience",
     "analytics": "Analytics Dashboard",
-    "predictions": "AI Predictions"
+    "predictions": "AI Predictions",
+    "status": {
+      "label": "AI status",
+      "guard": "Sensitive content detected. AI actions are guarded."
+    },
+    "workspace": {
+      "title": "Target Clipboard Text Block",
+      "clearInput": "Clear Input",
+      "placeholder": "Paste any system logs, emails, creative content, or code segments here...",
+      "guardNotice": "Guarded until sensitive content is removed",
+      "stats": {
+        "volume": "Character Volume",
+        "words": "Words",
+        "targetLanguage": "Target Language"
+      },
+      "operatorTitle": "Select AI Operator",
+      "outputTitle": "OpenRouter Processed Output",
+      "working": "Knoux OpenRouter AI Working...",
+      "emptyTitle": "Ready for Prompt",
+      "emptyDescription": "Select any of the AI operator actions on the left side to compile real OpenRouter outputs.",
+      "copyLabel": "Copy to System Clipboard",
+      "copySuccess": "Copied Successfully",
+      "commitLabel": "Commit as Snippet Card",
+      "auditTitle": "Knoux AI Workspace Audit Trail"
+    },
+    "operations": {
+      "summarize": { "label": "Summarize", "desc": "Extract key bullet summaries" },
+      "enhance": { "label": "Enhance Text", "desc": "Elevate readability and grammar" },
+      "rewrite": { "label": "Rewrite Corp", "desc": "Rephrase into corporate style" },
+      "translate": { "label": "Translate", "desc": "Localize semantics accurately" },
+      "analyze": { "label": "Deep Analyze", "desc": "Get structural & entity insights" },
+      "classify": { "label": "Suggest Tags", "desc": "Classify logical category tags" },
+      "extract": { "label": "Extract Points", "desc": "Pull lists, actions, & details" },
+      "reply": { "label": "Smart Reply", "desc": "Draft professional responder emails" },
+      "explain-code": { "label": "Explain Code", "desc": "Explain scripts and optimize code" },
+      "format-text": { "label": "Format Markdown", "desc": "Beautify unstructured raw text" }
+    }
   },
   "common": {
     "loading": "Loading...",

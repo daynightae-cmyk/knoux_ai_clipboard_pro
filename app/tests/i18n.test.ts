@@ -11,9 +11,18 @@ describe('i18n translation coverage', () => {
     expect(i18n.t('shell.topbar.searchPlaceholder')).toContain('Search');
   });
 
+  it('returns overview labels from the shared dictionaries', () => {
+    expect(i18n.t('overview.quickActionsTitle')).toBe('One-Tap Quick Clipboard Actions');
+  });
+
+  it('returns settings labels from the shared dictionaries', () => {
+    expect(i18n.t('settings.title')).toBe('Preferences');
+  });
+
   it('returns Arabic strings when Arabic is selected', () => {
     i18n.setLanguage('ar');
     expect(i18n.t('shell.sidebar.ai')).toBe('مساعد الذكاء');
     expect(i18n.t('shell.topbar.searchPlaceholder')).toContain('البحث');
+    expect(i18n.t('overview.quickActionsTitle')).toBe('إجراءات الحافظة السريعة بنقرة واحدة');
   });
 });
