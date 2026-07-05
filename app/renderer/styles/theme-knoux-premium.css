@@ -1,3 +1,4 @@
+/* Knoux AI Clipboard Pro — Premium Light Glass UI Skin */
 :root {
   --knoux-purple-500: #8226ee;
   --knoux-purple-700: #500fc8;
@@ -8,68 +9,391 @@
   --knoux-lilac-300: #c17ceb;
   --knoux-lavender-100: #cfb4ea;
   --knoux-lavender-white: #f3e6fb;
+  --knoux-white: #ffffff;
   --knoux-soft-white: #fcfaff;
-  --knoux-text-primary: #1a1225;
-  --knoux-text-secondary: #6e6487;
-  --knoux-text-muted: #9b93ae;
-  --knoux-border-subtle: rgba(130, 38, 238, 0.12);
-  --knoux-border-strong: rgba(130, 38, 238, 0.28);
+  --knoux-bg: #fbf7ff;
+  --knoux-surface: rgba(255, 255, 255, 0.78);
+  --knoux-surface-raised: rgba(255, 255, 255, 0.9);
+  --knoux-surface-glass: rgba(255, 255, 255, 0.74);
+  --knoux-card: rgba(255, 255, 255, 0.78);
+  --knoux-card-elevated: rgba(255, 255, 255, 0.92);
+  --knoux-card-border: rgba(130, 38, 238, 0.13);
+  --knoux-card-border-strong: rgba(130, 38, 238, 0.32);
+  --knoux-text-primary: #140d26;
+  --knoux-text-secondary: #514467;
+  --knoux-text-muted: #766b8c;
+  --knoux-purple: var(--knoux-purple-500);
+  --knoux-purple-strong: var(--knoux-purple-700);
+  --knoux-accent: var(--knoux-orchid-400);
+  --knoux-icon-bg: rgba(130, 38, 238, 0.1);
+  --knoux-icon-border: rgba(130, 38, 238, 0.16);
+  --knoux-glow: 0 18px 58px rgba(130, 38, 238, 0.13), 0 2px 14px rgba(80, 15, 200, 0.08);
+  --knoux-glow-strong: 0 32px 90px rgba(130, 38, 238, 0.22), 0 8px 30px rgba(28, 11, 78, 0.12);
+  --knoux-success: #16a34a;
+  --knoux-warning: #d97706;
+  --knoux-danger: #dc2626;
+  --gradient-brand: linear-gradient(135deg, #8226ee 0%, #500fc8 100%);
+  --gradient-brand-soft: linear-gradient(135deg, #c17ceb 0%, #8226ee 54%, #500fc8 100%);
+  --gradient-page-bg: radial-gradient(circle at 8% 10%, rgba(193, 124, 235, 0.42), transparent 28%), radial-gradient(circle at 88% 18%, rgba(130, 38, 238, 0.24), transparent 26%), radial-gradient(circle at 45% 90%, rgba(207, 180, 234, 0.38), transparent 36%), linear-gradient(135deg, #fff 0%, #fcfaff 40%, #f3e6fb 100%);
+}
+
+html[data-theme="night"] {
+  color-scheme: dark;
+  --knoux-bg: #11091d;
+  --knoux-surface: rgba(23, 13, 39, 0.78);
+  --knoux-surface-raised: rgba(33, 20, 54, 0.84);
+  --knoux-surface-glass: rgba(29, 16, 48, 0.74);
+  --knoux-card: rgba(30, 16, 50, 0.76);
+  --knoux-card-elevated: rgba(42, 25, 67, 0.86);
+  --knoux-card-border: rgba(207, 180, 234, 0.2);
+  --knoux-card-border-strong: rgba(207, 180, 234, 0.38);
+  --knoux-text-primary: #fffaff;
+  --knoux-text-secondary: #e8dcf6;
+  --knoux-text-muted: #c2b1dc;
+  --knoux-purple: #d7b6ff;
+  --knoux-purple-strong: #a74ce7;
+  --knoux-accent: #efe0fb;
+  --knoux-icon-bg: rgba(199, 124, 235, 0.16);
+  --knoux-icon-border: rgba(199, 124, 235, 0.24);
+  --knoux-glow: 0 18px 64px rgba(0, 0, 0, 0.32), 0 0 34px rgba(130, 38, 238, 0.15);
+  --knoux-glow-strong: 0 32px 92px rgba(0, 0, 0, 0.44), 0 0 50px rgba(193, 124, 235, 0.18);
+  --gradient-page-bg: radial-gradient(circle at 12% 4%, rgba(130, 38, 238, 0.3), transparent 28%), radial-gradient(circle at 88% 8%, rgba(193, 124, 235, 0.16), transparent 26%), linear-gradient(135deg, #090412 0%, #160b25 45%, #0d0527 100%);
+}
+
+html, body, #root {
+  min-width: 100%;
+  min-height: 100%;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: radial-gradient(circle at 20% 0%, #f3e6fb 0%, #fcfaff 45%, #ffffff 100%);
-  color: var(--knoux-text-primary);
+  background: var(--gradient-page-bg) !important;
+  color: var(--knoux-text-primary) !important;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-.knoux-app-shell {
-  background: radial-gradient(circle at 18% 0%, rgba(130, 38, 238, 0.13), transparent 34%), radial-gradient(circle at 90% 10%, rgba(193, 124, 235, 0.12), transparent 32%), linear-gradient(135deg, #fcfaff 0%, #f3e6fb 48%, #ffffff 100%);
+.knoux-app-shell,
+.knoux-window {
+  background: var(--gradient-page-bg) !important;
+  color: var(--knoux-text-primary) !important;
+  isolation: isolate;
 }
 
-.circuit-bg::before {
+.knoux-app-shell::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.28;
-  background-image: linear-gradient(rgba(130, 38, 238, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(130, 38, 238, 0.08) 1px, transparent 1px);
-  background-size: 42px 42px;
+  z-index: 0;
+  opacity: 0.36;
+  background-image: radial-gradient(circle at 16% 20%, rgba(130, 38, 238, 0.12), transparent 16%), radial-gradient(circle at 86% 18%, rgba(193, 124, 235, 0.15), transparent 18%), linear-gradient(90deg, rgba(130,38,238,0.055) 1px, transparent 1px), linear-gradient(rgba(130,38,238,0.045) 1px, transparent 1px);
+  background-size: auto, auto, 52px 52px, 52px 52px;
+  mask-image: radial-gradient(circle at 50% 18%, #000 0%, transparent 76%);
+}
+
+.knoux-window > main {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  direction: ltr;
+}
+
+#shell-sidebar-container {
+  direction: rtl;
+  background: rgba(255, 255, 255, 0.64) !important;
+  color: var(--knoux-text-primary) !important;
+  border-right: 1px solid rgba(130, 38, 238, 0.12) !important;
+  box-shadow: 24px 0 80px rgba(130, 38, 238, 0.12) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+}
+
+html[data-theme="night"] #shell-sidebar-container {
+  background: rgba(17, 9, 29, 0.72) !important;
+  border-right-color: rgba(207, 180, 234, 0.16) !important;
+}
+
+#shell-sidebar-container > div:first-child > div:first-child,
+#shell-sidebar-container > div:last-child {
+  background: transparent !important;
+  border-color: var(--knoux-card-border) !important;
+}
+
+#shell-sidebar-container span,
+#shell-sidebar-container button {
+  color: var(--knoux-text-primary) !important;
+  text-shadow: none !important;
+}
+
+#shell-sidebar-container button {
+  border-radius: 18px !important;
+}
+
+#shell-sidebar-container nav button {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--knoux-text-secondary) !important;
+}
+
+#shell-sidebar-container nav button:hover,
+#shell-sidebar-container nav button[class*="bg-gradient"],
+#shell-sidebar-container nav button[class*="bg-white/"] {
+  background: rgba(130, 38, 238, 0.1) !important;
+  border-color: rgba(130, 38, 238, 0.18) !important;
+  box-shadow: 0 14px 32px rgba(130, 38, 238, 0.12) !important;
+}
+
+#shell-sidebar-container nav button[class*="bg-gradient"] span,
+#shell-sidebar-container nav button[class*="bg-white/"] span {
+  color: var(--knoux-purple-500) !important;
+}
+
+header.sticky,
+.knoux-window > header {
+  height: 70px !important;
+  margin: 14px 18px 0 !important;
+  border: 1px solid rgba(130, 38, 238, 0.14) !important;
+  border-radius: 26px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: 0 18px 58px rgba(130, 38, 238, 0.12) !important;
+  backdrop-filter: blur(26px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+}
+
+html[data-theme="night"] header.sticky,
+html[data-theme="night"] .knoux-window > header {
+  background: rgba(24, 14, 39, 0.72) !important;
+}
+
+input,
+textarea,
+select {
+  color: var(--knoux-text-primary) !important;
+  background: rgba(255, 255, 255, 0.74) !important;
+  border-color: rgba(130, 38, 238, 0.14) !important;
+}
+
+html[data-theme="night"] input,
+html[data-theme="night"] textarea,
+html[data-theme="night"] select {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #fffaff !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--knoux-text-muted) 88%, transparent) !important;
 }
 
 .glass-panel,
 .glass-elevated,
+.knoux-section,
 .knoux-premium-card,
 .knoux-glass-card,
-.knoux-glass-panel {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(22px) saturate(130%);
-  -webkit-backdrop-filter: blur(22px) saturate(130%);
-  border: 1px solid var(--knoux-border-subtle);
-  border-radius: 28px;
-  box-shadow: 0 8px 32px rgba(130, 38, 238, 0.08), 0 2px 8px rgba(130, 38, 238, 0.04);
+.knoux-glass-panel,
+.stat-card,
+.ai-result-panel,
+#clipboard-workspace-root form,
+#clipboard-workspace-root .knoux-card-hover {
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: var(--knoux-text-primary) !important;
+  border: 1px solid rgba(130, 38, 238, 0.14) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--knoux-glow) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
 }
 
+html[data-theme="night"] .glass-panel,
+html[data-theme="night"] .glass-elevated,
+html[data-theme="night"] .knoux-section,
+html[data-theme="night"] .knoux-premium-card,
+html[data-theme="night"] .knoux-glass-card,
+html[data-theme="night"] .knoux-glass-panel,
+html[data-theme="night"] .stat-card,
+html[data-theme="night"] #clipboard-workspace-root form,
+html[data-theme="night"] #clipboard-workspace-root .knoux-card-hover {
+  background: rgba(29, 16, 48, 0.7) !important;
+  border-color: rgba(207, 180, 234, 0.18) !important;
+}
+
+.knoux-section,
 .glass-elevated {
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 20px 60px rgba(130, 38, 238, 0.15);
+  border-radius: 34px !important;
+  padding: 28px !important;
 }
 
-.btn-knoux-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1rem;
-  border-radius: 0.9rem;
-  background: linear-gradient(135deg, #8226ee 0%, #500fc8 100%);
+.knoux-premium-card,
+#clipboard-workspace-root .knoux-card-hover {
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease;
+}
+
+.knoux-premium-card:hover,
+#clipboard-workspace-root .knoux-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(130, 38, 238, 0.28) !important;
+  box-shadow: var(--knoux-glow-strong) !important;
+}
+
+.text-knoux-dark-text,
+[class*="text-knoux-dark-text"] {
+  color: var(--knoux-text-primary) !important;
+}
+
+.text-knoux-muted-text,
+[class*="text-knoux-muted-text"] {
+  color: var(--knoux-text-secondary) !important;
+}
+
+p,
+span,
+button,
+label,
+small,
+div {
+  letter-spacing: -0.005em;
+}
+
+h1, h2, h3, h4,
+.heading-hero {
+  color: var(--knoux-text-primary) !important;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace !important;
+}
+
+.btn-knoux-primary,
+.knoux-premium-button,
+button[class*="from-knoux-purple"],
+button[class*="bg-knoux-purple"] {
+  background: var(--gradient-brand-soft) !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow: 0 16px 36px rgba(130, 38, 238, 0.24) !important;
+}
+
+.btn-knoux-secondary,
+button[class*="border-knoux-purple"] {
+  background: rgba(255, 255, 255, 0.64) !important;
+  color: var(--knoux-purple-500) !important;
+  border-color: rgba(130, 38, 238, 0.16) !important;
+  box-shadow: 0 10px 26px rgba(130, 38, 238, 0.06) !important;
+}
+
+html[data-theme="night"] .btn-knoux-secondary,
+html[data-theme="night"] button[class*="border-knoux-purple"] {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #efe0fb !important;
+}
+
+button:hover {
+  filter: saturate(1.05);
+}
+
+.knoux-badge,
+.badge-pro,
+.badge-experimental,
+[class*="knoux-badge-"] {
+  border-radius: 999px !important;
+  padding: 5px 10px !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+}
+
+.knoux-badge-active,
+.knoux-status-ready {
+  background: rgba(34, 197, 94, 0.12) !important;
+  color: #047857 !important;
+  border: 1px solid rgba(34, 197, 94, 0.22) !important;
+}
+
+.knoux-badge-ready {
+  background: rgba(37, 99, 235, 0.1) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(37, 99, 235, 0.18) !important;
+}
+
+.knoux-badge-guarded,
+.knoux-status-warning {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #b45309 !important;
+  border: 1px solid rgba(245, 158, 11, 0.22) !important;
+}
+
+#clipboard-workspace-root {
+  height: calc(100vh - 84px) !important;
+  padding: 18px 18px 0 !important;
+  gap: 16px;
+}
+
+#clipboard-workspace-root > div:first-child,
+#clipboard-workspace-root > div:nth-child(2) {
+  background: transparent !important;
+  padding-inline: 0 !important;
+}
+
+#clipboard-workspace-root .flex-1.flex.overflow-hidden {
+  gap: 18px;
+}
+
+#clipboard-workspace-root .w-56 {
+  border: 1px solid rgba(130, 38, 238, 0.12) !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.66) !important;
+  box-shadow: var(--knoux-glow) !important;
+  margin-bottom: 18px;
+}
+
+#ai-workspace-container > div > div,
+#ai-workspace-container .rounded-3xl {
+  border-radius: 32px !important;
+}
+
+#ai-workspace-container textarea {
+  min-height: 210px;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+#ai-workspace-container .rounded-2xl,
+#ai-workspace-container button {
+  border-radius: 20px !important;
+}
+
+.knoux-doc-card {
+  background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.58)) !important;
+  border: 1px solid rgba(130,38,238,.14) !important;
+  border-radius: 26px !important;
+  box-shadow: var(--knoux-glow) !important;
+}
+
+.knoux-doc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
   color: #fff;
-  font-weight: 900;
-  box-shadow: 0 8px 24px rgba(130, 38, 238, 0.35);
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, .22);
 }
 
-.knoux-gradient-text,
-.text-gradient-primary {
-  background: linear-gradient(135deg, #8226ee 0%, #500fc8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+[dir="rtl"] .knoux-window,
+[dir="rtl"] main,
+[dir="rtl"] header,
+[dir="rtl"] #clipboard-workspace-root,
+[dir="rtl"] #ai-workspace-container {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+@media (max-width: 920px) {
+  #shell-sidebar-container { width: 86px !important; }
+  header.sticky, .knoux-window > header { margin-inline: 10px !important; }
+  #clipboard-workspace-root { padding-inline: 10px !important; }
 }
