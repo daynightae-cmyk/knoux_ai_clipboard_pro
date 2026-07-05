@@ -1,0 +1,33 @@
+name: KNOUX Production Validation
+
+on:
+  push:
+    branches: [main, complete-production-polish]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Renderer, Electron, and Tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --include=dev
+
+      - name: Build renderer
+        run: npm run build:renderer
+
+      - name: Build Electron main
+        run: npm run build:main
+
+      - name: Run tests
+        run: npm test
