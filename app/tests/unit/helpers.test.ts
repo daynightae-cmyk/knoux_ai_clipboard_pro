@@ -190,6 +190,12 @@ describe('helpers', () => {
   });
 
   describe('copyToClipboard / readFromClipboard', () => {
+    const originalClipboard = navigator.clipboard;
+
+    afterEach(() => {
+      Object.assign(navigator, { clipboard: originalClipboard });
+    });
+
     it('writes via the async clipboard API', async () => {
       const writeText = vi.fn().mockResolvedValue(undefined);
       Object.assign(navigator, { clipboard: { writeText } });

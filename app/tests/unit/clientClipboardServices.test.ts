@@ -166,6 +166,19 @@ describe('clientClipboardServices', () => {
   });
 
   describe('groupClipsByDate', () => {
+    // Pin the clock to local noon so relative offsets land in deterministic
+    // buckets regardless of the wall-clock time the suite runs at.
+    beforeEach(() => {
+      vi.useFakeTimers();
+      const noon = new Date();
+      noon.setHours(12, 0, 0, 0);
+      vi.setSystemTime(noon);
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('buckets clips into Today / Yesterday / This Week / Older', () => {
       const now = Date.now();
       const items = [

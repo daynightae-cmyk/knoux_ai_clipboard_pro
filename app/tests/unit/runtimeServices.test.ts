@@ -134,8 +134,11 @@ describe('runtimeServices', () => {
   });
 
   describe('system clipboard helpers', () => {
+    const originalClipboard = navigator.clipboard;
+
     afterEach(() => {
       vi.restoreAllMocks();
+      Object.assign(navigator, { clipboard: originalClipboard });
     });
 
     it('readSystemClipboard returns clipboard text', async () => {
