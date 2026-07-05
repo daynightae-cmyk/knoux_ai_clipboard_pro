@@ -3,6 +3,7 @@
 @import "./theme-knoux-premium.css";
 @import "./theme-knoux-production-polish.css";
 @import "./theme-knoux-lavender-overrides.css";
+@import "./theme-knoux-premium-parity.css";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;

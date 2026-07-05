@@ -131,7 +131,7 @@ export default function LabsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
         {PRODUCTION_SERVICES.filter((service) => ["Guarded", "Planned", "Missing", "Disabled"].includes(service.status)).map((service, index) => (
           <motion.div
             key={service.id}

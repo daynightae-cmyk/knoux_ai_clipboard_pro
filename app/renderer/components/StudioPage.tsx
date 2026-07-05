@@ -205,7 +205,7 @@ export default function StudioPage({ items = [] }: Props) {
         </div>
 
         <div className="grid grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_480px] gap-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-4">
             {DEVELOPER_TOOLS.map((tool) => {
               const Icon = toolIcon(tool.id);
               const selected = toolId === tool.id;
