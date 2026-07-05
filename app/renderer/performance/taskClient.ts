@@ -9,3 +9,6 @@ export interface RunWorkerTaskOptions<TPayload = unknown> {
   timeoutMs?: number;
   signal?: AbortSignal;
 }
+
+let taskCounter = 0;
+const createTaskId = () => `knoux-task-${Date.now()}-${++taskCounter}`;
