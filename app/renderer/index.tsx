@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/global.css';
 import './styles/theme-knoux-hotfix.css';
+import './services/i18nRuntime';
 import App from './App';
 
 const root = ReactDOM.createRoot(
