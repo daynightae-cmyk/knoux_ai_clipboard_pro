@@ -1,4 +1,4 @@
-export type ServiceStatus = "Active" | "Ready" | "Guarded" | "Planned" | "Missing" | "Disabled";
+﻿export type ServiceStatus = "Active" | "Ready" | "Guarded" | "Planned" | "Missing" | "Disabled";
 
 export interface ProductionService {
   id: string;
@@ -57,3 +57,11 @@ export const PRODUCTION_SERVICES: ProductionService[] = [
 ];
 
 export const getServiceReadinessPercent = () => 75;
+export const PRODUCTION_SCORE = {
+  score: getServiceReadinessPercent(),
+  securityVault: getServiceReadinessPercent(),
+  label: "Guarded",
+  status: "guarded",
+  note: "Production score is guarded until all production readiness checks are verified."
+} as const;
+

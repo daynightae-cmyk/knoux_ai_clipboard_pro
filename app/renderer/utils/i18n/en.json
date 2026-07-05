@@ -242,7 +242,7 @@
       "encode": "Encode",
       "decode": "Decode",
       "error": "Invalid Base64 string for decoding."
-    }
+    },
     "jwtViewer": {
       "title": "JWT Viewer",
       "description": "Decode and inspect JSON Web Tokens locally.",

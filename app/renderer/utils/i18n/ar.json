@@ -242,7 +242,7 @@
       "encode": "تشفير",
       "decode": "فك التشفير",
       "error": "سلسلة Base64 غير صالحة للفك."
-    }
+    },
     "jwtViewer": {
       "title": "عارض JWT",
       "description": "فك تشفير وفحص رموز الويب JSON محليًا.",
