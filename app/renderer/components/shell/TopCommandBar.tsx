@@ -63,6 +63,7 @@ export default function TopCommandBar({
       case "settings": return t("shell.topbar.pageTitles.settings", "Preferences");
       case "labs": return t("shell.topbar.pageTitles.labs", "Experimental Labs");
       case "developer": return t("shell.topbar.pageTitles.developer", "Developer Studio");
+      case "qa": return t("shell.topbar.pageTitles.qa", "Testing / QA Lab");
       case "barcode": return t("shell.topbar.pageTitles.barcode", "Barcode Scanner");
       case "about": return t("shell.topbar.pageTitles.about", "About KNOUX");
       default: return t("shell.topbar.pageTitles.default", "Knoux AI Clipboard");

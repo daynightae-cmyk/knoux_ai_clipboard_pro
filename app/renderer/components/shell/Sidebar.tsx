@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   QrCode,
   Code2,
+  Beaker,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../../constants/brand";
 import i18n from "../../utils/i18n";
@@ -55,6 +56,7 @@ export default function Sidebar({
 
   const experimentalItems = [
     { id: "developer" as NavTab, label: t("shell.sidebar.developer", ar ? "استوديو المطورين" : "Developer Studio"), icon: Code2 },
+    { id: "qa" as NavTab, label: t("shell.sidebar.qa", ar ? "مختبر الاختبار والجودة" : "Testing / QA Lab"), icon: Beaker },
     { id: "labs" as NavTab, label: t("shell.sidebar.labs", ar ? "مختبرات تجريبية" : "Experimental Labs"), icon: FlaskConical },
     { id: "about" as NavTab, label: t("shell.sidebar.about", ar ? "عن كنوكس" : "About Knoux"), icon: Info },
   ];

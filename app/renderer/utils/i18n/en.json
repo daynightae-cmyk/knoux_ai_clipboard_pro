@@ -27,7 +27,8 @@
       "productTag": "A Knoux Product",
       "version": "v1.0.0",
       "aiReadyBadge": "Ready",
-      "toggleInspectorTitle": "Toggle system metrics panel"
+      "toggleInspectorTitle": "Toggle system metrics panel",
+      "qa": "Testing / QA Lab"
     },
     "topbar": {
       "searchPlaceholder": "Search clip history, code snippets, secure vaults (Ctrl+K)...",
@@ -51,7 +52,8 @@
         "developer": "Developer Studio",
         "barcode": "Barcode Scanner",
         "about": "About KNOUX",
-        "default": "Knoux AI Clipboard"
+        "default": "Knoux AI Clipboard",
+        "qa": "Testing / QA Lab"
       }
     }
   },
@@ -386,7 +388,59 @@
       "signatureNotice": "Signature verification is a guarded action and requires a secret key. This tool only decodes the token.",
       "errorInvalid": "Invalid JWT structure. It must have 3 parts separated by dots.",
       "errorDecode": "Failed to decode or parse JWT. Check if it is a valid token."
-    }
+    },
+    "statusReady": "Ready",
+    "copied": "Copied to clipboard",
+    "checkingAi": "Checking AI route...",
+    "aiReady": "AI route is ready",
+    "aiGuarded": "AI route guarded",
+    "aiNotChecked": "AI route not checked",
+    "sampleLoaded": "sample loaded",
+    "running": "running",
+    "inWorker": "in a background worker",
+    "completed": "completed",
+    "outputCopied": "output copied",
+    "exported": "Result exported",
+    "heroBadge": "KNOUX Developer Control Deck",
+    "heroSubtitle": "Premium local-first developer workspace",
+    "heroDesc": "Run real developer utilities, inspect AI route health, and export a truthful handoff report. Every tool executes locally and streams results into the live preview — no fake states.",
+    "readiness": "Readiness",
+    "tools": "tools",
+    "workerBacked": "worker-backed",
+    "workspaceHealth": "Workspace Health",
+    "availableTools": "Available Tools",
+    "guardedUntil": "Guarded until verified",
+    "localFirst": "Local-first",
+    "nonBlocking": "Non-blocking",
+    "activeServices": "Active Services",
+    "readyServices": "Ready Services",
+    "records": "Clipboard Records",
+    "secure": "secure",
+    "pinned": "pinned",
+    "utilitiesTitle": "Developer Utilities",
+    "utilitiesDesc": "Run any card, load its sample, or copy the last output. Results stream into the live preview with logs, JSON, and history.",
+    "utilities": "utilities",
+    "activeBench": "Active Tool Bench",
+    "run": "Run",
+    "sample": "Sample",
+    "copy": "Copy",
+    "worker": "Worker",
+    "mainThread": "Main thread",
+    "hasResult": "Has result",
+    "livePreview": "Live Preview",
+    "previewWaiting": "Run any tool to stream output here",
+    "previewEmpty": "Run any developer tool to see live output, logs, JSON, and run history.",
+    "aiDiagnostics": "AI Route Diagnostics",
+    "checkNow": "Check Now",
+    "provider": "Provider",
+    "model": "Model",
+    "notChecked": "not checked",
+    "status": "Status",
+    "realityMatrix": "Service Reality Matrix",
+    "services": "services",
+    "buildCommands": "Build & Packaging Commands",
+    "downloadJson": "Download JSON",
+    "copyJson": "Copy JSON"
   },
   "ai": {
     "title": "AI Features",
@@ -422,16 +476,46 @@
       "auditTitle": "Knoux AI Workspace Audit Trail"
     },
     "operations": {
-      "summarize": { "label": "Summarize", "desc": "Extract key bullet summaries" },
-      "enhance": { "label": "Enhance Text", "desc": "Elevate readability and grammar" },
-      "rewrite": { "label": "Rewrite Corp", "desc": "Rephrase into corporate style" },
-      "translate": { "label": "Translate", "desc": "Localize semantics accurately" },
-      "analyze": { "label": "Deep Analyze", "desc": "Get structural & entity insights" },
-      "classify": { "label": "Suggest Tags", "desc": "Classify logical category tags" },
-      "extract": { "label": "Extract Points", "desc": "Pull lists, actions, & details" },
-      "reply": { "label": "Smart Reply", "desc": "Draft professional responder emails" },
-      "explain-code": { "label": "Explain Code", "desc": "Explain scripts and optimize code" },
-      "format-text": { "label": "Format Markdown", "desc": "Beautify unstructured raw text" }
+      "summarize": {
+        "label": "Summarize",
+        "desc": "Extract key bullet summaries"
+      },
+      "enhance": {
+        "label": "Enhance Text",
+        "desc": "Elevate readability and grammar"
+      },
+      "rewrite": {
+        "label": "Rewrite Corp",
+        "desc": "Rephrase into corporate style"
+      },
+      "translate": {
+        "label": "Translate",
+        "desc": "Localize semantics accurately"
+      },
+      "analyze": {
+        "label": "Deep Analyze",
+        "desc": "Get structural & entity insights"
+      },
+      "classify": {
+        "label": "Suggest Tags",
+        "desc": "Classify logical category tags"
+      },
+      "extract": {
+        "label": "Extract Points",
+        "desc": "Pull lists, actions, & details"
+      },
+      "reply": {
+        "label": "Smart Reply",
+        "desc": "Draft professional responder emails"
+      },
+      "explain-code": {
+        "label": "Explain Code",
+        "desc": "Explain scripts and optimize code"
+      },
+      "format-text": {
+        "label": "Format Markdown",
+        "desc": "Beautify unstructured raw text"
+      }
     }
   },
   "barcode": {
@@ -586,5 +670,50 @@
     "close": "Close",
     "clear": "Clear",
     "copy": "Copy"
+  },
+  "qa": {
+    "suite": "QA Suite",
+    "logI18n": "Auditing i18n dictionaries…",
+    "logRuntime": "Verifying runtime honesty & status badges…",
+    "logTools": "Executing tool self-checks…",
+    "logSecurity": "Probing security scanners…",
+    "checksComplete": "checks complete",
+    "passed": "Passed",
+    "warnings": "Warnings",
+    "failed": "Failed",
+    "readiness": "Readiness",
+    "category": "Category",
+    "status": "Status",
+    "sessionReport": "Session Report",
+    "desktop": "Desktop",
+    "web": "Web",
+    "never": "Never",
+    "heroBadge": "KNOUX Testing & QA Lab",
+    "heroTitle": "Testing / QA Lab",
+    "heroSubtitle": "Honest, code-aware quality checks",
+    "heroDesc": "Run real quality checkers against the live app: i18n parity, runtime honesty, status-badge consistency, tool self-checks, and security scanners. Every result reflects the actual codebase — no mock results.",
+    "checks": "checks",
+    "runtime": "runtime",
+    "totalChecks": "Total Checks",
+    "lastRun": "Last Run",
+    "runtimeMode": "Runtime Mode",
+    "honest": "Honest runtime",
+    "running": "Running…",
+    "runAll": "Run All Checks",
+    "viewReport": "View Report",
+    "exportReport": "Export Report",
+    "readinessTitle": "Release Readiness by Area",
+    "readinessDesc": "Category rollup of passes, warnings, and failures across the checked surfaces.",
+    "checkersTitle": "Quality Checkers",
+    "checkersDesc": "Inspect any checker to stream its findings into the live monitor, or copy its report.",
+    "checkers": "checkers",
+    "pass": "Pass",
+    "warn": "Warn",
+    "fail": "Fail",
+    "inspect": "Inspect",
+    "report": "Report",
+    "monitor": "Test Monitor",
+    "monitorWaiting": "Run checks to stream live results",
+    "monitorEmpty": "Run the suite or inspect a checker to see live results, logs, JSON, and history."
   }
 }
