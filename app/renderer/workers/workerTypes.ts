@@ -3,13 +3,24 @@ export type WorkerTaskKind =
   | "json-minify"
   | "regex-test"
   | "markdown-preview"
+  | "markdown-parse"
   | "hash-generate"
   | "base64-encode"
   | "base64-decode"
   | "jwt-inspect"
+  | "code-format"
+  | "secret-scan"
   | "redact"
   | "large-text-analyze"
   | "clipboard-bulk-process";
+
+export type WorkerChannel =
+  | "json"
+  | "regex"
+  | "markdown"
+  | "hash"
+  | "security"
+  | "clipboard";
 
 export interface WorkerTask<TPayload = unknown> {
   taskId: string;
@@ -41,13 +52,71 @@ export interface RegexPayload {
   sample: string;
 }
 
+export interface JsonPayload {
+  text: string;
+  indent?: number;
+}
+
+export interface MarkdownPayload {
+  text: string;
+}
+
 export interface HashPayload {
   text: string;
   algorithm?: "SHA-1" | "SHA-256" | "SHA-384" | "SHA-512";
 }
 
+export interface Base64Payload {
+  text: string;
+}
+
+export interface ClipboardWorkerItem {
+  id: string;
+  content: string;
+  type?: string;
+  tags?: string[];
+  source?: string;
+  timestamp?: string;
+  pinned?: boolean;
+  favorite?: boolean;
+  isSecure?: boolean;
+  folder?: string;
+  language?: string;
+}
+
 export interface ClipboardBulkPayload {
-  items: Array<{ id: string; content: string; type?: string; tags?: string[]; source?: string; timestamp?: string }>;
+  items: ClipboardWorkerItem[];
   query?: string;
+  selectedFilter?: string;
+  selectedFolder?: string;
+  businessMode?: string;
   mode?: "search" | "dedupe" | "analyze";
+}
+
+export interface ClipboardBulkResult {
+  items: ClipboardWorkerItem[];
+  metrics: {
+    total: number;
+    matched: number;
+    pinned: number;
+    favorites: number;
+    secure: number;
+    generatedAt: string;
+  };
+}
+
+export interface LargeTextAnalysisResult {
+  characters: number;
+  words: number;
+  lines: number;
+  paragraphs: number;
+  estimatedReadMinutes: number;
+  hasStructuredData: boolean;
+}
+
+export interface SecurityFinding {
+  type: string;
+  index: number;
+  length: number;
+  preview: string;
 }
