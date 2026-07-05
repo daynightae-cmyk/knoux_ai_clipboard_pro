@@ -6,3 +6,9 @@
 }
 
 .knoux-lavender-override-ready { color: #381584; }
+
+.knoux-security-dashboard pre {
+  background: #1c0b4e !important;
+  color: #fcfaff !important;
+  border-color: rgba(207, 180, 234, .24) !important;
+}
