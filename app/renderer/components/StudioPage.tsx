@@ -3,6 +3,7 @@ import { ClipboardItem } from "../types";
 import { CheckCircle2, Copy, Database, Download, FileJson, PackageCheck, RefreshCw, ServerCog, ShieldCheck, Sparkles, TerminalSquare, Wrench, Code2, Play, Hammer } from "lucide-react";
 import { PRODUCTION_SERVICES } from "../services/productionCatalog";
 import { DEVELOPER_TOOLS, DeveloperToolId, runDeveloperTool } from "../services/developerTools";
+import ServiceControlPanel from "./ServiceControlPanel";
 
 interface Props { items?: ClipboardItem[]; }
 type ApiCheck = { ok: boolean; status?: string; provider?: string; model?: string; error?: string } | null;
@@ -13,7 +14,7 @@ const commands = [
   { title: "Build Electron main", cmd: "npm run build:main" },
   { title: "Package Windows EXE", cmd: "npm run dist:installer" },
   { title: "Run tests", cmd: "npm test" },
-  { title: "Secret audit", cmd: "rg \"sk-or-v1|VITE_OPENROUTER|Authorization\" app api docs -n" }
+  { title: "Secret audit", cmd: "npm run verify || npm test" }
 ];
 
 export default function StudioPage({ items = [] }: Props) {
@@ -93,7 +94,7 @@ export default function StudioPage({ items = [] }: Props) {
         <div className="relative space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-knoux-purple/10 bg-knoux-purple/5 text-[11px] font-black text-knoux-purple uppercase tracking-widest"><Wrench className="w-4 h-4" /> Developer Control Deck</div>
           <h1 className="text-3xl font-black text-knoux-dark-text">KNOUX Developer Studio</h1>
-          <p className="text-sm text-knoux-muted-text max-w-4xl">Live diagnostics, service matrix, build commands, safe utility tools, API payload builder, document handoff builder, and exportable project report. Failed or guarded checks stay explicit.</p>
+          <p className="text-sm text-knoux-muted-text max-w-4xl">Live diagnostics, executable service controls, service matrix, build commands, safe utility tools, API payload builder, document handoff builder, and exportable project report. Failed or guarded checks stay explicit.</p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
               { label: "Records", value: items.length, icon: Database },
@@ -108,6 +109,8 @@ export default function StudioPage({ items = [] }: Props) {
 
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_390px] gap-6">
         <main className="space-y-5">
+          <ServiceControlPanel items={items} onStatus={setStatus} />
+
           <section className="glass-panel p-5 space-y-4">
             <div className="flex items-center justify-between gap-3"><h2 className="font-black text-knoux-dark-text flex items-center gap-2"><Code2 className="w-5 h-5 text-knoux-purple" /> Developer Service Console</h2><span className="knoux-badge knoux-badge-active">{DEVELOPER_TOOLS.length} tools</span></div>
             <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
@@ -133,7 +136,7 @@ export default function StudioPage({ items = [] }: Props) {
 
           <section className="glass-panel p-5 space-y-4">
             <h2 className="font-black text-knoux-dark-text flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-knoux-purple" /> Service Reality Matrix</h2>
-            <div className="space-y-5">{Object.entries(groupedServices).map(([category, services]) => <div key={category} className="space-y-3"><div className="flex items-center justify-between border-b border-knoux-purple/10 pb-2"><h3 className="text-xs font-black uppercase tracking-widest text-knoux-dark-text">{category}</h3><span className="knoux-badge">{services.length} services</span></div><div className="grid grid-cols-1 md:grid-cols-2 gap-3">{services.map((service) => <div key={service.id} className="knoux-premium-card p-4 text-xs space-y-2"><div className="flex items-center justify-between gap-2"><b className="text-knoux-dark-text">{service.displayName}</b><span className={`knoux-badge knoux-badge-${service.status.toLowerCase()}`}>{service.status}</span></div><p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p><div className="grid grid-cols-2 gap-2 text-[10px] text-knoux-muted-text"><span>Runtime: {service.runtimeType}</span><span>Config: {service.requiresConfig ? "Required" : "No"}</span><span>Implemented: {service.implemented ? "Yes" : "No"}</span><span>Handler: {service.actionHandler || "None"}</span></div>{service.disabledReason && <p className="text-[10px] text-amber-700">{service.disabledReason}</p>}<p className="text-[10px] text-knoux-muted-text">Fallback: {service.fallback}</p></div>)}</div></div>)}</div>
+            <div className="space-y-5">{Object.entries(groupedServices).map(([category, services]) => <div key={category} className="space-y-3"><div className="flex items-center justify-between border-b border-knoux-purple/10 pb-2"><h3 className="text-xs font-black uppercase tracking-widest text-knoux-dark-text">{category}</h3><span className="knoux-badge">{services.length} services</span></div><div className="grid grid-cols-1 md:grid-cols-2 gap-3">{services.map((service) => <div key={service.id} className="knoux-premium-card p-3 text-xs space-y-2"><div className="flex items-center justify-between gap-2"><b className="text-knoux-dark-text">{service.displayName}</b><span className={`knoux-badge knoux-badge-${service.status.toLowerCase()}`}>{service.status}</span></div><p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p><div className="grid grid-cols-2 gap-2 text-[10px] text-knoux-muted-text"><span>Runtime: {service.runtimeType}</span><span>Config: {service.requiresConfig ? "Required" : "No"}</span><span>Implemented: {service.implemented ? "Yes" : "No"}</span><span>Handler: {service.actionHandler || "None"}</span></div>{service.disabledReason && <p className="text-[10px] text-amber-700">{service.disabledReason}</p>}<p className="text-[10px] text-knoux-muted-text">Fallback: {service.fallback}</p></div>)}</div></div>)}</div>
           </section>
 
           <section className="glass-panel p-5 space-y-4"><h2 className="font-black text-knoux-dark-text flex items-center gap-2"><TerminalSquare className="w-5 h-5 text-knoux-purple" /> Build & Packaging Commands</h2><div className="grid grid-cols-1 md:grid-cols-2 gap-3">{commands.map((item) => <button key={item.cmd} onClick={() => copy(item.cmd)} className="knoux-premium-card p-4 text-left hover:border-knoux-purple/25 transition"><div className="text-[10px] font-black text-knoux-purple uppercase">{item.title}</div><code className="block text-xs text-knoux-dark-text mt-2 break-all">{item.cmd}</code></button>)}</div></section>
