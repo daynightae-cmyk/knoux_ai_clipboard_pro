@@ -217,9 +217,18 @@ describe('helpers', () => {
       await expect(readFromClipboard()).resolves.toBe('pasted');
     });
 
-    it('returns null when readText is unavailable', async () => {
+    it('returns empty string when readText is unavailable', async () => {
       Object.assign(navigator, { clipboard: {} });
-      await expect(readFromClipboard()).resolves.toBeNull();
+      const result = await readFromClipboard();
+      expect(result).toBe('');
+    });
+
+    it('returns empty string when readText throws permission error', async () => {
+      Object.assign(navigator, {
+        clipboard: { readText: vi.fn().mockRejectedValue(new Error('NotAllowedError')) },
+      });
+      const result = await readFromClipboard();
+      expect(result).toBe('');
     });
   });
 

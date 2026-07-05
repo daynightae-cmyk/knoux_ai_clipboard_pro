@@ -4,36 +4,76 @@ import { creativeEngine } from '../ai/creative-engine';
 
 export function setupCreativeStudioIPC(): void {
   ipcMain.handle('creative:generate', async (event, input: string, settings: any) => {
-    return await creativeEngine.generateCreative(input, settings);
+    try {
+      return await creativeEngine.generateCreative(input, settings);
+    } catch (err) {
+      console.error('[creative:generate] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Creative generation failed' };
+    }
   });
 
   ipcMain.handle('creative:createProfile', async (event, name: string, settings: any) => {
-    return creativeEngine.createProfile(name, settings);
+    try {
+      return creativeEngine.createProfile(name, settings);
+    } catch (err) {
+      console.error('[creative:createProfile] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Profile creation failed' };
+    }
   });
 
   ipcMain.handle('creative:switchProfile', async (event, profileId: string) => {
-    return creativeEngine.switchProfile(profileId);
+    try {
+      return creativeEngine.switchProfile(profileId);
+    } catch (err) {
+      console.error('[creative:switchProfile] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Profile switch failed' };
+    }
   });
 
   ipcMain.handle('creative:getCurrentProfile', async () => {
-    return creativeEngine.getCurrentProfile();
+    try {
+      return creativeEngine.getCurrentProfile();
+    } catch (err) {
+      console.error('[creative:getCurrentProfile] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Failed to get current profile' };
+    }
   });
 
   ipcMain.handle('creative:getAllProfiles', async () => {
-    return creativeEngine.getAllProfiles();
+    try {
+      return creativeEngine.getAllProfiles();
+    } catch (err) {
+      console.error('[creative:getAllProfiles] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Failed to get profiles' };
+    }
   });
 
   ipcMain.handle('creative:updateSettings', async (event, settings: any) => {
-    creativeEngine.updateProfileSettings(settings);
-    return { success: true };
+    try {
+      creativeEngine.updateProfileSettings(settings);
+      return { success: true };
+    } catch (err) {
+      console.error('[creative:updateSettings] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Settings update failed' };
+    }
   });
 
   ipcMain.handle('creative:getHistory', async (event, limit?: number) => {
-    return creativeEngine.getHistory(limit);
+    try {
+      return creativeEngine.getHistory(limit);
+    } catch (err) {
+      console.error('[creative:getHistory] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Failed to get history' };
+    }
   });
 
   ipcMain.handle('creative:getScore', async () => {
-    return creativeEngine.getCreativeScore();
+    try {
+      return creativeEngine.getCreativeScore();
+    } catch (err) {
+      console.error('[creative:getScore] Engine error:', err instanceof Error ? err.message : String(err));
+      return { success: false, error: 'Failed to get creative score' };
+    }
   });
 
   console.log('✅ Creative Studio IPC registered');

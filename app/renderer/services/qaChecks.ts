@@ -1,20 +1,19 @@
 import en from "../utils/i18n/en.json";
 import ar from "../utils/i18n/ar.json";
 import { PRODUCTION_SERVICES, type ServiceStatus } from "./productionCatalog";
-import { DEVELOPER_TOOLS, runDeveloperTool, getDeveloperToolSample } from "./developerTools";
+import {
+  DEVELOPER_TOOLS,
+  runDeveloperTool,
+  getDeveloperToolSample,
+  DeveloperToolId,
+} from "./developerTools";
 import { hashContent } from "./clientClipboardServices";
 import { KNOUX_BRAND } from "../constants/brand";
 
 export type QAStatus = "pass" | "warning" | "fail";
 
 export type QACategory =
-  | "i18n"
-  | "runtime"
-  | "cards"
-  | "actions"
-  | "tools"
-  | "security"
-  | "brand";
+  "i18n" | "catalog" | "runtime" | "cards" | "actions" | "tools" | "security" | "brand";
 
 export interface QACheckResult {
   id: string;
@@ -37,15 +36,25 @@ const flattenKeys = (obj: unknown, prefix = ""): string[] => {
 
 const flattenEntries = (obj: unknown, prefix = ""): Array<[string, unknown]> => {
   if (!obj || typeof obj !== "object") return [];
-  return Object.entries(obj as Record<string, unknown>).reduce<Array<[string, unknown]>>((acc, [key, value]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-    if (value && typeof value === "object") acc.push(...flattenEntries(value, path));
-    else acc.push([path, value]);
-    return acc;
-  }, []);
+  return Object.entries(obj as Record<string, unknown>).reduce<Array<[string, unknown]>>(
+    (acc, [key, value]) => {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (value && typeof value === "object") acc.push(...flattenEntries(value, path));
+      else acc.push([path, value]);
+      return acc;
+    },
+    []
+  );
 };
 
-const ALLOWED_STATUSES: ServiceStatus[] = ["Active", "Ready", "Guarded", "Planned", "Missing", "Disabled"];
+const ALLOWED_STATUSES: ServiceStatus[] = [
+  "Active",
+  "Ready",
+  "Guarded",
+  "Planned",
+  "Missing",
+  "Disabled",
+];
 
 function checkI18nCoverage(): QACheckResult {
   const enKeys = new Set(flattenKeys(en));
@@ -58,30 +67,40 @@ function checkI18nCoverage(): QACheckResult {
     title: "i18n Coverage Checker",
     category: "i18n",
     status: total === 0 ? "pass" : "fail",
-    summary: total === 0
-      ? `English and Arabic dictionaries match (${enKeys.size} keys).`
-      : `${total} key mismatch(es) between English and Arabic.`,
-    details: total === 0
-      ? [`Both dictionaries expose ${enKeys.size} keys with full parity.`]
-      : [
-          ...missingInAr.slice(0, 8).map((k) => `Missing in Arabic: ${k}`),
-          ...missingInEn.slice(0, 8).map((k) => `Missing in English: ${k}`),
-        ],
+    summary:
+      total === 0
+        ? `English and Arabic dictionaries match (${enKeys.size} keys).`
+        : `${total} key mismatch(es) between English and Arabic.`,
+    details:
+      total === 0
+        ? [`Both dictionaries expose ${enKeys.size} keys with full parity.`]
+        : [
+            ...missingInAr.slice(0, 8).map((k) => `Missing in Arabic: ${k}`),
+            ...missingInEn.slice(0, 8).map((k) => `Missing in English: ${k}`),
+          ],
   };
 }
 
 function checkI18nEmptyValues(): QACheckResult {
   const empties = [
-    ...flattenEntries(en).filter(([, v]) => typeof v !== "string" || v.trim() === "").map(([k]) => `en:${k}`),
-    ...flattenEntries(ar).filter(([, v]) => typeof v !== "string" || v.trim() === "").map(([k]) => `ar:${k}`),
+    ...flattenEntries(en)
+      .filter(([, v]) => typeof v !== "string" || v.trim() === "")
+      .map(([k]) => `en:${k}`),
+    ...flattenEntries(ar)
+      .filter(([, v]) => typeof v !== "string" || v.trim() === "")
+      .map(([k]) => `ar:${k}`),
   ];
   return {
     id: "i18n-empty",
     title: "Empty String Checker",
     category: "i18n",
     status: empties.length === 0 ? "pass" : "warning",
-    summary: empties.length === 0 ? "No empty translation values found." : `${empties.length} empty translation value(s).`,
-    details: empties.length === 0 ? ["Every localized string carries content."] : empties.slice(0, 12),
+    summary:
+      empties.length === 0
+        ? "No empty translation values found."
+        : `${empties.length} empty translation value(s).`,
+    details:
+      empties.length === 0 ? ["Every localized string carries content."] : empties.slice(0, 12),
   };
 }
 
@@ -92,55 +111,70 @@ function checkStatusBadgeConsistency(): QACheckResult {
     title: "Status Badge Consistency Checker",
     category: "runtime",
     status: invalid.length === 0 ? "pass" : "fail",
-    summary: invalid.length === 0
-      ? `All ${PRODUCTION_SERVICES.length} services use approved status names.`
-      : `${invalid.length} service(s) use an unknown status name.`,
-    details: invalid.length === 0
-      ? [`Approved set: ${ALLOWED_STATUSES.join(", ")}.`]
-      : invalid.map((s) => `${s.displayName}: "${s.status}"`),
+    summary:
+      invalid.length === 0
+        ? `All ${PRODUCTION_SERVICES.length} services use approved status names.`
+        : `${invalid.length} service(s) use an unknown status name.`,
+    details:
+      invalid.length === 0
+        ? [`Approved set: ${ALLOWED_STATUSES.join(", ")}.`]
+        : invalid.map((s) => `${s.displayName}: "${s.status}"`),
   };
 }
 
 function checkRuntimeHonesty(): QACheckResult {
   const dishonest = PRODUCTION_SERVICES.filter((s) => s.status === "Active" && !s.implemented);
-  const plannedButLive = PRODUCTION_SERVICES.filter((s) => s.tier === "planned" && (s.status === "Active" || s.status === "Ready"));
+  const plannedButLive = PRODUCTION_SERVICES.filter(
+    (s) => s.tier === "planned" && (s.status === "Active" || s.status === "Ready")
+  );
   const issues = [...dishonest, ...plannedButLive];
   return {
     id: "runtime-honesty",
     title: "Runtime Honesty Checker",
     category: "runtime",
     status: issues.length === 0 ? "pass" : "fail",
-    summary: issues.length === 0
-      ? "No fake availability: Active states map to implemented services."
-      : `${issues.length} service(s) claim availability without implementation.`,
-    details: issues.length === 0
-      ? ["Planned services stay Planned/Disabled; Active services are implemented."]
-      : [
-          ...dishonest.map((s) => `${s.displayName}: Active but implemented=false`),
-          ...plannedButLive.map((s) => `${s.displayName}: planned tier but status ${s.status}`),
-        ],
+    summary:
+      issues.length === 0
+        ? "No fake availability: Active states map to implemented services."
+        : `${issues.length} service(s) claim availability without implementation.`,
+    details:
+      issues.length === 0
+        ? ["Planned services stay Planned/Disabled; Active services are implemented."]
+        : [
+            ...dishonest.map((s) => `${s.displayName}: Active but implemented=false`),
+            ...plannedButLive.map((s) => `${s.displayName}: planned tier but status ${s.status}`),
+          ],
   };
 }
 
 function checkServiceCardElements(): QACheckResult {
-  const weak = PRODUCTION_SERVICES.filter((s) => !s.displayName || !s.description || !s.status || !s.actionHandler);
+  const weak = PRODUCTION_SERVICES.filter(
+    (s) => !s.displayName || !s.description || !s.status || !s.actionHandler
+  );
   return {
     id: "service-card-qa",
     title: "Service Card QA Checker",
     category: "cards",
     status: weak.length === 0 ? "pass" : "warning",
-    summary: weak.length === 0
-      ? `All ${PRODUCTION_SERVICES.length} service cards expose name, description, status, and handler.`
-      : `${weak.length} service card(s) missing required elements.`,
-    details: weak.length === 0
-      ? ["Every card has title, description, truthful status, and an action handler."]
-      : weak.map((s) => `${s.id}: missing ${[!s.displayName && "name", !s.description && "description", !s.actionHandler && "handler"].filter(Boolean).join(", ")}`),
+    summary:
+      weak.length === 0
+        ? `All ${PRODUCTION_SERVICES.length} service cards expose name, description, status, and handler.`
+        : `${weak.length} service card(s) missing required elements.`,
+    details:
+      weak.length === 0
+        ? ["Every card has title, description, truthful status, and an action handler."]
+        : weak.map(
+            (s) =>
+              `${s.id}: missing ${[!s.displayName && "name", !s.description && "description", !s.actionHandler && "handler"].filter(Boolean).join(", ")}`
+          ),
   };
 }
 
 function checkActionButtonIntegrity(): QACheckResult {
   const generic = DEVELOPER_TOOLS.filter((t) => {
-    const labels = [t.actionLabel, t.sampleLabel, t.copyLabel].map((l) => (l || "").trim().toLowerCase());
+    const labels = [t.actionLabel, t.sampleLabel, t.copyLabel].map((l) =>
+      (l || "").trim().toLowerCase()
+    );
     const empty = labels.some((l) => l === "");
     const duplicate = new Set(labels).size !== labels.length;
     return empty || duplicate;
@@ -150,12 +184,85 @@ function checkActionButtonIntegrity(): QACheckResult {
     title: "Action Button Integrity Checker",
     category: "actions",
     status: generic.length === 0 ? "pass" : "warning",
-    summary: generic.length === 0
-      ? `All ${DEVELOPER_TOOLS.length} tools use distinct, purposeful action labels.`
-      : `${generic.length} tool(s) use empty or repeated action labels.`,
-    details: generic.length === 0
-      ? ["Primary/secondary/tertiary actions are tool-specific across the studio."]
-      : generic.map((t) => `${t.title}: [${t.actionLabel} / ${t.sampleLabel} / ${t.copyLabel}]`),
+    summary:
+      generic.length === 0
+        ? `All ${DEVELOPER_TOOLS.length} tools use distinct, purposeful action labels.`
+        : `${generic.length} tool(s) use empty or repeated action labels.`,
+    details:
+      generic.length === 0
+        ? ["Primary/secondary/tertiary actions are tool-specific across the studio."]
+        : generic.map((t) => `${t.title}: [${t.actionLabel} / ${t.sampleLabel} / ${t.copyLabel}]`),
+  };
+}
+
+function checkToolLabelUniqueness(): QACheckResult {
+  const actionLabels = new Map<string, string[]>();
+  const sampleLabels = new Map<string, string[]>();
+  const copyLabels = new Map<string, string[]>();
+
+  for (const tool of DEVELOPER_TOOLS) {
+    const action = (tool.actionLabel || "").trim();
+    if (action) {
+      if (!actionLabels.has(action)) actionLabels.set(action, []);
+      actionLabels.get(action)!.push(tool.title);
+    }
+
+    const sample = (tool.sampleLabel || "").trim();
+    if (sample) {
+      if (!sampleLabels.has(sample)) sampleLabels.set(sample, []);
+      sampleLabels.get(sample)!.push(tool.title);
+    }
+
+    const copy = (tool.copyLabel || "").trim();
+    if (copy) {
+      if (!copyLabels.has(copy)) copyLabels.set(copy, []);
+      copyLabels.get(copy)!.push(tool.title);
+    }
+  }
+
+  const duplicateActions = [...actionLabels.entries()].filter(([, tools]) => tools.length > 1);
+  const duplicateSamples = [...sampleLabels.entries()].filter(([, tools]) => tools.length > 1);
+  const duplicateCopies = [...copyLabels.entries()].filter(([, tools]) => tools.length > 1);
+
+  const totalDuplicates = duplicateActions.length + duplicateSamples.length + duplicateCopies.length;
+
+  const details: string[] = [];
+  if (duplicateActions.length > 0) duplicateActions.forEach(([label, tools]) => details.push(`Action "${label}" used by: ${tools.join(', ')}`));
+  if (duplicateSamples.length > 0) duplicateSamples.forEach(([label, tools]) => details.push(`Sample "${label}" used by: ${tools.join(', ')}`));
+  if (duplicateCopies.length > 0) duplicateCopies.forEach(([label, tools]) => details.push(`Copy "${label}" used by: ${tools.join(', ')}`));
+
+  return {
+    id: "tool-label-uniqueness",
+    title: "Developer Tool Label Uniqueness",
+    category: "tools",
+    status: totalDuplicates === 0 ? "pass" : "warning",
+    summary: totalDuplicates === 0 ? "All tool button labels are unique across the studio." : `${totalDuplicates} duplicate label(s) found across different tools.`,
+    details: totalDuplicates === 0 ? ["Ensures that buttons with the same label don't perform different actions on different tools."] : details,
+  };
+}
+
+function checkServiceOperationCoverage(): QACheckResult {
+  // This is a conceptual check. A real implementation would need to parse serviceOperations.ts
+  // For now, we check if every 'actionHandler' seems plausible.
+  const missingHandlers = PRODUCTION_SERVICES.filter(
+    (s) => s.implemented && s.status === "Active" && !s.actionHandler
+  );
+
+  return {
+    id: "service-operation-coverage",
+    title: "Service Operation Coverage",
+    category: "catalog",
+    status: missingHandlers.length === 0 ? "pass" : "warning",
+    summary:
+      missingHandlers.length === 0
+        ? `All ${PRODUCTION_SERVICES.filter((s) => s.status === "Active").length} active services have an actionHandler.`
+        : `${missingHandlers.length} active service(s) are missing an actionHandler.`,
+    details:
+      missingHandlers.length === 0
+        ? ["Ensures every active service can be triggered."]
+        : missingHandlers.map(
+            (s) => `${s.displayName} (ID: ${s.id}) is Active but has no actionHandler.`
+          ),
   };
 }
 
@@ -164,7 +271,12 @@ function checkToolOutputIntegrity(): QACheckResult {
   for (const tool of DEVELOPER_TOOLS) {
     const sample = getDeveloperToolSample(tool.id);
     const output = runDeveloperTool(tool.id, sample);
-    if (!output || output.trim() === "" || output === "No input provided." || /^No input/.test(output)) {
+    if (
+      !output ||
+      output.trim() === "" ||
+      output === "No input provided." ||
+      /^No input/.test(output)
+    ) {
       failing.push(`${tool.title}: empty output for its own sample`);
     }
   }
@@ -173,10 +285,14 @@ function checkToolOutputIntegrity(): QACheckResult {
     title: "Tool Output Integrity Checker",
     category: "tools",
     status: failing.length === 0 ? "pass" : "fail",
-    summary: failing.length === 0
-      ? `All ${DEVELOPER_TOOLS.length} developer tools produce real output for their sample.`
-      : `${failing.length} tool(s) returned an empty result.`,
-    details: failing.length === 0 ? ["Every tool card returns a concrete, non-empty result — no fake buttons."] : failing,
+    summary:
+      failing.length === 0
+        ? `All ${DEVELOPER_TOOLS.length} developer tools produce real output for their sample.`
+        : `${failing.length} tool(s) returned an empty result.`,
+    details:
+      failing.length === 0
+        ? ["Every tool card returns a concrete, non-empty result — no fake buttons."]
+        : failing,
   };
 }
 
@@ -191,15 +307,20 @@ function checkDuplicateIds(): QACheckResult {
     title: "Unique Identifier Checker",
     category: "cards",
     status: total === 0 ? "pass" : "fail",
-    summary: total === 0 ? "All service and tool identifiers are unique." : `${total} duplicate identifier(s) found.`,
-    details: total === 0
-      ? [`${serviceIds.length} service ids and ${toolIds.length} tool ids are unique.`]
-      : [...new Set([...dupService, ...dupTool])].map((id) => `Duplicate id: ${id}`),
+    summary:
+      total === 0
+        ? "All service and tool identifiers are unique."
+        : `${total} duplicate identifier(s) found.`,
+    details:
+      total === 0
+        ? [`${serviceIds.length} service ids and ${toolIds.length} tool ids are unique.`]
+        : [...new Set([...dupService, ...dupTool])].map((id) => `Duplicate id: ${id}`),
   };
 }
 
 function checkSecretScanner(): QACheckResult {
-  const sample = "OPENROUTER_API_KEY=sk-or-v1-abcdefghijklmnopqrstuvwxyz123456\nEmail: admin@knoux.store";
+  const sample =
+    "OPENROUTER_API_KEY=sk-or-v1-abcdefghijklmnopqrstuvwxyz123456\nEmail: admin@knoux.store";
   const output = runDeveloperTool("secret-scanner", sample);
   const detected = /openrouter-key/.test(output) && /email/.test(output);
   return {
@@ -207,21 +328,28 @@ function checkSecretScanner(): QACheckResult {
     title: "Security Scanner Self-Check",
     category: "security",
     status: detected ? "pass" : "fail",
-    summary: detected ? "Secret scanner detects seeded API key and email." : "Secret scanner missed a known secret pattern.",
+    summary: detected
+      ? "Secret scanner detects seeded API key and email."
+      : "Secret scanner missed a known secret pattern.",
     details: [output],
   };
 }
 
 function checkRedaction(): QACheckResult {
   const secret = "sk-or-v1-abcdefghijklmnopqrstuvwxyz123456";
-  const output = runDeveloperTool("redaction-map", `OPENROUTER_API_KEY=${secret}\nadmin@knoux.store`);
+  const output = runDeveloperTool(
+    "redaction-map",
+    `OPENROUTER_API_KEY=${secret}\nadmin@knoux.store`
+  );
   const redacted = !output.includes(secret) && /redacted/i.test(output);
   return {
     id: "redaction-selfcheck",
     title: "Redaction Engine Self-Check",
     category: "security",
     status: redacted ? "pass" : "fail",
-    summary: redacted ? "Redaction removes the raw secret before sharing." : "Redaction left raw secret material in the output.",
+    summary: redacted
+      ? "Redaction removes the raw secret before sharing."
+      : "Redaction left raw secret material in the output.",
     details: [output],
   };
 }
@@ -236,7 +364,9 @@ function checkBase64Roundtrip(): QACheckResult {
     title: "Base64 Round-Trip Checker",
     category: "tools",
     status: ok ? "pass" : "fail",
-    summary: ok ? "Base64 encode/decode round-trips without data loss." : "Base64 round-trip did not restore the original text.",
+    summary: ok
+      ? "Base64 encode/decode round-trips without data loss."
+      : "Base64 round-trip did not restore the original text.",
     details: [`Encoded: ${encoded}`, `Decoded: ${decoded}`],
   };
 }
@@ -250,7 +380,9 @@ function checkJsonFormatter(): QACheckResult {
     title: "JSON Formatter Error-State Checker",
     category: "tools",
     status: ok ? "pass" : "warning",
-    summary: ok ? "JSON formatter pretty-prints valid input and reports errors clearly." : "JSON formatter error handling is unclear.",
+    summary: ok
+      ? "JSON formatter pretty-prints valid input and reports errors clearly."
+      : "JSON formatter error handling is unclear.",
     details: [`Valid → ${valid.replace(/\n/g, " ")}`, `Invalid → ${invalid}`],
   };
 }
@@ -265,7 +397,9 @@ function checkHashDeterminism(): QACheckResult {
     title: "Hash Determinism Checker",
     category: "tools",
     status: ok ? "pass" : "fail",
-    summary: ok ? "Local hash is deterministic and case-sensitive." : "Hash function is not deterministic.",
+    summary: ok
+      ? "Local hash is deterministic and case-sensitive."
+      : "Hash function is not deterministic.",
     details: [`hash("knoux") = ${a}`, `hash("Knoux") = ${c}`],
   };
 }
@@ -279,8 +413,14 @@ function checkArabicNavCoverage(): QACheckResult {
     title: "RTL / Arabic Navigation Checker",
     category: "i18n",
     status: missing.length === 0 ? "pass" : "warning",
-    summary: missing.length === 0 ? "Core navigation labels are translated for Arabic RTL." : `${missing.length} core nav label(s) missing Arabic translation.`,
-    details: missing.length === 0 ? ["Sidebar navigation resolves in Arabic; layout flips to RTL via dir attribute."] : missing,
+    summary:
+      missing.length === 0
+        ? "Core navigation labels are translated for Arabic RTL."
+        : `${missing.length} core nav label(s) missing Arabic translation.`,
+    details:
+      missing.length === 0
+        ? ["Sidebar navigation resolves in Arabic; layout flips to RTL via dir attribute."]
+        : missing,
   };
 }
 
@@ -292,24 +432,30 @@ function checkBrandConsistency(): QACheckResult {
     title: "Brand Consistency Checker",
     category: "brand",
     status: ok ? "pass" : "fail",
-    summary: ok ? "Official website resolves to knoux.store." : "Official website is not set to knoux.store.",
+    summary: ok
+      ? "Official website resolves to knoux.store."
+      : "Official website is not set to knoux.store.",
     details: [`officialWebsite = ${site}`, `primaryPurple = ${KNOUX_BRAND.colors.primaryPurple}`],
   };
 }
 
 function checkGuardedLabeling(): QACheckResult {
-  const mislabeled = PRODUCTION_SERVICES.filter((s) => s.tier === "guarded" && s.status === "Active" && s.requiresConfig);
+  const mislabeled = PRODUCTION_SERVICES.filter(
+    (s) => s.tier === "guarded" && s.status === "Active" && s.requiresConfig
+  );
   return {
     id: "guarded-labeling",
     title: "Guarded Labeling Checker",
     category: "runtime",
     status: mislabeled.length === 0 ? "pass" : "warning",
-    summary: mislabeled.length === 0
-      ? "Config-dependent services are not marked fully Active."
-      : `${mislabeled.length} config-dependent service(s) marked Active.`,
-    details: mislabeled.length === 0
-      ? ["Services that need provider configuration are surfaced as Guarded/Ready."]
-      : mislabeled.map((s) => `${s.displayName}: Active but requiresConfig=true`),
+    summary:
+      mislabeled.length === 0
+        ? "Config-dependent services are not marked fully Active."
+        : `${mislabeled.length} config-dependent service(s) marked Active.`,
+    details:
+      mislabeled.length === 0
+        ? ["Services that need provider configuration are surfaced as Guarded/Ready."]
+        : mislabeled.map((s) => `${s.displayName}: Active but requiresConfig=true`),
   };
 }
 
@@ -323,24 +469,36 @@ function checkToolCoverage(): QACheckResult {
     category: "tools",
     status: ok ? "pass" : "warning",
     summary: `${count} developer tools registered (${active} Active).`,
-    details: [ok ? "Studio exceeds the 15-tool coverage target." : "Studio is below the 15-tool coverage target."],
+    details: [
+      ok
+        ? "Studio exceeds the 15-tool coverage target."
+        : "Studio is below the 15-tool coverage target.",
+    ],
   };
 }
 
 function checkPlannedTransparency(): QACheckResult {
-  const planned = PRODUCTION_SERVICES.filter((s) => s.status === "Planned" || s.status === "Disabled" || s.status === "Missing");
+  const planned = PRODUCTION_SERVICES.filter(
+    (s) => s.status === "Planned" || s.status === "Disabled" || s.status === "Missing"
+  );
   const withoutReason = planned.filter((s) => !s.userFallback && !s.fallback);
   return {
     id: "planned-transparency",
     title: "Planned Feature Transparency Checker",
     category: "cards",
     status: withoutReason.length === 0 ? "pass" : "warning",
-    summary: withoutReason.length === 0
-      ? `All ${planned.length} planned/limited service(s) explain their guarded reason.`
-      : `${withoutReason.length} planned service(s) missing an explanation.`,
-    details: withoutReason.length === 0
-      ? planned.map((s) => `${s.displayName}: ${s.userFallback || s.fallback}`)
-      : withoutReason.map((s) => `${s.displayName}: no fallback reason`),
+    summary:
+      withoutReason.length === 0
+        ? `All ${planned.length} planned/limited service(s) explain their guarded reason.`
+        : `${withoutReason.length} planned service(s) missing an explanation.`,
+    details:
+      withoutReason.length === 0
+        ? planned.length > 0
+          ? planned.map((s) => `${s.displayName}: ${s.userFallback || s.fallback}`)
+          : [
+              "No Planned/Disabled/Missing services in catalog - all services are Active/Ready/Guarded.",
+            ]
+        : withoutReason.map((s) => `${s.displayName}: no fallback reason`),
   };
 }
 
@@ -352,7 +510,9 @@ function checkRegexTool(): QACheckResult {
     title: "Regex Engine Checker",
     category: "tools",
     status: ok ? "pass" : "warning",
-    summary: ok ? "Regex tool matches expected token count." : "Regex tool output did not match expectation.",
+    summary: ok
+      ? "Regex tool matches expected token count."
+      : "Regex tool output did not match expectation.",
     details: [output.replace(/\n/g, " ")],
   };
 }
@@ -363,12 +523,14 @@ export function runQaChecks(): QACheckResult[] {
     checkI18nEmptyValues(),
     checkArabicNavCoverage(),
     checkStatusBadgeConsistency(),
+    checkServiceOperationCoverage(),
     checkRuntimeHonesty(),
     checkGuardedLabeling(),
     checkServiceCardElements(),
     checkDuplicateIds(),
     checkPlannedTransparency(),
     checkActionButtonIntegrity(),
+    checkToolLabelUniqueness(),
     checkToolCoverage(),
     checkToolOutputIntegrity(),
     checkBase64Roundtrip(),
@@ -416,7 +578,9 @@ export function buildQaReport(results: QACheckResult[]): string {
   lines.push("");
   lines.push(`Generated: ${new Date().toISOString()}`);
   lines.push(`Readiness: ${summary.readiness}%`);
-  lines.push(`Checks: ${summary.total} | Passed: ${summary.passed} | Warnings: ${summary.warnings} | Failed: ${summary.failed}`);
+  lines.push(
+    `Checks: ${summary.total} | Passed: ${summary.passed} | Warnings: ${summary.warnings} | Failed: ${summary.failed}`
+  );
   lines.push("");
   for (const result of results) {
     const icon = result.status === "pass" ? "PASS" : result.status === "warning" ? "WARN" : "FAIL";

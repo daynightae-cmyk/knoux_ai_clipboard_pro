@@ -1,0 +1,9 @@
+{
+  "workbench.editor.decorations.colors": true,
+  "chat.tools.terminal.autoApprove": {
+    "/^git fetch origin --prune ; git checkout main ; git pull --rebase origin main ; git status -sb ; git log -10 --oneline ; npm run build:renderer ; npm test ; npm run build:main$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
+}

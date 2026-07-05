@@ -9,7 +9,8 @@ export function readJsonStorage<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
+  } catch (err) {
+    console.warn('[storage-utils] Failed to read key:', key, 'Error:', err instanceof Error ? err.message : String(err));
     return fallback;
   }
 }
@@ -17,7 +18,8 @@ export function readJsonStorage<T>(key: string, fallback: T): T {
 export function writeJsonStorage<T>(key: string, value: T): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // storage full or unavailable — silently degrade
+  } catch (err) {
+    // storage full or unavailable — log warning for debugging
+    console.warn('[storage-utils] Failed to write key:', key, 'Error:', err instanceof Error ? err.message : String(err));
   }
 }

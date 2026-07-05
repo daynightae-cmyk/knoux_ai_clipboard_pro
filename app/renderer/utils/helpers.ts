@@ -118,7 +118,7 @@ export async function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number
 ): Promise<T> {
-  let timeoutId: ReturnType<typeof setTimeout>;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const timeoutPromise = new Promise<never>((_, reject) =>
     (timeoutId = setTimeout(() => reject(new Error('Operation timeout')), timeoutMs))
@@ -127,15 +127,14 @@ export async function withTimeout<T>(
   try {
     return await Promise.race([promise, timeoutPromise]);
   } finally {
-    clearTimeout(timeoutId);
+    if (timeoutId) clearTimeout(timeoutId);
   }
 }
 
 export const copyToClipboard = _copyToClipboard;
 
-export async function readFromClipboard(): Promise<string | null> {
-  const result = await _readFromClipboard();
-  return result || null;
+export async function readFromClipboard(): Promise<string> {
+  return await _readFromClipboard();
 }
 
 /**
@@ -212,7 +211,8 @@ export function deepMerge<T extends Record<string, any>>(target: T, source: Part
       const targetValue = result[key];
 
       if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
-        result[key] = deepMerge(targetValue || {}, sourceValue as any);
+        const targetObj = (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue)) ? targetValue : {} as Record<string, any>;
+        result[key] = deepMerge(targetObj, sourceValue as any) as T[Extract<keyof T, string>];
       } else {
         result[key] = sourceValue as any;
       }

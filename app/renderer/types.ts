@@ -38,6 +38,7 @@ export interface AppSettings {
   maxHistorySize: number;
   syncToCloud: boolean;
   language?: "en" | "ar";
+  studioHistorySize?: number;
 }
 
 export interface LabModule {

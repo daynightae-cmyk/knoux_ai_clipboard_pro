@@ -22,16 +22,23 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     const success = document.execCommand('copy');
     document.body.removeChild(textarea);
     return success;
-  } catch {
+  } catch (err) {
+    // Permission denied or clipboard unavailable - debug level
+    console.debug('[clipboard-utils] Copy failed:', err instanceof Error ? err.message : String(err));
     return false;
   }
 }
 
 export async function readFromClipboard(): Promise<string> {
-  if (!navigator.clipboard?.readText) return '';
+  if (!navigator.clipboard?.readText) {
+    console.debug('[clipboard-utils] Clipboard API unavailable');
+    return '';
+  }
   try {
     return await navigator.clipboard.readText();
-  } catch {
+  } catch (err) {
+    // Permission denied or clipboard unavailable - debug level
+    console.debug('[clipboard-utils] Read failed:', err instanceof Error ? err.message : String(err));
     return '';
   }
 }

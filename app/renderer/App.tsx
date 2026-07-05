@@ -17,9 +17,18 @@ import BarcodeScannerPage from "./components/BarcodeScannerPage";
 import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
-import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
+import {
+  compactLocalStore,
+  detectSensitiveTypes,
+  writeSystemClipboard,
+} from "./services/runtimeServices";
 import i18n from "./utils/i18n";
-import { autoTags, detectClipboardType, hashContent, importCurrentClipboardFromRuntime } from "./services/clientClipboardServices";
+import {
+  autoTags,
+  detectClipboardType,
+  hashContent,
+  importCurrentClipboardFromRuntime,
+} from "./services/clientClipboardServices";
 
 const DEFAULT_SETTINGS: AppSettings = {
   themeMode: "system",
@@ -30,19 +39,79 @@ const DEFAULT_SETTINGS: AppSettings = {
   maxHistorySize: 100,
   syncToCloud: false,
   language: "en",
+  studioHistorySize: 25,
 };
 
 const SEED_ITEMS: ClipboardItem[] = [
-  { id: "clip-1", content: "Your clipboard. Upgraded by AI.", type: "text", timestamp: new Date(Date.now() - 3 * 60 * 1000).toISOString(), pinned: true, favorite: true, tags: ["tagline", "knoux"], source: "System", isSecure: false, aiSummarized: "Defines the core branding tagline and executive mission of Knoux AI Clipboard Pro." },
-  { id: "clip-2", content: "const runKnouxAction = async (text: string) => console.log('KNOUX action ready', text);", type: "code", timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(), pinned: false, favorite: false, tags: ["script", "knoux"], source: "VS Code", isSecure: false, language: "typescript" },
-  { id: "clip-3", content: "https://knoux.store", type: "link", timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(), pinned: false, favorite: true, tags: ["store", "knoux"], source: "Chrome", isSecure: false },
-  { id: "clip-4", content: "KNOUX secure workspace note: production UI, AI bridge, barcode scanner, and local-first clipboard workflow are active.", type: "note", timestamp: new Date(Date.now() - 2 * 3600 * 1000).toISOString(), pinned: true, favorite: false, tags: ["secure", "workspace"], source: "System", isSecure: true },
+  {
+    id: "clip-1",
+    content: "Your clipboard. Upgraded by AI.",
+    type: "text",
+    timestamp: new Date(Date.now() - 3 * 60 * 1000).toISOString(),
+    pinned: true,
+    favorite: true,
+    tags: ["tagline", "knoux"],
+    source: "System",
+    isSecure: false,
+    aiSummarized:
+      "Defines the core branding tagline and executive mission of Knoux AI Clipboard Pro.",
+  },
+  {
+    id: "clip-2",
+    content:
+      "const runKnouxAction = async (text: string) => console.log('KNOUX action ready', text);",
+    type: "code",
+    timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+    pinned: false,
+    favorite: false,
+    tags: ["script", "knoux"],
+    source: "VS Code",
+    isSecure: false,
+    language: "typescript",
+  },
+  {
+    id: "clip-3",
+    content: "https://knoux.store",
+    type: "link",
+    timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+    pinned: false,
+    favorite: true,
+    tags: ["store", "knoux"],
+    source: "Chrome",
+    isSecure: false,
+  },
+  {
+    id: "clip-4",
+    content:
+      "KNOUX secure workspace note: production UI, AI bridge, barcode scanner, and local-first clipboard workflow are active.",
+    type: "note",
+    timestamp: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
+    pinned: true,
+    favorite: false,
+    tags: ["secure", "workspace"],
+    source: "System",
+    isSecure: true,
+  },
 ];
 
 const normalizeSettings = (value: any): AppSettings => {
-  const themeMode = value?.themeMode === "day" ? "light" : value?.themeMode === "night" ? "dark" : value?.themeMode;
-  const density = value?.density === "compact" || value?.density === "comfortable" || value?.density === "spacious" ? value.density : DEFAULT_SETTINGS.density;
-  return { ...DEFAULT_SETTINGS, ...(value || {}), themeMode: themeMode === "light" || themeMode === "dark" || themeMode === "system" ? themeMode : DEFAULT_SETTINGS.themeMode, density };
+  const themeMode =
+    value?.themeMode === "day" ? "light" : value?.themeMode === "night" ? "dark" : value?.themeMode;
+  const density =
+    value?.density === "compact" ||
+    value?.density === "comfortable" ||
+    value?.density === "spacious"
+      ? value.density
+      : DEFAULT_SETTINGS.density;
+  return {
+    ...DEFAULT_SETTINGS,
+    ...(value || {}),
+    themeMode:
+      themeMode === "light" || themeMode === "dark" || themeMode === "system"
+        ? themeMode
+        : DEFAULT_SETTINGS.themeMode,
+    density,
+  };
 };
 
 const loadSettings = (): AppSettings => {
@@ -98,7 +167,8 @@ export default function App() {
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const applyTheme = () => {
-      const resolved = settings.themeMode === "system" ? (media.matches ? "dark" : "light") : settings.themeMode;
+      const resolved =
+        settings.themeMode === "system" ? (media.matches ? "dark" : "light") : settings.themeMode;
       const cssTheme = resolved === "dark" ? "night" : "day";
       document.documentElement.dataset.theme = cssTheme;
       document.documentElement.dataset.themeMode = settings.themeMode;
@@ -116,13 +186,26 @@ export default function App() {
 
   const saveClips = (newClips: ClipboardItem[]) => {
     setItems(newClips);
-    localStorage.setItem("knoux_clips", JSON.stringify(newClips));
+    try {
+      localStorage.setItem("knoux_clips", JSON.stringify(newClips));
+    } catch (error) {
+      console.error("Failed to save clips to localStorage:", error);
+      triggerToast(
+        settings.language === "ar"
+          ? "فشل حفظ الحافظة. قد تكون المساحة ممتلئة."
+          : "Failed to save clips. Storage might be full."
+      );
+    }
   };
 
   const parseAITags = (text: string): string[] => {
     const hashes = text.match(/#\w+/g);
     if (hashes?.length) return hashes.map((h) => h.substring(1).trim());
-    return text.split(/[\s,.;\n]+/).map((w) => w.replace(/[^a-zA-Z0-9]/g, "").trim()).filter((w) => w.length > 2 && w.length < 15).slice(0, 4);
+    return text
+      .split(/[\s,.;\n]+/)
+      .map((w) => w.replace(/[^a-zA-Z0-9]/g, "").trim())
+      .filter((w) => w.length > 2 && w.length < 15)
+      .slice(0, 4);
   };
 
   const handleAddNewItem = async (content: string, type: ClipboardType, source = "System Note") => {
@@ -152,14 +235,23 @@ export default function App() {
       timestamp: new Date().toISOString(),
       pinned: false,
       favorite: false,
-      tags: Array.from(new Set([...(detectedTags.length ? detectedTags : ["snippet"]), ...(shouldSecure ? ["secret"] : [])])),
+      tags: Array.from(
+        new Set([
+          ...(detectedTags.length ? detectedTags : ["snippet"]),
+          ...(shouldSecure ? ["secret"] : []),
+        ])
+      ),
       source,
       isSecure: shouldSecure,
       folder,
     };
     const nextItems = [item, ...items].slice(0, settings.maxHistorySize);
     saveClips(nextItems);
-    triggerToast(settings.language === "ar" ? "تم حفظ العنصر في مساحة KNOUX." : "Snippet committed to KNOUX workspace.");
+    triggerToast(
+      settings.language === "ar"
+        ? "تم حفظ العنصر في مساحة KNOUX."
+        : "Snippet committed to KNOUX workspace."
+    );
 
     if (settings.autoAnalyze) {
       try {
@@ -167,27 +259,59 @@ export default function App() {
         const extraTags = parseAITags(data.result);
         if (extraTags.length) {
           setItems((prev) => {
-            const next = prev.map((x) => x.id === id ? { ...x, tags: Array.from(new Set([...x.tags, ...extraTags])), aiTags: extraTags } : x);
+            const next = prev.map((x) =>
+              x.id === id
+                ? { ...x, tags: Array.from(new Set([...x.tags, ...extraTags])), aiTags: extraTags }
+                : x
+            );
             localStorage.setItem("knoux_clips", JSON.stringify(next));
             return next;
           });
         }
       } catch {
-        triggerToast(settings.language === "ar" ? "تم الحفظ. مزود الذكاء يحتاج إعدادًا." : "Saved. AI provider pending.");
+        triggerToast(
+          settings.language === "ar"
+            ? "تم الحفظ. مزود الذكاء يحتاج إعدادًا."
+            : "Saved. AI provider pending."
+        );
       }
     }
   };
 
   const handleCopyItem = async (item: ClipboardItem) => {
     const copied = await writeSystemClipboard(item.content);
-    triggerToast(copied ? (settings.language === "ar" ? "تم النسخ." : "Copied.") : "Clipboard permission required.");
+    triggerToast(
+      copied
+        ? settings.language === "ar"
+          ? "تم النسخ."
+          : "Copied."
+        : "Clipboard permission required."
+    );
   };
 
-  const handleTogglePin = (item: ClipboardItem) => saveClips(items.map((x) => x.id === item.id ? { ...x, pinned: !x.pinned } : x));
-  const handleToggleFavorite = (item: ClipboardItem) => saveClips(items.map((x) => x.id === item.id ? { ...x, favorite: !x.favorite } : x));
-  const handleDeleteItem = (item: ClipboardItem) => saveClips(items.filter((x) => x.id !== item.id));
-  const handleClearHistory = () => { if (window.confirm("Clear local history?")) saveClips([]); };
-  const handleRunMaintenance = () => { const health = compactLocalStore(items); triggerToast(`Local store compacted: ${health.kb} KB.`); };
+  const handleTogglePin = (item: ClipboardItem) => {
+    const target = items.find((x) => x.id === item.id);
+    if (!target) return;
+    saveClips(items.map((x) => (x.id === item.id ? { ...x, pinned: !x.pinned } : x)));
+  };
+  const handleToggleFavorite = (item: ClipboardItem) => {
+    const target = items.find((x) => x.id === item.id);
+    if (!target) {
+      triggerToast(settings.language === "ar" ? "فشل تبديل المفضلة" : "Failed to toggle favorite");
+      return;
+    }
+    saveClips(items.map((x) => (x.id === item.id ? { ...x, favorite: !x.favorite } : x)));
+  };
+  const handleDeleteItem = (item: ClipboardItem) =>
+    saveClips(items.filter((x) => x.id !== item.id));
+  const handleClearHistory = () => {
+    if (window.confirm("Clear local history?")) saveClips([]);
+  };
+  const handleRunMaintenance = () => {
+    const { compacted, health } = compactLocalStore(items);
+    setItems(compacted); // Update the state with the compacted items
+    triggerToast(`Local store compacted: ${health.kb} KB.`);
+  };
 
   const handleRefreshClipboard = async () => {
     setIsRefreshing(true);
@@ -215,26 +339,140 @@ export default function App() {
 
   const renderActiveTab = () => {
     switch (activeTab) {
-      case "overview": return <OverviewDashboard items={items} onCopyItem={handleCopyItem} onTogglePin={handleTogglePin} onDeleteItem={handleDeleteItem} setActiveTab={setActiveTab} setAiInputText={setAiInputText} onAddNewItem={handleAddNewItem} />;
-      case "clipboard": return <ClipboardWorkspace items={items} onAddNewItem={handleAddNewItem} onCopyItem={handleCopyItem} onTogglePin={handleTogglePin} onToggleFavorite={handleToggleFavorite} onDeleteItem={handleDeleteItem} onClearHistory={handleClearHistory} setActiveTab={setActiveTab} setAiInputText={setAiInputText} searchQuery={searchQuery} onUpdateItems={saveClips} />;
-      case "search": return <SearchPage items={items} onCopyItem={handleCopyItem} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />;
-      case "ai": return <AIToolsPage inputText={aiInputText} setInputText={setAiInputText} onAddNewItem={handleAddNewItem} />;
-      case "barcode": return <BarcodeScannerPage onAddNewItem={handleAddNewItem} />;
-      case "security": return <SecurityPage privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} itemsCount={items.length} />;
-      case "settings": return <SettingsPage settings={settings} setSettings={setSettings} onClearHistory={handleClearHistory} setActiveTab={setActiveTab} items={items} onUpdateItems={saveClips} />;
-      case "labs": return <LabsPage />;
-      case "developer": return <StudioPage items={items} />;
-      case "qa": return <QALabPage />;
-      case "about": return <AboutPage />;
-      default: return <OverviewDashboard items={items} onCopyItem={handleCopyItem} onTogglePin={handleTogglePin} onDeleteItem={handleDeleteItem} setActiveTab={setActiveTab} setAiInputText={setAiInputText} onAddNewItem={handleAddNewItem} />;
+      case "overview":
+        return (
+          <OverviewDashboard
+            items={items}
+            onCopyItem={handleCopyItem}
+            onTogglePin={handleTogglePin}
+            onDeleteItem={handleDeleteItem}
+            setActiveTab={setActiveTab}
+            setAiInputText={setAiInputText}
+            onAddNewItem={handleAddNewItem}
+          />
+        );
+      case "clipboard":
+        return (
+          <ClipboardWorkspace
+            items={items}
+            onAddNewItem={handleAddNewItem}
+            onCopyItem={handleCopyItem}
+            onTogglePin={handleTogglePin}
+            onToggleFavorite={handleToggleFavorite}
+            onDeleteItem={handleDeleteItem}
+            onClearHistory={handleClearHistory}
+            setActiveTab={setActiveTab}
+            setAiInputText={setAiInputText}
+            searchQuery={searchQuery}
+            onUpdateItems={saveClips}
+          />
+        );
+      case "search":
+        return (
+          <SearchPage
+            items={items}
+            onCopyItem={handleCopyItem}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+        );
+      case "ai":
+        return (
+          <AIToolsPage
+            inputText={aiInputText}
+            setInputText={setAiInputText}
+            onAddNewItem={handleAddNewItem}
+          />
+        );
+      case "barcode":
+        return <BarcodeScannerPage onAddNewItem={handleAddNewItem} />;
+      case "security":
+        return (
+          <SecurityPage
+            privacyMode={privacyMode}
+            setPrivacyMode={setPrivacyMode}
+            itemsCount={items.length}
+          />
+        );
+      case "settings":
+        return (
+          <SettingsPage
+            settings={settings}
+            setSettings={setSettings}
+            onClearHistory={handleClearHistory}
+            setActiveTab={setActiveTab}
+            items={items}
+            onUpdateItems={saveClips}
+          />
+        );
+      case "labs":
+        return <LabsPage />;
+      case "developer":
+        return <StudioPage items={items} settings={settings} />;
+      case "qa":
+        return <QALabPage />;
+      case "about":
+        return <AboutPage />;
+      default:
+        return (
+          <OverviewDashboard
+            items={items}
+            onCopyItem={handleCopyItem}
+            onTogglePin={handleTogglePin}
+            onDeleteItem={handleDeleteItem}
+            setActiveTab={setActiveTab}
+            setAiInputText={setAiInputText}
+            onAddNewItem={handleAddNewItem}
+          />
+        );
     }
   };
 
   return (
-    <AppShellPro activeTab={activeTab} setActiveTab={setActiveTab} collapsed={collapsed} setCollapsed={setCollapsed} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefreshClipboard} isRefreshing={isRefreshing} itemsCount={items.length} onRunMaintenance={handleRunMaintenance} toastMessage={toastMessage} isInspectorOpen={isInspectorOpen} setIsInspectorOpen={setIsInspectorOpen} language={settings.language} themeMode={settings.themeMode} setThemeMode={(themeMode: AppSettings["themeMode"]) => setSettings((prev) => ({ ...prev, themeMode }))}>
+    <AppShellPro
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      collapsed={collapsed}
+      setCollapsed={setCollapsed}
+      privacyMode={privacyMode}
+      setPrivacyMode={setPrivacyMode}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      onRefresh={handleRefreshClipboard}
+      isRefreshing={isRefreshing}
+      itemsCount={items.length}
+      onRunMaintenance={handleRunMaintenance}
+      toastMessage={toastMessage}
+      isInspectorOpen={isInspectorOpen}
+      setIsInspectorOpen={setIsInspectorOpen}
+      language={settings.language}
+      themeMode={settings.themeMode}
+      setThemeMode={(themeMode: AppSettings["themeMode"]) =>
+        setSettings((prev) => ({ ...prev, themeMode }))
+      }
+    >
       {renderActiveTab()}
-      <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} items={items} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} setAiInputText={setAiInputText} onCopyItem={handleCopyItem} onToast={triggerToast} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
-      <AnimatePresence>{toastMessage && <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-2xl bg-[#160A26]/90 border border-white/15 shadow-knoux-glow flex items-center gap-2 text-xs font-bold text-white"><Check className="w-4 h-4 text-emerald-300" /><span>{toastMessage}</span></div>}</AnimatePresence>
+      <CommandPalette
+        open={commandPaletteOpen}
+        onOpenChange={setCommandPaletteOpen}
+        items={items}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        setSearchQuery={setSearchQuery}
+        setAiInputText={setAiInputText}
+        onCopyItem={handleCopyItem}
+        onToast={triggerToast}
+        privacyMode={privacyMode}
+        setPrivacyMode={setPrivacyMode}
+      />
+      <AnimatePresence>
+        {toastMessage && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-2xl bg-[#160A26]/90 border border-white/15 shadow-knoux-glow flex items-center gap-2 text-xs font-bold text-white">
+            <Check className="w-4 h-4 text-emerald-300" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+      </AnimatePresence>
     </AppShellPro>
   );
 }
