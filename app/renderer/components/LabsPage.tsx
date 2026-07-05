@@ -45,15 +45,17 @@ const tierStyle: Record<ProductionService["tier"], string> = {
 };
 
 const statusStyle: Record<ProductionService["status"], string> = {
-  ACTIVE: "bg-emerald-500",
-  READY: "bg-blue-500",
-  GUARDED: "bg-amber-500",
-  NEXT: "bg-slate-400",
+  Active: "bg-emerald-500",
+  Ready: "bg-blue-500",
+  Guarded: "bg-amber-500",
+  Planned: "bg-slate-400",
+  Missing: "bg-red-500",
+  Disabled: "bg-slate-500",
 };
 
 export default function LabsPage() {
   const [enabledServices, setEnabledServices] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(PRODUCTION_SERVICES.map((service) => [service.id, service.status !== "NEXT"]))
+    Object.fromEntries(PRODUCTION_SERVICES.map((service) => [service.id, service.implemented && service.status !== "Disabled"]))
   );
 
   const readiness = getServiceReadinessPercent();
@@ -63,6 +65,8 @@ export default function LabsPage() {
   );
 
   const toggleService = (id: string) => {
+    const service = PRODUCTION_SERVICES.find((item) => item.id === id);
+    if (!service?.implemented) return;
     setEnabledServices((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -145,10 +149,11 @@ export default function LabsPage() {
                   </span>
                   <button
                     onClick={() => toggleService(service.id)}
+                    disabled={!service.implemented}
                     className={`w-10 h-5 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${
                       enabledServices[service.id] ? "bg-knoux-purple justify-end" : "bg-knoux-purple/15 justify-start"
-                    }`}
-                    aria-label={`Toggle ${service.title}`}
+                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                    aria-label={`Toggle ${service.displayName}`}
                   >
                     <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
                   </button>
@@ -161,9 +166,10 @@ export default function LabsPage() {
                   <span className="text-[10px] font-black text-knoux-muted-text uppercase tracking-wider">{service.status}</span>
                 </div>
                 <h3 className="text-sm font-black text-knoux-dark-text group-hover:text-knoux-purple transition-colors">
-                  {service.title}
+                  {service.displayName}
                 </h3>
                 <p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p>
+                {service.disabledReason && <p className="text-[10px] text-amber-700 leading-relaxed">{service.disabledReason}</p>}
               </div>
             </div>
 

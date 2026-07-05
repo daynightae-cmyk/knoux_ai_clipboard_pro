@@ -916,7 +916,7 @@ export default function ClipboardWorkspace({
                   <div className="flex justify-between">
                     <span className="text-knoux-muted-text font-medium">Vault lock state:</span>
                     <span className={`font-bold uppercase ${selectedItem.isSecure ? "text-emerald-600" : "text-knoux-muted-text/60"}`}>
-                      {selectedItem.isSecure ? "Encrypted AES" : "Plaintext"}
+                      {selectedItem.isSecure ? "Privacy guarded" : "Plaintext"}
                     </span>
                   </div>
                 </div>

@@ -15,7 +15,7 @@
 }
 
 html, body, #root { width: 100%; height: 100%; }
-body { margin: 0; font-family: var(--font-sans); background-color: #FCFAFF; color: #241B39; overflow: hidden; }
+body { margin: 0; font-family: var(--font-sans); background-color: var(--knoux-bg); color: var(--knoux-text-primary); overflow: hidden; }
 * { box-sizing: border-box; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

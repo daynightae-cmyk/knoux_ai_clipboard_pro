@@ -4,6 +4,26 @@
  */
 
 :root {
+  color-scheme: light;
+  --knoux-bg: #fcfaff;
+  --knoux-surface: #ffffff;
+  --knoux-surface-glass: rgba(255, 255, 255, 0.80);
+  --knoux-card: rgba(255, 255, 255, 0.86);
+  --knoux-card-border: rgba(130, 38, 238, 0.12);
+  --knoux-purple: #8A2BE2;
+  --knoux-purple-strong: #6F2DBD;
+  --knoux-accent: #A678DD;
+  --knoux-glow: 0 10px 40px rgba(138, 43, 226, 0.16);
+  --knoux-danger: #dc2626;
+  --knoux-success: #047857;
+  --knoux-warning: #b45309;
+  --knoux-info: #2563eb;
+  --color-knoux-purple: var(--knoux-purple);
+  --color-knoux-neon: #B026FF;
+  --color-knoux-soft-white: var(--knoux-bg);
+  --color-knoux-lavender-white: #F7F2FF;
+  --color-knoux-dark-text: var(--knoux-text-primary);
+  --color-knoux-muted-text: var(--knoux-text-secondary);
   --knoux-purple-500: #8226ee;
   --knoux-purple-700: #500fc8;
   --knoux-violet-900: #381584;
@@ -21,16 +41,58 @@
   --knoux-border-strong: rgba(130, 38, 238, 0.28);
 }
 
+html[data-theme="night"] {
+  color-scheme: dark;
+  --knoux-bg: #0d0527;
+  --knoux-surface: #160a2b;
+  --knoux-surface-glass: rgba(28, 11, 78, 0.76);
+  --knoux-card: rgba(25, 12, 48, 0.88);
+  --knoux-card-border: rgba(216, 184, 236, 0.18);
+  --knoux-text-primary: #fcfaff;
+  --knoux-text-secondary: #d8c8ee;
+  --knoux-text-muted: #bfa7db;
+  --knoux-purple: #a678dd;
+  --knoux-purple-strong: #8a2be2;
+  --knoux-accent: #d8b8ec;
+  --knoux-glow: 0 10px 42px rgba(166, 120, 221, 0.28);
+  --knoux-danger: #f87171;
+  --knoux-success: #34d399;
+  --knoux-warning: #fbbf24;
+  --knoux-info: #93c5fd;
+  --color-knoux-purple: var(--knoux-purple);
+  --color-knoux-neon: #d8b8ec;
+  --color-knoux-soft-white: #160a2b;
+  --color-knoux-lavender-white: #21113d;
+  --color-knoux-dark-text: var(--knoux-text-primary);
+  --color-knoux-muted-text: var(--knoux-text-secondary);
+  --knoux-border-subtle: rgba(216, 184, 236, 0.16);
+  --knoux-border-strong: rgba(216, 184, 236, 0.32);
+}
+
 body {
-  background: radial-gradient(circle at 20% 0%, #f3e6fb 0%, #fcfaff 46%, #ffffff 100%);
+  background: radial-gradient(circle at 20% 0%, #f3e6fb 0%, var(--knoux-bg) 46%, var(--knoux-surface) 100%);
   color: var(--knoux-text-primary);
+}
+
+html[data-theme="night"] body {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(138, 43, 226, 0.22), transparent 34%),
+    radial-gradient(circle at 88% 8%, rgba(216, 184, 236, 0.12), transparent 32%),
+    linear-gradient(135deg, #0d0527 0%, #160a2b 50%, #080414 100%);
 }
 
 .knoux-app-shell {
   background:
     radial-gradient(circle at 18% 0%, rgba(130, 38, 238, 0.13), transparent 34%),
     radial-gradient(circle at 90% 10%, rgba(193, 124, 235, 0.12), transparent 32%),
-    linear-gradient(135deg, #fcfaff 0%, #f3e6fb 48%, #ffffff 100%);
+    linear-gradient(135deg, var(--knoux-bg) 0%, #f3e6fb 48%, var(--knoux-surface) 100%);
+}
+
+html[data-theme="night"] .knoux-app-shell {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(138, 43, 226, 0.20), transparent 34%),
+    radial-gradient(circle at 90% 10%, rgba(216, 184, 236, 0.10), transparent 32%),
+    linear-gradient(135deg, #0d0527 0%, #170a2d 48%, #080414 100%);
 }
 
 .circuit-bg::before {
@@ -58,6 +120,33 @@ body {
   box-shadow: 0 8px 32px rgba(130, 38, 238, 0.08), 0 2px 8px rgba(130, 38, 238, 0.04);
   color: var(--knoux-text-primary);
 }
+
+html[data-theme="night"] .glass-panel,
+html[data-theme="night"] .glass-elevated,
+html[data-theme="night"] .knoux-premium-card,
+html[data-theme="night"] .knoux-glass-card,
+html[data-theme="night"] .knoux-glass-panel,
+html[data-theme="night"] .knoux-window,
+html[data-theme="night"] section,
+html[data-theme="night"] aside {
+  background-color: var(--knoux-surface-glass);
+  border-color: var(--knoux-card-border);
+  color: var(--knoux-text-primary);
+}
+
+.knoux-window {
+  background: var(--knoux-surface);
+  color: var(--knoux-text-primary);
+}
+
+.knoux-app-bg { background: var(--knoux-bg); color: var(--knoux-text-primary); }
+.knoux-sidebar { background: rgba(22, 10, 43, 0.96); color: #fcfaff; }
+.knoux-dark-panel { background: #160a2b; color: #f7f2ff; border: 1px solid rgba(216, 184, 236, 0.18); }
+.knoux-primary-button { background: linear-gradient(135deg, var(--knoux-purple), var(--knoux-purple-strong)); color: #fff; box-shadow: var(--knoux-glow); }
+.knoux-secondary-button { background: var(--knoux-card); color: var(--knoux-purple); border: 1px solid var(--knoux-card-border); }
+.knoux-search-input { background: var(--knoux-card); color: var(--knoux-text-primary); border: 1px solid var(--knoux-card-border); }
+.knoux-orb { background: radial-gradient(circle, rgba(166, 120, 221, 0.35), transparent 65%); filter: blur(24px); }
+.knoux-circuit-bg { background-image: linear-gradient(rgba(138, 43, 226, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(138, 43, 226, 0.08) 1px, transparent 1px); background-size: 42px 42px; }
 
 .glass-elevated {
   background: rgba(255, 255, 255, 0.90);
@@ -106,6 +195,30 @@ body {
 .knoux-status-warning { color: #92400e; background: #fffbeb; border: 1px solid #fde68a; }
 .knoux-status-error { color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; }
 .knoux-status-muted { color: var(--knoux-text-secondary); background: #fff; border: 1px solid var(--knoux-border-subtle); }
+
+html[data-theme="night"] .bg-white,
+html[data-theme="night"] .bg-white\/40,
+html[data-theme="night"] .bg-white\/50,
+html[data-theme="night"] .bg-white\/60,
+html[data-theme="night"] .bg-white\/70,
+html[data-theme="night"] .bg-white\/75,
+html[data-theme="night"] .bg-white\/80,
+html[data-theme="night"] .bg-white\/90 {
+  background-color: var(--knoux-card) !important;
+}
+
+html[data-theme="night"] .text-knoux-dark-text { color: var(--knoux-text-primary) !important; }
+html[data-theme="night"] .text-knoux-muted-text { color: var(--knoux-text-secondary) !important; }
+html[data-theme="night"] .border-knoux-purple\/5,
+html[data-theme="night"] .border-knoux-purple\/10,
+html[data-theme="night"] .border-knoux-purple\/15 { border-color: var(--knoux-card-border) !important; }
+html[data-theme="night"] input,
+html[data-theme="night"] textarea,
+html[data-theme="night"] select {
+  background: rgba(13, 5, 39, 0.72) !important;
+  color: var(--knoux-text-primary) !important;
+  border-color: var(--knoux-card-border) !important;
+}
 
 .knoux-shimmer-fast {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);

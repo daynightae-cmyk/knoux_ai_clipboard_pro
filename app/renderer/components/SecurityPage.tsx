@@ -56,7 +56,7 @@ export default function SecurityPage({
   );
   const [auditTrail, setAuditTrail] = useState<AuditEntry[]>([
     { action: "OPENROUTER_PROXY_READY", msg: "Server-side AI route is isolated from client secrets.", time: nowTime(), severity: "success" },
-    { action: "AES_GCM_BRIDGE_READY", msg: "Electron security IPC uses authenticated AES-256-GCM payload format.", time: nowTime(), severity: "success" },
+    { action: "AES_GCM_BRIDGE_GUARDED", msg: "Electron security IPC exposes an authenticated AES-256-GCM payload format for Electron-scoped vault operations.", time: nowTime(), severity: "success" },
     { action: "CLIPBOARD_GUARD_ACTIVE", msg: "Credential-like text patterns are scanned before reuse.", time: nowTime(), severity: "info" },
   ]);
 
@@ -121,7 +121,7 @@ export default function SecurityPage({
               <div className="text-4xl font-black text-emerald-950 font-mono">{securityScore}/100</div>
             </div>
             <div className="relative pt-2 border-t border-emerald-100 space-y-2 text-left text-xs text-emerald-900 leading-normal">
-              <div className="flex justify-between font-mono"><span>AES-256-GCM IPC:</span><span className="font-bold">READY</span></div>
+              <div className="flex justify-between font-mono"><span>AES-256-GCM IPC:</span><span className="font-bold">GUARDED</span></div>
               <div className="flex justify-between font-mono"><span>OpenRouter secret isolation:</span><span className="font-bold">SERVER-SIDE</span></div>
               <div className="flex justify-between font-mono"><span>Credential pattern guard:</span><span className="font-bold">ACTIVE</span></div>
             </div>

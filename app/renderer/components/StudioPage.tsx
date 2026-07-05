@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ClipboardItem } from "../types";
 import { CheckCircle2, Copy, Database, Download, FileJson, PackageCheck, RefreshCw, ServerCog, ShieldCheck, Sparkles, TerminalSquare, Wrench } from "lucide-react";
+import { PRODUCTION_SERVICES } from "../services/productionCatalog";
 
 interface Props { items?: ClipboardItem[]; }
 
@@ -86,6 +87,28 @@ export default function StudioPage({ items = [] }: Props) {
               <div className="rounded-2xl bg-white border border-knoux-purple/10 p-3"><b>Provider</b><div className="text-knoux-muted-text mt-1">{api?.provider || "openrouter"}</div></div>
               <div className="rounded-2xl bg-white border border-knoux-purple/10 p-3"><b>Model</b><div className="text-knoux-muted-text mt-1">{api?.model || "not checked"}</div></div>
               <div className="rounded-2xl bg-white border border-knoux-purple/10 p-3"><b>Status</b><div className="text-knoux-muted-text mt-1">{api?.status || "idle"}</div></div>
+            </div>
+          </section>
+
+          <section className="glass-panel p-5 space-y-4">
+            <h2 className="font-black text-knoux-dark-text flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-knoux-purple" /> Service Reality Matrix</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {PRODUCTION_SERVICES.map((service) => (
+                <div key={service.id} className="rounded-2xl border border-knoux-purple/10 bg-white/75 p-3 text-xs space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <b className="text-knoux-dark-text">{service.displayName}</b>
+                    <span className="text-[10px] font-black text-knoux-purple uppercase">{service.status}</span>
+                  </div>
+                  <p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p>
+                  <div className="grid grid-cols-2 gap-2 text-[10px] text-knoux-muted-text">
+                    <span>Runtime: {service.runtimeType}</span>
+                    <span>Config: {service.requiresConfig ? "Required" : "No"}</span>
+                    <span>Implemented: {service.implemented ? "Yes" : "No"}</span>
+                    <span>Handler: {service.actionHandler || "None"}</span>
+                  </div>
+                  {service.disabledReason && <p className="text-[10px] text-amber-700">{service.disabledReason}</p>}
+                </div>
+              ))}
             </div>
           </section>
 

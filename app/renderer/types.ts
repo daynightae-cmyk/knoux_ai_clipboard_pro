@@ -34,6 +34,7 @@ export type NavTab =
   | "about";
 
 export interface AppSettings {
+  themeMode: "day" | "night" | "system";
   density: "compact" | "comfortable";
   glowIntensity: "low" | "medium" | "high";
   privacyMode: boolean;

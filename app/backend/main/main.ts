@@ -4,7 +4,7 @@
 import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
 import * as path from "path";
 import * as url from "url";
-import { initBackendServices } from "./backend/init";
+import { initBackendServices } from "../init";
 import { setupAllIPC } from "./index";
 
 // Global references
@@ -15,7 +15,7 @@ let isQuitting = false;
 // ==================== Window Management ====================
 
 function createMainWindow(): BrowserWindow {
-  const mainWindow = new BrowserWindow({
+  const window = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 1200,
@@ -35,26 +35,26 @@ function createMainWindow(): BrowserWindow {
   // Load application
   if (process.env.NODE_ENV === "development") {
     // Development mode - load from Vite dev server
-    mainWindow.loadURL("http://localhost:5173");
-    mainWindow.webContents.openDevTools();
+    window.loadURL("http://localhost:5173");
+    window.webContents.openDevTools();
   } else {
     // Production mode - load from built files
-    mainWindow.loadFile(path.join(__dirname, "../../app/renderer/index.html"));
+    window.loadFile(path.join(__dirname, "../../app/renderer/index.html"));
   }
 
   // Event handlers
-  mainWindow.once("ready-to-show", () => {
+  window.once("ready-to-show", () => {
     if (mainWindow) {
       mainWindow.show();
       mainWindow.focus();
     }
   });
 
-  mainWindow.on("closed", () => {
+  window.on("closed", () => {
     mainWindow = null;
   });
 
-  mainWindow.on("close", (event) => {
+  window.on("close", (event) => {
     if (!isQuitting && process.platform !== "darwin") {
       event.preventDefault();
       if (mainWindow) {
@@ -64,7 +64,7 @@ function createMainWindow(): BrowserWindow {
     }
   });
 
-  return mainWindow;
+  return window;
 }
 
 // ==================== Tray Management ====================

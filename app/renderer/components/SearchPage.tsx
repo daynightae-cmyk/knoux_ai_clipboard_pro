@@ -90,7 +90,7 @@ export default function SearchPage({
             <Search className="w-8 h-8 text-knoux-purple/30 mb-2 animate-pulse" />
             <span className="text-xs font-bold text-knoux-dark-text">Ready for search retrieval</span>
             <p className="text-[10px] text-knoux-muted-text mt-1 max-w-xs">
-              Type inside the search bar above or click any suggested term to scan the encrypted local SQLite logs.
+              Type inside the search bar above or click any suggested term to scan local clipboard records.
             </p>
           </div>
         ) : filteredItems.length === 0 ? (
