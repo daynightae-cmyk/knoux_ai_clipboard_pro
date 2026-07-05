@@ -36,12 +36,17 @@ const SEED_ITEMS: ClipboardItem[] = [
   { id: "clip-4", content: "KNOUX secure workspace note: production UI, AI bridge, barcode scanner, and local-first clipboard workflow are active.", type: "note", timestamp: new Date(Date.now() - 2 * 3600 * 1000).toISOString(), pinned: true, favorite: false, tags: ["secure", "workspace"], source: "System", isSecure: true },
 ];
 
+const normalizeSettings = (value: any): AppSettings => {
+  const themeMode = value?.themeMode === "day" ? "light" : value?.themeMode === "night" ? "dark" : value?.themeMode;
+  const density = value?.density === "compact" || value?.density === "comfortable" || value?.density === "spacious" ? value.density : DEFAULT_SETTINGS.density;
+  return { ...DEFAULT_SETTINGS, ...(value || {}), themeMode: themeMode === "light" || themeMode === "dark" || themeMode === "system" ? themeMode : DEFAULT_SETTINGS.themeMode, density };
+};
+
 const loadSettings = (): AppSettings => {
   try {
     const saved = localStorage.getItem("knoux_settings");
     if (!saved) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(saved);
-    return { ...DEFAULT_SETTINGS, ...(parsed || {}) };
+    return normalizeSettings(JSON.parse(saved));
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -81,15 +86,17 @@ export default function App() {
     document.documentElement.lang = settings.language || "en";
     document.documentElement.dir = settings.language === "ar" ? "rtl" : "ltr";
     localStorage.setItem("knoux_theme_mode", settings.themeMode);
+    document.documentElement.dataset.density = settings.density;
   }, [settings]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const applyTheme = () => {
-      const resolved = settings.themeMode === "system" ? (media.matches ? "night" : "day") : settings.themeMode;
-      document.documentElement.dataset.theme = resolved;
+      const resolved = settings.themeMode === "system" ? (media.matches ? "dark" : "light") : settings.themeMode;
+      const cssTheme = resolved === "dark" ? "night" : "day";
+      document.documentElement.dataset.theme = cssTheme;
       document.documentElement.dataset.themeMode = settings.themeMode;
-      document.documentElement.classList.toggle("dark", resolved === "night");
+      document.documentElement.classList.toggle("dark", resolved === "dark");
     };
     applyTheme();
     media.addEventListener("change", applyTheme);
