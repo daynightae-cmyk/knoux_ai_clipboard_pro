@@ -7,6 +7,15 @@
 
 .knoux-lavender-override-ready { color: #381584; }
 
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-slate-400,
+.text-slate-500,
+.text-slate-600 {
+  color: var(--knoux-ui-muted) !important;
+}
+
 .knoux-security-dashboard pre {
   background: #1c0b4e !important;
   color: #fcfaff !important;
