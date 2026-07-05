@@ -60,7 +60,7 @@ const badgeClass = (status: string) => {
   return "";
 };
 
-const looksLikeError = (output: string) => /^(error|invalid|.*error:|no input|.* error)/i.test((output.split("\n")[0] || "").trim());
+const looksLikeError = (output: string) => /^(error\b|invalid\b|.*error:|no input)/i.test((output.split("\n")[0] || "").trim());
 const maybeJson = (output: string) => { try { JSON.parse(output); return output; } catch { return undefined; } };
 
 export default function StudioPage({ items = [] }: Props) {
@@ -326,7 +326,7 @@ export default function StudioPage({ items = [] }: Props) {
 
         <aside className="space-y-5">
           <section className="glass-panel p-5 space-y-3">
-            <h2 className="font-black text-knoux-dark-text flex items-center gap-2"><FileJson className="w-5 h-5 text-knoux-purple" /> {t("studio.handoff", "Handoff Report")}</h2>
+            <h2 className="font-black text-knoux-dark-text flex items-center gap-2"><FileJson className="w-5 h-5 text-knoux-purple" /> {t("studio.handoff.title", "Handoff Report")}</h2>
             <button onClick={download} className="w-full btn-knoux-primary text-xs"><Download className="w-4 h-4" /> {t("studio.downloadJson", "Download JSON")}</button>
             <button onClick={() => copy(JSON.stringify(report, null, 2))} className="w-full btn-knoux-secondary text-xs"><Copy className="w-4 h-4" /> {t("studio.copyJson", "Copy JSON")}</button>
           </section>
