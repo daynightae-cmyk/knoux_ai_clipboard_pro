@@ -1,4 +1,8 @@
 import { ClipboardItem } from "../types";
+import { logger } from "../../shared/logger";
+
+const isPermissionError = (error: unknown): boolean =>
+  error instanceof DOMException && (error.name === "NotAllowedError" || error.name === "SecurityError");
 
 export interface StorageHealth {
   bytes: number;
@@ -19,7 +23,9 @@ export function getStoredClips(): ClipboardItem[] {
     const raw = localStorage.getItem("knoux_clips");
     const parsed = raw ? JSON.parse(raw) : [];
     return Array.isArray(parsed) ? parsed : [];
-  } catch {
+  } catch (error) {
+    // Corrupt or unreadable store: fall back to empty, but never hide the cause.
+    logger.warn("Failed to read stored clips from localStorage; falling back to empty history", error);
     return [];
   }
 }
@@ -46,7 +52,13 @@ export function compactLocalStore(items: ClipboardItem[]): StorageHealth {
       tags: Array.from(new Set(item.tags || [])).slice(0, 12),
     }));
 
-  localStorage.setItem("knoux_clips", JSON.stringify(compacted));
+  try {
+    localStorage.setItem("knoux_clips", JSON.stringify(compacted));
+  } catch (error) {
+    // Persistence can fail (e.g. quota exceeded); surface it instead of silently returning success.
+    logger.error("Failed to persist compacted clips to localStorage", error instanceof Error ? error : undefined, { records: compacted.length });
+    throw error;
+  }
   return getStorageHealth(compacted);
 }
 
@@ -84,7 +96,10 @@ export async function readSystemClipboard(): Promise<string> {
   if (!navigator.clipboard?.readText) return "";
   try {
     return await navigator.clipboard.readText();
-  } catch {
+  } catch (error) {
+    // A denied permission is expected in the web runtime; anything else is worth flagging.
+    if (isPermissionError(error)) logger.debug("System clipboard read denied by permission policy", error);
+    else logger.warn("Unexpected error reading system clipboard", error);
     return "";
   }
 }
@@ -94,7 +109,9 @@ export async function writeSystemClipboard(value: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(value);
     return true;
-  } catch {
+  } catch (error) {
+    if (isPermissionError(error)) logger.debug("System clipboard write denied by permission policy", error);
+    else logger.warn("Unexpected error writing system clipboard", error);
     return false;
   }
 }

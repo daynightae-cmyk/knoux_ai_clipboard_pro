@@ -25,7 +25,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: settings };
     } catch (error) {
       console.error('❌ Error getting settings:', error);
-      return { success: false, error: 'Failed to load settings' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to load settings' };
     }
   });
 
@@ -35,7 +35,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: value };
     } catch (error) {
       console.error('❌ Error getting setting:', error);
-      return { success: false, error: 'Failed to load setting' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to load setting' };
     }
   });
 
@@ -45,7 +45,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: settingsService.getAllSettings() };
     } catch (error) {
       console.error('❌ Error updating settings:', error);
-      return { success: false, error: 'Failed to update settings' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to update settings' };
     }
   });
 
@@ -55,7 +55,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: settingsService.getAllSettings() };
     } catch (error) {
       console.error('❌ Error setting setting:', error);
-      return { success: false, error: 'Failed to save setting' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to save setting' };
     }
   });
 
@@ -65,7 +65,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: settingsService.getAllSettings() };
     } catch (error) {
       console.error('❌ Error resetting settings:', error);
-      return { success: false, error: 'Failed to reset settings' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to reset settings' };
     }
   });
 
@@ -75,7 +75,7 @@ export function registerSettingsHandlers() {
       return { success: true, data: exportData };
     } catch (error) {
       console.error('❌ Error exporting settings:', error);
-      return { success: false, error: 'Failed to export settings' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to export settings' };
     }
   });
 
@@ -85,7 +85,7 @@ export function registerSettingsHandlers() {
       return { success, data: success };
     } catch (error) {
       console.error('❌ Error importing settings:', error);
-      return { success: false, error: 'Failed to import settings' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to import settings' };
     }
   });
 }
@@ -98,7 +98,7 @@ export function registerLanguageHandlers() {
       return { success: true, data: language };
     } catch (error) {
       console.error('❌ Error getting language:', error);
-      return { success: false, error: 'Failed to get language' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get language' };
     }
   });
 
@@ -108,7 +108,7 @@ export function registerLanguageHandlers() {
       return { success: true, data: language };
     } catch (error) {
       console.error('❌ Error setting language:', error);
-      return { success: false, error: 'Failed to set language' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set language' };
     }
   });
 
@@ -147,7 +147,7 @@ export function registerLanguageHandlers() {
       return { success: true, data: translations };
     } catch (error) {
       console.error('❌ Error getting translations:', error);
-      return { success: false, error: 'Failed to get translations' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get translations' };
     }
   });
 
@@ -169,7 +169,7 @@ export function registerThemeHandlers() {
       return { success: true, data: theme };
     } catch (error) {
       console.error('❌ Error getting theme:', error);
-      return { success: false, error: 'Failed to get theme' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get theme' };
     }
   });
 
@@ -179,7 +179,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error setting theme mode:', error);
-      return { success: false, error: 'Failed to set theme mode' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set theme mode' };
     }
   });
 
@@ -189,7 +189,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error toggling theme:', error);
-      return { success: false, error: 'Failed to toggle theme' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle theme' };
     }
   });
 
@@ -199,7 +199,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error setting glass intensity:', error);
-      return { success: false, error: 'Failed to set glass intensity' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set glass intensity' };
     }
   });
 
@@ -209,7 +209,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error setting accent color:', error);
-      return { success: false, error: 'Failed to set accent color' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set accent color' };
     }
   });
 
@@ -219,7 +219,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error setting animations:', error);
-      return { success: false, error: 'Failed to set animations' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set animations' };
     }
   });
 
@@ -229,7 +229,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error setting transparency:', error);
-      return { success: false, error: 'Failed to set transparency' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set transparency' };
     }
   });
 
@@ -239,7 +239,7 @@ export function registerThemeHandlers() {
       return { success: true, data: css };
     } catch (error) {
       console.error('❌ Error getting theme CSS:', error);
-      return { success: false, error: 'Failed to get theme CSS' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get theme CSS' };
     }
   });
 
@@ -258,7 +258,7 @@ export function registerThemeHandlers() {
       return { success: true, data: themeService.getTheme() };
     } catch (error) {
       console.error('❌ Error applying preset:', error);
-      return { success: false, error: 'Failed to apply preset' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to apply preset' };
     }
   });
 }
@@ -294,7 +294,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: id };
     } catch (error) {
       console.error('❌ Error saving clipboard item:', error);
-      return { success: false, error: 'Failed to save clipboard item' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to save clipboard item' };
     }
   });
 
@@ -304,7 +304,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: id };
     } catch (error) {
       console.error('❌ Error adding clipboard item:', error);
-      return { success: false, error: 'Failed to add clipboard item' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to add clipboard item' };
     }
   });
 
@@ -314,7 +314,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: items };
     } catch (error) {
       console.error('❌ Error getting clipboard items:', error);
-      return { success: false, error: 'Failed to get clipboard items' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get clipboard items' };
     }
   });
 
@@ -324,7 +324,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: items };
     } catch (error) {
       console.error('❌ Error getting recent clipboard items:', error);
-      return { success: false, error: 'Failed to get recent clipboard items' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get recent clipboard items' };
     }
   });
 
@@ -334,7 +334,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: items };
     } catch (error) {
       console.error('❌ Error searching clipboard items:', error);
-      return { success: false, error: 'Failed to search clipboard items' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to search clipboard items' };
     }
   });
 
@@ -344,7 +344,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: items };
     } catch (error) {
       console.error('❌ Error searching clipboard items:', error);
-      return { success: false, error: 'Failed to search clipboard items' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to search clipboard items' };
     }
   });
 
@@ -354,7 +354,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: items };
     } catch (error) {
       console.error('❌ Error getting favorite items:', error);
-      return { success: false, error: 'Failed to get favorite items' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get favorite items' };
     }
   });
 
@@ -362,13 +362,13 @@ export function registerDatabaseHandlers() {
     try {
       const changed = await databaseService.toggleFavorite(id);
       if (!changed) {
-        return { success: false, error: 'Failed to toggle favorite' };
+        return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
       }
       const item = await databaseService.getClipboardItemById(id);
       return { success: true, data: Boolean(item?.isFavorite) };
     } catch (error) {
       console.error('❌ Error toggling favorite:', error);
-      return { success: false, error: 'Failed to toggle favorite' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
     }
   });
 
@@ -376,13 +376,13 @@ export function registerDatabaseHandlers() {
     try {
       const changed = await databaseService.toggleFavorite(id);
       if (!changed) {
-        return { success: false, error: 'Failed to toggle favorite' };
+        return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
       }
       const item = await databaseService.getClipboardItemById(id);
       return { success: true, data: Boolean(item?.isFavorite) };
     } catch (error) {
       console.error('❌ Error toggling favorite:', error);
-      return { success: false, error: 'Failed to toggle favorite' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to toggle favorite' };
     }
   });
 
@@ -392,7 +392,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: success };
     } catch (error) {
       console.error('❌ Error deleting clipboard item:', error);
-      return { success: false, error: 'Failed to delete clipboard item' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to delete clipboard item' };
     }
   });
 
@@ -402,7 +402,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: success };
     } catch (error) {
       console.error('❌ Error deleting clipboard item:', error);
-      return { success: false, error: 'Failed to delete clipboard item' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to delete clipboard item' };
     }
   });
 
@@ -412,7 +412,7 @@ export function registerDatabaseHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Error clearing clipboard history:', error);
-      return { success: false, error: 'Failed to clear clipboard history' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to clear clipboard history' };
     }
   });
 
@@ -423,7 +423,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: id };
     } catch (error) {
       console.error('❌ Error saving chat message:', error);
-      return { success: false, error: 'Failed to save chat message' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to save chat message' };
     }
   });
 
@@ -433,7 +433,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: messages };
     } catch (error) {
       console.error('❌ Error getting chat history:', error);
-      return { success: false, error: 'Failed to get chat history' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get chat history' };
     }
   });
 
@@ -443,7 +443,7 @@ export function registerDatabaseHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Error clearing chat history:', error);
-      return { success: false, error: 'Failed to clear chat history' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to clear chat history' };
     }
   });
 
@@ -454,7 +454,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: status };
     } catch (error) {
       console.error('❌ Error getting VIP status:', error);
-      return { success: false, error: 'Failed to get VIP status' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get VIP status' };
     }
   });
 
@@ -464,7 +464,7 @@ export function registerDatabaseHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Error setting VIP status:', error);
-      return { success: false, error: 'Failed to set VIP status' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set VIP status' };
     }
   });
 
@@ -475,7 +475,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: stats };
     } catch (error) {
       console.error('❌ Error getting statistics:', error);
-      return { success: false, error: 'Failed to get statistics' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get statistics' };
     }
   });
 
@@ -492,7 +492,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: { total, favorites, byType } };
     } catch (error) {
       console.error('❌ Error getting clipboard stats:', error);
-      return { success: false, error: 'Failed to get clipboard stats' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get clipboard stats' };
     }
   });
 
@@ -503,7 +503,7 @@ export function registerDatabaseHandlers() {
       return { success: true, data: value };
     } catch (error) {
       console.error('❌ Error getting stored setting:', error);
-      return { success: false, error: 'Failed to get stored setting' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get stored setting' };
     }
   });
 
@@ -513,7 +513,7 @@ export function registerDatabaseHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Error setting stored setting:', error);
-      return { success: false, error: 'Failed to set stored setting' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to set stored setting' };
     }
   });
 }
@@ -534,7 +534,7 @@ export function registerSystemHandlers() {
       };
     } catch (error) {
       console.error('❌ Error getting memory usage:', error);
-      return { success: false, error: 'Failed to get memory usage' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get memory usage' };
     }
   });
 
@@ -552,7 +552,7 @@ export function registerSystemHandlers() {
       };
     } catch (error) {
       console.error('❌ Error getting platform info:', error);
-      return { success: false, error: 'Failed to get platform info' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get platform info' };
     }
   });
 }
@@ -579,7 +579,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: predictions };
     } catch (error) {
       console.error('❌ Quantum prediction error:', error);
-      return { success: false, error: 'Quantum prediction failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'Quantum prediction failed' };
     }
   });
 
@@ -589,7 +589,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: status };
     } catch (error) {
       console.error('❌ Quantum status error:', error);
-      return { success: false, error: 'Failed to get quantum status' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to get quantum status' };
     }
   });
 
@@ -599,7 +599,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Quantum accuracy update error:', error);
-      return { success: false, error: 'Failed to update accuracy' };
+      return { success: false, error: error instanceof Error ? error.message : 'Failed to update accuracy' };
     }
   });
 
@@ -610,7 +610,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: analysis };
     } catch (error) {
       console.error('❌ Vision analysis error:', error);
-      return { success: false, error: 'Vision analysis failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'Vision analysis failed' };
     }
   });
 
@@ -620,7 +620,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: text };
     } catch (error) {
       console.error('❌ Text extraction error:', error);
-      return { success: false, error: 'Text extraction failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'Text extraction failed' };
     }
   });
 
@@ -630,7 +630,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: { sessionId: 'ar_' + Date.now() } };
     } catch (error) {
       console.error('❌ AR session error:', error);
-      return { success: false, error: 'AR session failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'AR session failed' };
     }
   });
 
@@ -641,7 +641,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true };
     } catch (error) {
       console.error('❌ Memory learning error:', error);
-      return { success: false, error: 'Memory learning failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'Memory learning failed' };
     }
   });
 
@@ -651,7 +651,7 @@ export function registerRevolutionaryHandlers() {
       return { success: true, data: insights };
     } catch (error) {
       console.error('❌ Memory insights error:', error);
-      return { success: false, error: 'Memory insights failed' };
+      return { success: false, error: error instanceof Error ? error.message : 'Memory insights failed' };
     }
   });
 

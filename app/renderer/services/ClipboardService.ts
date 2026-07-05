@@ -2,6 +2,11 @@
  * Clipboard Service - Real clipboard monitoring and management
  */
 
+import { logger } from '../../shared/logger';
+
+const isPermissionError = (error: unknown): boolean =>
+  error instanceof DOMException && (error.name === 'NotAllowedError' || error.name === 'SecurityError');
+
 interface ClipboardItemData {
   id: string;
   content: string;
@@ -28,7 +33,8 @@ export const initializeClipboardService = async () => {
       const text = await navigator.clipboard.readText();
       lastClipboardContent = text;
     } catch (err) {
-      console.log('Clipboard access denied on init');
+      if (isPermissionError(err)) logger.debug('Clipboard access denied on init', err);
+      else logger.warn('Failed to read clipboard on init', err);
     }
   }
 };
@@ -72,14 +78,16 @@ export const startClipboardMonitoring = (callback: (items: ClipboardItemData[]) 
           try {
             localStorage.setItem('clipboard-history', JSON.stringify(clipboardHistory));
           } catch (e) {
-            console.warn('Failed to save clipboard history');
+            logger.warn('Failed to save clipboard history', e);
           }
 
           callback(clipboardHistory);
         }
       }
     } catch (err) {
-      // Clipboard access denied
+      // A denied permission is expected while polling; only surface unexpected failures.
+      if (isPermissionError(err)) logger.debug('Clipboard poll skipped: access denied', err);
+      else logger.warn('Unexpected error while monitoring clipboard', err);
     }
   };
 
@@ -186,7 +194,7 @@ export const getClipboardHistory = (): ClipboardItemData[] => {
       clipboardHistory = JSON.parse(stored);
     }
   } catch (e) {
-    console.warn('Failed to load clipboard history');
+    logger.warn('Failed to load clipboard history', e);
   }
 
   return clipboardHistory;
@@ -200,7 +208,7 @@ export const deleteClipboardItem = (id: string): ClipboardItemData[] => {
   try {
     localStorage.setItem('clipboard-history', JSON.stringify(clipboardHistory));
   } catch (e) {
-    console.warn('Failed to save clipboard history');
+    logger.warn('Failed to save clipboard history', e);
   }
   return clipboardHistory;
 };
@@ -213,7 +221,7 @@ export const clearClipboardHistory = (): ClipboardItemData[] => {
   try {
     localStorage.removeItem('clipboard-history');
   } catch (e) {
-    console.warn('Failed to clear clipboard history');
+    logger.warn('Failed to clear clipboard history', e);
   }
   return clipboardHistory;
 };
@@ -228,7 +236,7 @@ export const toggleFavorite = (id: string): ClipboardItemData[] => {
   try {
     localStorage.setItem('clipboard-history', JSON.stringify(clipboardHistory));
   } catch (e) {
-    console.warn('Failed to save clipboard history');
+    logger.warn('Failed to save clipboard history', e);
   }
   return clipboardHistory;
 };

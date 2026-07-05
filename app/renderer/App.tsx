@@ -20,6 +20,7 @@ import { runKnouxAIAction } from "./services/aiClient";
 import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
 import i18n from "./utils/i18n";
 import { autoTags, detectClipboardType, hashContent, importCurrentClipboardFromRuntime } from "./services/clientClipboardServices";
+import { logger } from "../shared/logger";
 
 const DEFAULT_SETTINGS: AppSettings = {
   themeMode: "system",
@@ -75,7 +76,8 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         setItems(Array.isArray(parsed) ? parsed : SEED_ITEMS);
-      } catch {
+      } catch (error) {
+        logger.warn("Stored clips were corrupt; reseeding local history", error);
         setItems(SEED_ITEMS);
         localStorage.setItem("knoux_clips", JSON.stringify(SEED_ITEMS));
       }
@@ -116,7 +118,14 @@ export default function App() {
 
   const saveClips = (newClips: ClipboardItem[]) => {
     setItems(newClips);
-    localStorage.setItem("knoux_clips", JSON.stringify(newClips));
+    try {
+      localStorage.setItem("knoux_clips", JSON.stringify(newClips));
+    } catch (error) {
+      // Persistence failed (e.g. storage full). The in-memory update stands, but the
+      // user must know it was not saved rather than assuming their history is durable.
+      logger.error("Failed to persist clips to localStorage", error instanceof Error ? error : undefined, { records: newClips.length });
+      triggerToast(settings.language === "ar" ? "تعذر حفظ السجل محليًا." : "Could not save history locally.");
+    }
   };
 
   const parseAITags = (text: string): string[] => {
@@ -168,7 +177,11 @@ export default function App() {
         if (extraTags.length) {
           setItems((prev) => {
             const next = prev.map((x) => x.id === id ? { ...x, tags: Array.from(new Set([...x.tags, ...extraTags])), aiTags: extraTags } : x);
-            localStorage.setItem("knoux_clips", JSON.stringify(next));
+            try {
+              localStorage.setItem("knoux_clips", JSON.stringify(next));
+            } catch (error) {
+              logger.error("Failed to persist AI-enriched tags to localStorage", error instanceof Error ? error : undefined, { id });
+            }
             return next;
           });
         }
@@ -187,7 +200,15 @@ export default function App() {
   const handleToggleFavorite = (item: ClipboardItem) => saveClips(items.map((x) => x.id === item.id ? { ...x, favorite: !x.favorite } : x));
   const handleDeleteItem = (item: ClipboardItem) => saveClips(items.filter((x) => x.id !== item.id));
   const handleClearHistory = () => { if (window.confirm("Clear local history?")) saveClips([]); };
-  const handleRunMaintenance = () => { const health = compactLocalStore(items); triggerToast(`Local store compacted: ${health.kb} KB.`); };
+  const handleRunMaintenance = () => {
+    try {
+      const health = compactLocalStore(items);
+      triggerToast(`Local store compacted: ${health.kb} KB.`);
+    } catch (error) {
+      logger.error("Failed to compact local store", error instanceof Error ? error : undefined);
+      triggerToast(settings.language === "ar" ? "تعذر ضغط المخزن المحلي." : "Could not compact local store.");
+    }
+  };
 
   const handleRefreshClipboard = async () => {
     setIsRefreshing(true);
