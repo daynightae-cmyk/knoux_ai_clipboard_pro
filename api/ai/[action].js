@@ -40,11 +40,11 @@ function safeAppName() {
 }
 
 function isAllowedOrigin(origin = "") {
-  if (!origin) return true;
+  if (!origin) return false;
   if (origin === "https://knoux.store") return true;
   if (origin === "https://www.knoux.store") return true;
   if (process.env.NODE_ENV !== "production" && /^http:\/\/localhost:\d+$/.test(origin)) return true;
-  if (/^https:\/\/[a-z0-9-]+(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin)) return true;
+  if (/^https:\/\/knoux-ai-clipboard-pro[a-z0-9-]*\.vercel\.app$/i.test(origin)) return true;
   return false;
 }
 
@@ -138,7 +138,15 @@ module.exports = async function handler(req, res) {
   applyCors(req, res);
 
   if (req.method === "OPTIONS") return res.status(204).end();
-  if (!isAllowedOrigin(req.headers.origin || "")) return res.status(403).json(errorPayload("origin_not_allowed", "Origin not allowed."));
+
+  const origin = req.headers.origin || "";
+  const expectedSecret = process.env.KNOUX_AI_PROXY_SECRET;
+  const hasValidSecret = expectedSecret && req.headers["x-knoux-ai-secret"] === expectedSecret;
+
+  // Allow requests with a valid origin OR a valid proxy secret (server-to-server)
+  if (!isAllowedOrigin(origin) && !hasValidSecret) {
+    return res.status(403).json(errorPayload("origin_not_allowed", "Origin not allowed."));
+  }
 
   const action = normalizeAction(req.query.action);
   const configured = Boolean(process.env.OPENROUTER_API_KEY);
@@ -147,8 +155,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json(errorPayload("method_not_allowed", "Method not allowed."));
   if (!ALLOWED_ACTIONS.has(action)) return res.status(400).json(errorPayload("action_not_supported", `Unsupported AI action: ${action}`));
 
-  const expectedSecret = process.env.KNOUX_AI_PROXY_SECRET;
-  if (expectedSecret && req.headers["x-knoux-ai-secret"] !== expectedSecret) {
+  if (expectedSecret && !hasValidSecret) {
     return res.status(401).json(errorPayload("proxy_secret_invalid", "AI proxy secret is invalid or missing."));
   }
 

@@ -188,18 +188,48 @@ class ContextAwareSnippets {
   }
 
   private async evaluateCondition(condition: string, context: SnippetContext): Promise<boolean> {
-    // Simple condition evaluation
     try {
-      // Replace context variables in condition
-      let evaluableCondition = condition
-        .replace(/\$app/g, `"${context.app}"`)
-        .replace(/\$timeOfDay/g, `"${context.timeOfDay}"`)
-        .replace(/\$dayOfWeek/g, `"${context.dayOfWeek}"`)
-        .replace(/\$workMode/g, `"${context.workMode}"`)
-        .replace(/\$language/g, `"${context.language}"`);
-      
-      // Safe evaluation (in real implementation, use a proper expression evaluator)
-      return eval(evaluableCondition);
+      const contextVars: Record<string, string> = {
+        '$app': context.app,
+        '$timeOfDay': context.timeOfDay,
+        '$dayOfWeek': context.dayOfWeek,
+        '$workMode': context.workMode,
+        '$language': context.language,
+      };
+
+      // $var === "literal"
+      const eqMatch = condition.match(/^(\$\w+)\s*===?\s*"([^"]*)"$/);
+      if (eqMatch) {
+        const value = contextVars[eqMatch[1]];
+        return value !== undefined && value === eqMatch[2];
+      }
+
+      // $var.includes("literal")
+      const includesMatch = condition.match(/^(\$\w+)\.includes\("([^"]*)"\)$/);
+      if (includesMatch) {
+        const value = contextVars[includesMatch[1]];
+        return value !== undefined && value.includes(includesMatch[2]);
+      }
+
+      // expr1 || expr2  (one level of OR)
+      if (condition.includes(' || ')) {
+        const parts = condition.split(' || ');
+        for (const part of parts) {
+          if (await this.evaluateCondition(part.trim(), context)) return true;
+        }
+        return false;
+      }
+
+      // expr1 && expr2  (one level of AND)
+      if (condition.includes(' && ')) {
+        const parts = condition.split(' && ');
+        for (const part of parts) {
+          if (!(await this.evaluateCondition(part.trim(), context))) return false;
+        }
+        return true;
+      }
+
+      return false;
     } catch (error) {
       console.warn('Failed to evaluate condition:', condition, error);
       return false;

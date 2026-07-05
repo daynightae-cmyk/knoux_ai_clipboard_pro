@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
@@ -36,6 +36,27 @@ async function createWindow() {
         electronVersion: process.versions.electron,
       },
     };
+  });
+
+  // Secure shell:open-external — only allow http(s) and mailto URLs
+  const ALLOWED_PROTOCOLS = new Set(["https:", "http:", "mailto:"]);
+  ipcMain.handle("shell:open-external", async (_event, url) => {
+    try {
+      const parsed = new URL(String(url || ""));
+      if (!ALLOWED_PROTOCOLS.has(parsed.protocol)) {
+        return { ok: false, error: `Blocked protocol: ${parsed.protocol}` };
+      }
+      await shell.openExternal(parsed.href);
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: error.message };
+    }
+  });
+
+  // Secure app:quit handler
+  ipcMain.handle("app:quit", async () => {
+    app.quit();
+    return { ok: true };
   });
 
   // Register ALL service IPC handlers
