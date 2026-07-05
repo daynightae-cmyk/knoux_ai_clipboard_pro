@@ -23,7 +23,7 @@ body { margin: 0; font-family: var(--font-sans); background-color: var(--knoux-b
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(138,43,226,.18); border-radius: 9999px; }
-.lang-ar, html[dir="rtl"] body { font-family: Inter, system-ui, sans-serif; }
+.lang-ar, html[lang="ar"], html[dir="rtl"] body { font-family: "Cairo", "Tajawal", "Segoe UI", Tahoma, system-ui, sans-serif; }
 html[dir="rtl"] { direction: rtl; }
 html[dir="rtl"] .ltr-only { direction: ltr; }
 
