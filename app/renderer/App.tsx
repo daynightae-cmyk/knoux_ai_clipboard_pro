@@ -8,7 +8,7 @@ import ClipboardWorkspace from "./components/ClipboardWorkspace";
 import AIToolsPage from "./components/AIToolsPage";
 import SearchPage from "./components/SearchPage";
 import SecurityPage from "./components/SecurityPage";
-import SettingsPage from "./components/SettingsPage";
+import SettingsPage from "./components/SettingsPageServerOnly";
 import LabsPage from "./components/LabsPage";
 import AboutPage from "./components/AboutPage";
 import StudioPage from "./components/StudioPage";
