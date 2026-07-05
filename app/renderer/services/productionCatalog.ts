@@ -60,6 +60,9 @@ export const getServiceReadinessPercent = () => 75;
 export const PRODUCTION_SCORE = {
   score: getServiceReadinessPercent(),
   securityVault: getServiceReadinessPercent(),
+  openRouterBridge: getServiceReadinessPercent(),
+  sqlitePersistence: getServiceReadinessPercent(),
+  serviceTransparency: getServiceReadinessPercent(),
   label: "Guarded",
   status: "guarded",
   note: "Production score is guarded until all production readiness checks are verified."
