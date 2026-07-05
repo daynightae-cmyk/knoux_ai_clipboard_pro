@@ -8,14 +8,16 @@ import ClipboardWorkspace from "./components/ClipboardWorkspace";
 import AIToolsPage from "./components/AIToolsPage";
 import SearchPage from "./components/SearchPage";
 import SecurityPage from "./components/SecurityPage";
-import SettingsPage from "./components/SettingsPage";
+import SettingsPage from "./components/SettingsPageServerOnly";
 import LabsPage from "./components/LabsPage";
 import AboutPage from "./components/AboutPage";
 import StudioPage from "./components/StudioPage";
 import BarcodeScannerPage from "./components/BarcodeScannerPage";
+import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
 import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
+import i18n from "./utils/i18n";
 import { autoTags, detectClipboardType, hashContent, importCurrentClipboardFromRuntime } from "./services/clientClipboardServices";
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -36,12 +38,17 @@ const SEED_ITEMS: ClipboardItem[] = [
   { id: "clip-4", content: "KNOUX secure workspace note: production UI, AI bridge, barcode scanner, and local-first clipboard workflow are active.", type: "note", timestamp: new Date(Date.now() - 2 * 3600 * 1000).toISOString(), pinned: true, favorite: false, tags: ["secure", "workspace"], source: "System", isSecure: true },
 ];
 
+const normalizeSettings = (value: any): AppSettings => {
+  const themeMode = value?.themeMode === "day" ? "light" : value?.themeMode === "night" ? "dark" : value?.themeMode;
+  const density = value?.density === "compact" || value?.density === "comfortable" || value?.density === "spacious" ? value.density : DEFAULT_SETTINGS.density;
+  return { ...DEFAULT_SETTINGS, ...(value || {}), themeMode: themeMode === "light" || themeMode === "dark" || themeMode === "system" ? themeMode : DEFAULT_SETTINGS.themeMode, density };
+};
+
 const loadSettings = (): AppSettings => {
   try {
     const saved = localStorage.getItem("knoux_settings");
     if (!saved) return DEFAULT_SETTINGS;
-    const parsed = JSON.parse(saved);
-    return { ...DEFAULT_SETTINGS, ...(parsed || {}) };
+    return normalizeSettings(JSON.parse(saved));
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -57,6 +64,7 @@ export default function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [items, setItems] = useState<ClipboardItem[]>([]);
 
@@ -78,18 +86,22 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem("knoux_settings", JSON.stringify(settings));
-    document.documentElement.lang = settings.language || "en";
-    document.documentElement.dir = settings.language === "ar" ? "rtl" : "ltr";
+    const language = settings.language === "ar" ? "ar" : "en";
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
     localStorage.setItem("knoux_theme_mode", settings.themeMode);
+    document.documentElement.dataset.density = settings.density;
+    i18n.setLanguage(language as "en" | "ar");
   }, [settings]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const applyTheme = () => {
-      const resolved = settings.themeMode === "system" ? (media.matches ? "night" : "day") : settings.themeMode;
-      document.documentElement.dataset.theme = resolved;
+      const resolved = settings.themeMode === "system" ? (media.matches ? "dark" : "light") : settings.themeMode;
+      const cssTheme = resolved === "dark" ? "night" : "day";
+      document.documentElement.dataset.theme = cssTheme;
       document.documentElement.dataset.themeMode = settings.themeMode;
-      document.documentElement.classList.toggle("dark", resolved === "night");
+      document.documentElement.classList.toggle("dark", resolved === "dark");
     };
     applyTheme();
     media.addEventListener("change", applyTheme);
@@ -189,9 +201,9 @@ export default function App() {
 
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setActiveTab("search");
+        setCommandPaletteOpen((open) => !open);
       }
     };
     window.addEventListener("keydown", f);
@@ -219,6 +231,7 @@ export default function App() {
   return (
     <AppShellPro activeTab={activeTab} setActiveTab={setActiveTab} collapsed={collapsed} setCollapsed={setCollapsed} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefreshClipboard} isRefreshing={isRefreshing} itemsCount={items.length} onRunMaintenance={handleRunMaintenance} toastMessage={toastMessage} isInspectorOpen={isInspectorOpen} setIsInspectorOpen={setIsInspectorOpen} language={settings.language} themeMode={settings.themeMode} setThemeMode={(themeMode: AppSettings["themeMode"]) => setSettings((prev) => ({ ...prev, themeMode }))}>
       {renderActiveTab()}
+      <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} items={items} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} setAiInputText={setAiInputText} onCopyItem={handleCopyItem} onToast={triggerToast} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
       <AnimatePresence>{toastMessage && <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-2xl bg-[#160A26]/90 border border-white/15 shadow-knoux-glow flex items-center gap-2 text-xs font-bold text-white"><Check className="w-4 h-4 text-emerald-300" /><span>{toastMessage}</span></div>}</AnimatePresence>
     </AppShellPro>
   );

@@ -27,6 +27,7 @@ import {
   Activity,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../constants/brand";
+import i18n from "../utils/i18n";
 
 interface OverviewDashboardProps {
   items: ClipboardItem[];
@@ -163,6 +164,8 @@ export default function OverviewDashboard({
     }
   };
 
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
+
   return (
     <div id="overview-dashboard-container" className="p-6 space-y-6 max-w-6xl mx-auto">
       {/* 1. Hero Product Banner Card */}
@@ -181,23 +184,23 @@ export default function OverviewDashboard({
             <Zap className="w-3.5 h-3.5" /> Product Launch v1.0.0 Stable
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-knoux-dark-text tracking-tight leading-tight">
-            Elevate Your Flow with <span className="text-knoux-purple">Knoux AI</span>
+            {t("overview.heroTitle", "Elevate Your Flow with Knoux AI")}
           </h1>
           <p className="text-sm text-knoux-muted-text/90 leading-relaxed">
-            Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.
+            {t("overview.heroDescription", "Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.")}
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
             <button
               onClick={() => setActiveTab("clipboard")}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-knoux-purple to-knoux-neon text-white text-xs font-semibold shadow-knoux-glow hover:brightness-110 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Clipboard className="w-3.5 h-3.5" /> Launch Clipboard Hub
+              <Clipboard className="w-3.5 h-3.5" /> {t("overview.launchClipboard", "Launch Clipboard Hub")}
             </button>
             <button
               onClick={() => setActiveTab("ai")}
               className="px-5 py-2.5 rounded-xl border border-knoux-purple/20 bg-white hover:bg-knoux-purple/5 text-knoux-purple text-xs font-semibold hover:border-knoux-purple/30 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5 animate-pulse" /> Deploy AI Assistant
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" /> {t("overview.deployAi", "Deploy AI Assistant")}
             </button>
           </div>
         </div>
@@ -255,7 +258,7 @@ export default function OverviewDashboard({
       {/* 3. Horizontal Row of Quick Actions */}
       <div className="space-y-3">
         <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5 px-1">
-          <Zap className="w-4 h-4 text-knoux-purple animate-pulse" /> One-Tap Quick Clipboard Actions
+          <Zap className="w-4 h-4 text-knoux-purple animate-pulse" /> {t("overview.quickActionsTitle", "One-Tap Quick Clipboard Actions")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
@@ -328,7 +331,7 @@ export default function OverviewDashboard({
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-knoux-purple" /> Recent Clipboard Clips
+                <Clock className="w-4 h-4 text-knoux-purple" /> {t("overview.recentClipsTitle", "Recent Clipboard Clips")}
               </h3>
               <button
                 onClick={() => setActiveTab("clipboard")}
@@ -342,8 +345,8 @@ export default function OverviewDashboard({
               {recentClips.length === 0 ? (
                 <div className="p-8 text-center rounded-2xl border border-dashed border-knoux-purple/15 bg-white/40 flex flex-col items-center">
                   <Clipboard className="w-8 h-8 text-knoux-purple/30 mb-2" />
-                  <span className="text-xs font-semibold text-knoux-dark-text">Your clipboard is currently clean</span>
-                  <span className="text-[10px] text-knoux-muted-text mt-1">Copy any text or code on your system to register records.</span>
+                  <span className="text-xs font-semibold text-knoux-dark-text">{t("overview.emptyState", "Your clipboard is currently clean")}</span>
+                  <span className="text-[10px] text-knoux-muted-text mt-1">{t("overview.emptyDescription", "Copy any text or code on your system to register records.")}</span>
                 </div>
               ) : (
                 recentClips.map((clip) => (
@@ -394,7 +397,7 @@ export default function OverviewDashboard({
           <div className="p-5 rounded-2xl bg-white border border-knoux-purple/5 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5">
-                <Activity className="w-4 h-4 text-knoux-purple" /> Recent AI-Processed Actions
+                <Activity className="w-4 h-4 text-knoux-purple" /> {t("overview.recentActivityTitle", "Recent AI-Processed Actions")}
               </h3>
               <span className="text-[10px] bg-knoux-purple/10 text-knoux-purple px-2 py-0.5 rounded-full font-semibold">
                 Timeline Log

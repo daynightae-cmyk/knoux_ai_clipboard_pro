@@ -31,186 +31,142 @@ export interface RunAIActionResult {
   status?: string;
 }
 
-const LOCAL_OPENROUTER_KEY = "knoux_openrouter_local";
+export interface AIStatusSummary {
+  label: string;
+  tone: "success" | "warning" | "danger" | "info";
+  detail: string;
+  routeOk: boolean;
+  configured: boolean;
+  status: string;
+}
 
 const normalizeAction = (action: string): KnouxAIAction => {
   if (action === "format-text") return "format";
   return action as KnouxAIAction;
 };
 
-const isElectronRuntime = () => {
-  if (typeof window === "undefined") return false;
-  return Boolean((window as any).knoux || (window as any).electronAPI || window.location.protocol === "file:");
-};
+const mapSafeStatus = (data: any, fallback: string) => String(data?.status || data?.error || fallback || "network_error");
 
-const unwrap = (response: any): string | null => {
-  if (!response) return null;
-  if (typeof response === "string") return response;
-  if (typeof response.result === "string") return response.result;
-  if (typeof response.data === "string") return response.data;
-  if (response.data && typeof response.data.result === "string") return response.data.result;
-  if (response.ok === false || response.success === false) throw new Error(response.status || response.error || "AI provider returned an error.");
-  return null;
-};
+export function deriveAIStatus(providerResult: any, context: { hasSensitiveContent?: boolean; isRuntimeGuarded?: boolean } = {}): AIStatusSummary {
+  const status = String(providerResult?.status || providerResult?.error || "").toLowerCase();
+  const configured = Boolean(providerResult?.configured);
+  const ok = Boolean(providerResult?.ok);
+  const hasSensitiveContent = Boolean(context.hasSensitiveContent);
+  const isRuntimeGuarded = Boolean(context.isRuntimeGuarded);
 
-const buildPrompt = (action: string, text: string, targetLanguage?: string) => {
-  switch (normalizeAction(action)) {
-    case "summarize": return `Summarize this clipboard content into concise professional bullets:\n\n${text}`;
-    case "reply": return `Write a professional reply to this clipboard content:\n\n${text}`;
-    case "extract": return `Extract key points, actions, dates, names, links, and structured bullets from this clipboard content:\n\n${text}`;
-    case "rewrite": return `Rewrite this clipboard text in a professional KNOUX style without changing meaning:\n\n${text}`;
-    case "enhance": return `Improve clarity, grammar, structure, and professional tone without changing meaning:\n\n${text}`;
-    case "format": return `Clean and format this clipboard content as polished Markdown:\n\n${text}`;
-    case "explain-code": return `Explain this code clearly, identify risks, and suggest improvements:\n\n${text}`;
-    case "translate": return `Translate this clipboard text into ${targetLanguage || "Arabic"} while preserving meaning and formatting:\n\n${text}`;
-    case "classify": return `Classify this clipboard content with useful tags only:\n\n${text}`;
-    case "commit-message": return `Create a conventional commit message with subject and body for these changes:\n\n${text}`;
-    case "readme-block": return `Create a production-ready README section for this feature or project note:\n\n${text}`;
-    case "api-docs": return `Create concise API documentation with endpoint, method, params, examples, and errors:\n\n${text}`;
-    case "action-items": return `Extract clear action items with priority and due dates if present:\n\n${text}`;
-    case "checklist": return `Convert this content into a practical checklist grouped by phase or priority:\n\n${text}`;
-    default: return text;
+  if (hasSensitiveContent) {
+    return {
+      label: "Sensitive Content Guarded",
+      tone: "warning",
+      detail: "Sensitive content was detected locally, so AI actions stay blocked until the content is redacted.",
+      routeOk: false,
+      configured,
+      status: "guarded",
+    };
   }
-};
 
-const readLocalOpenRouterConfig = () => {
-  try {
-    return JSON.parse(localStorage.getItem(LOCAL_OPENROUTER_KEY) || "{}");
-  } catch {
-    return {};
+  if (isRuntimeGuarded) {
+    return {
+      label: "Runtime Guarded",
+      tone: "warning",
+      detail: "The current runtime cannot safely send AI requests to the provider.",
+      routeOk: false,
+      configured,
+      status: "runtime_guarded",
+    };
   }
-};
 
-const mapSafeStatus = (data: any, fallback: string) => {
-  return String(data?.status || data?.error || fallback || "network_error");
-};
-
-const runViaElectronBridge = async ({ action, text, targetLanguage }: RunAIActionInput): Promise<RunAIActionResult | null> => {
-  const knoux = (window as any).knoux;
-  const ai = knoux?.ai;
-  if (!ai) return null;
-  const normalized = normalizeAction(action);
-  let response: any = null;
-  if (normalized === "summarize" && ai.summarize) response = await ai.summarize(text);
-  else if ((normalized === "enhance" || normalized === "rewrite" || normalized === "format") && ai.enhance) response = await ai.enhance(text, { action: normalized, targetLanguage, brand: "KNOUX", provider: "openrouter" });
-  else if (normalized === "translate" && ai.translate) response = await ai.translate(text, targetLanguage || "Arabic");
-  else if ((normalized === "analyze" || normalized === "extract" || normalized === "explain-code") && ai.analyze) response = await ai.analyze(buildPrompt(normalized, text, targetLanguage));
-  else if (normalized === "classify" && ai.classify) response = await ai.classify(text);
-  else if (ai.chat) response = await ai.chat(buildPrompt(normalized, text, targetLanguage));
-  const result = unwrap(response);
-  return result ? { result, provider: response?.provider || "openrouter", model: response?.model, simulated: false, status: response?.status } : null;
-};
-
-const runViaHttp = async ({ action, text, targetLanguage }: RunAIActionInput): Promise<RunAIActionResult | null> => {
-  const endpointAction = normalizeAction(action);
-  const response = await fetch(`/api/ai/${endpointAction}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, action: endpointAction, targetLanguage }),
-  }).catch(() => null);
-  if (!response) return null;
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    if (response.status === 401) return null;
-    throw new Error(mapSafeStatus(data, `AI HTTP endpoint returned ${response.status}`));
+  if (ok) {
+    return {
+      label: "OpenRouter Connected",
+      tone: "success",
+      detail: "The server AI route responded successfully.",
+      routeOk: true,
+      configured: true,
+      status: "ready",
+    };
   }
-  const result = unwrap(data);
-  return result ? { result, provider: data.provider || "openrouter", model: data.model, simulated: false, status: data.status } : null;
-};
 
-const runViaLocalOpenRouterKey = async ({ action, text, targetLanguage }: RunAIActionInput): Promise<RunAIActionResult | null> => {
-  if (!isElectronRuntime()) return null;
-  const settings = readLocalOpenRouterConfig();
-  const apiKey = String(settings.apiKey || "").trim();
-  if (!apiKey) return null;
-  const model = String(settings.model || "cohere/north-mini-code:free").trim();
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://knoux.store",
-      "X-OpenRouter-Title": "Knoux AI Clipboard Pro",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: "You are the KNOUX AI Clipboard Pro assistant. Be precise, useful, and concise. Never expose secrets." },
-        { role: "user", content: buildPrompt(action, text, targetLanguage) },
-      ],
-      temperature: 0.35,
-      max_tokens: 900,
-    }),
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    if (response.status === 401 || response.status === 403) throw new Error("invalid_api_key");
-    if (response.status === 429) throw new Error("rate_limited");
-    throw new Error(data?.error?.message || "provider_unavailable");
+  if (status.includes("provider") || status === "provider_not_configured" || !configured) {
+    return {
+      label: "Provider Missing",
+      tone: "warning",
+      detail: "The OpenRouter provider is not configured for this session.",
+      routeOk: false,
+      configured: false,
+      status: "provider_missing",
+    };
   }
-  const result = data?.choices?.[0]?.message?.content || "";
-  return result ? { result, provider: "openrouter-local-key", model, simulated: false, status: "ready" } : null;
-};
 
-export async function testLocalOpenRouterKey(apiKey: string, model = "cohere/north-mini-code:free"): Promise<RunAIActionResult> {
-  if (!apiKey.trim()) throw new Error("provider_not_configured");
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey.trim()}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://knoux.store",
-      "X-OpenRouter-Title": "Knoux AI Clipboard Pro",
-    },
-    body: JSON.stringify({
-      model: model || "cohere/north-mini-code:free",
-      messages: [
-        { role: "system", content: "You are KNOUX AI Clipboard Pro. Reply with a short provider readiness confirmation." },
-        { role: "user", content: "Return: KNOUX OpenRouter provider ready." },
-      ],
-      temperature: 0.1,
-      max_tokens: 40,
-    }),
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    if (response.status === 401 || response.status === 403) throw new Error("invalid_api_key");
-    if (response.status === 429) throw new Error("rate_limited");
-    throw new Error(data?.error?.message || "provider_unavailable");
+  if (status.includes("route") || status === "server_route_unavailable" || status === "route_unavailable") {
+    return {
+      label: "Server Route Unavailable",
+      tone: "danger",
+      detail: "The AI route is unreachable or returned a server-side error.",
+      routeOk: false,
+      configured,
+      status: "route_unavailable",
+    };
   }
-  return { result: data?.choices?.[0]?.message?.content || "ready", provider: "openrouter-local-key", model, simulated: false, status: "ready" };
-}
 
-export function getLocalOpenRouterSummary() {
-  const config = readLocalOpenRouterConfig();
-  const key = String(config.apiKey || "").trim();
+  if (status.includes("network")) {
+    return {
+      label: "Network Error",
+      tone: "danger",
+      detail: "The AI route could not be reached. Check the network and try again.",
+      routeOk: false,
+      configured,
+      status: "network_error",
+    };
+  }
+
   return {
-    configured: key.length > 0,
-    model: String(config.model || "cohere/north-mini-code:free"),
-    keyPreview: key ? `${key.slice(0, 8)}••••${key.slice(-4)}` : "",
-    electronOnly: true,
+    label: "AI Ready",
+    tone: "info",
+    detail: "The AI route responded with a generic ready state.",
+    routeOk: false,
+    configured,
+    status: status || "ready",
   };
 }
 
-export function saveLocalOpenRouterConfig(apiKey: string, model = "cohere/north-mini-code:free") {
-  const clean = apiKey.trim();
-  if (!clean) throw new Error("provider_not_configured");
-  localStorage.setItem(LOCAL_OPENROUTER_KEY, JSON.stringify({ apiKey: clean, model: model.trim() || "cohere/north-mini-code:free", updatedAt: new Date().toISOString(), storage: "local-guarded-electron-only" }));
-}
-
-export function clearLocalOpenRouterConfig() {
-  localStorage.removeItem(LOCAL_OPENROUTER_KEY);
+export async function checkProviderRoute(action = "chat") {
+  const response = await fetch(`/api/ai/${normalizeAction(action)}`, { method: "GET", cache: "no-store" }).catch(() => null);
+  if (!response) return { ok: false, configured: false, status: "network_error", provider: "openrouter" };
+  const data = await response.json().catch(() => ({}));
+  return {
+    ok: Boolean(response.ok && data?.ok),
+    configured: Boolean(data?.configured),
+    status: mapSafeStatus(data, response.ok ? "ready" : "provider_not_configured"),
+    provider: data?.provider || "openrouter",
+    model: data?.model,
+    error: data?.error,
+  };
 }
 
 export async function runKnouxAIAction(input: RunAIActionInput): Promise<RunAIActionResult> {
   const cleanText = input.text?.trim();
   if (!cleanText) throw new Error("No clipboard text provided.");
-  const normalized = { ...input, action: normalizeAction(input.action), text: cleanText };
-  const electronResult = await runViaElectronBridge(normalized);
-  if (electronResult) return electronResult;
-  const httpResult = await runViaHttp(normalized);
-  if (httpResult) return httpResult;
-  const localKeyResult = await runViaLocalOpenRouterKey(normalized);
-  if (localKeyResult) return localKeyResult;
-  throw new Error("provider_not_configured");
+
+  const endpointAction = normalizeAction(input.action);
+  const response = await fetch(`/api/ai/${endpointAction}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: cleanText, action: endpointAction, targetLanguage: input.targetLanguage }),
+  }).catch(() => null);
+
+  if (!response) throw new Error("network_error");
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(mapSafeStatus(data, `AI route returned ${response.status}`));
+
+  const result = typeof data?.result === "string" ? data.result : "";
+  if (!result.trim()) throw new Error(mapSafeStatus(data, "empty_ai_result"));
+
+  return {
+    result,
+    provider: data.provider || "openrouter",
+    model: data.model,
+    simulated: false,
+    status: data.status || "ready",
+  };
 }

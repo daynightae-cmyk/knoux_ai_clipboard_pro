@@ -7,6 +7,7 @@ import { useState } from "react";
 import { ClipboardItem } from "../types";
 import { motion } from "motion/react";
 import { Search, Copy, Check, Calendar, ArrowRight, ShieldAlert, FileCode, ExternalLink } from "lucide-react";
+import i18n from "../utils/i18n";
 
 interface SearchPageProps {
   items: ClipboardItem[];
@@ -22,6 +23,15 @@ export default function SearchPage({
   setSearchQuery,
 }: SearchPageProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const t = (key: string, fallback: string, params?: Record<string, string | number>) => {
+    let value = i18n.t(key, fallback);
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        value = value.replace(`{${k}}`, String(v));
+      });
+    }
+    return value;
+  };
 
   const handleCopy = (item: ClipboardItem) => {
     onCopyItem(item);
@@ -47,7 +57,7 @@ export default function SearchPage({
       {/* 1. Large Search Input bar */}
       <div className="p-5 rounded-3xl border border-knoux-purple/10 bg-white shadow-sm space-y-4">
         <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider">
-          Universal Semantic Search Core
+          {t("search.title", "Universal Semantic Search Core")}
         </h3>
 
         <div className="relative">
@@ -56,7 +66,7 @@ export default function SearchPage({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Type content query keywords, source app names, tags, or file extensions..."
+            placeholder={t("search.placeholder", "Type content query keywords, source app names, tags, or file extensions...")}
             className="w-full h-12 pl-12 pr-4 rounded-2xl border border-knoux-purple/15 bg-[#FCFAFF] focus:bg-white text-sm outline-none focus:border-knoux-purple focus:ring-4 focus:ring-knoux-purple/5 transition-all"
             autoFocus
           />
@@ -64,7 +74,7 @@ export default function SearchPage({
 
         {/* Suggestion list */}
         <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-          <span className="text-knoux-muted-text font-semibold">Recommended Searches:</span>
+          <span className="text-knoux-muted-text font-semibold">{t("search.recommended", "Recommended Searches:")}</span>
           {recentSearches.map((term) => (
             <button
               key={term}
@@ -81,24 +91,24 @@ export default function SearchPage({
       <div className="space-y-3">
         <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider px-1">
           {searchQuery.trim()
-            ? `Query Matches (${filteredItems.length} items found)`
-            : "Awaiting Query Input"}
+            ? t("search.queryMatches", "Query Matches ({count} items found)", { count: filteredItems.length })
+            : t("search.awaitingQuery", "Awaiting Query Input")}
         </h3>
 
         {!searchQuery.trim() ? (
           <div className="p-8 text-center border border-dashed border-knoux-purple/15 rounded-2xl bg-white/40 flex flex-col items-center">
             <Search className="w-8 h-8 text-knoux-purple/30 mb-2 animate-pulse" />
-            <span className="text-xs font-bold text-knoux-dark-text">Ready for search retrieval</span>
+            <span className="text-xs font-bold text-knoux-dark-text">{t("search.emptyStateTitle", "Ready for search retrieval")}</span>
             <p className="text-[10px] text-knoux-muted-text mt-1 max-w-xs">
-              Type inside the search bar above or click any suggested term to scan local clipboard records.
+              {t("search.emptyStateDescription", "Type inside the search bar above or click any suggested term to scan local clipboard records.")}
             </p>
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="p-8 text-center border border-dashed border-knoux-purple/15 rounded-2xl bg-white/40 flex flex-col items-center">
             <ShieldAlert className="w-8 h-8 text-amber-500/50 mb-2" />
-            <span className="text-xs font-bold text-knoux-dark-text">No matches in local database</span>
+            <span className="text-xs font-bold text-knoux-dark-text">{t("search.noMatchesTitle", "No matches in local database")}</span>
             <p className="text-[10px] text-knoux-muted-text mt-1 max-w-xs">
-              Try search expansion terms or clear active filters. Knoux has scanned {items.length} records in temporary memory.
+              {t("search.noMatchesDescription", "Try search expansion terms or clear active filters. Knoux has scanned {count} records in temporary memory.", { count: items.length })}
             </p>
           </div>
         ) : (

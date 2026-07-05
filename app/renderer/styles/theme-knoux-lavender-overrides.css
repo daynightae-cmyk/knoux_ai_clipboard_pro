@@ -1,0 +1,37 @@
+/* KNOUX lavender override for premium UI consistency. */
+:root {
+  --knoux-ui-muted: #5f5475;
+  --knoux-ui-strong: #381584;
+  --knoux-ui-soft-card: #fcfaff;
+}
+
+.knoux-lavender-override-ready { color: #381584; }
+
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-slate-400,
+.text-slate-500,
+.text-slate-600 {
+  color: var(--knoux-ui-muted) !important;
+}
+
+.bg-gray-50,
+.bg-gray-100,
+.bg-slate-50,
+.bg-slate-100 {
+  background: linear-gradient(135deg, #fcfaff 0%, #f3e6fb 100%) !important;
+}
+
+.border-gray-100,
+.border-gray-200,
+.border-slate-100,
+.border-slate-200 {
+  border-color: rgba(130, 38, 238, .16) !important;
+}
+
+.knoux-security-dashboard pre {
+  background: #1c0b4e !important;
+  color: #fcfaff !important;
+  border-color: rgba(207, 180, 234, .24) !important;
+}

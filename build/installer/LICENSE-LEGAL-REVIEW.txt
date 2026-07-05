@@ -1,0 +1,21 @@
+KNOUX AI Clipboard Pro
+Installer License Placeholder — Legal Review Required
+
+This placeholder exists only to reserve the installer license/terms phase.
+It is not final legal advice and must be reviewed before commercial distribution.
+
+Product: Knoux AI Clipboard Pro
+Website: https://knoux.store
+Developer Credit: Crafted by Eng. Sadek Elgazar (Knoux)
+
+The application stores clipboard records locally unless a separately configured provider or integration is explicitly enabled by the user.
+OpenRouter AI features require a server-side provider configuration and must not expose provider keys in the client UI.
+Sensitive content handling is guarded locally where supported, but web localStorage must not be described as encrypted storage.
+
+Review required before release:
+- End-user license terms
+- Privacy wording
+- Data retention wording
+- AI provider disclosure
+- Warranty and liability clauses
+- Jurisdiction and support terms

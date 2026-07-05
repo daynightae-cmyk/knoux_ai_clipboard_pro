@@ -1,0 +1,61 @@
+name: KNOUX Production Validation
+
+on:
+  push:
+    branches: [main, complete-production-polish]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Renderer, Tests, and Electron Main
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --include=dev
+
+      - name: Build renderer
+        run: npm run build:renderer
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Electron main
+        run: npm run build:main
+
+  windows-installer:
+    name: Premium Windows Installer Phase
+    runs-on: windows-latest
+    needs: validate
+    if: ${{ needs.validate.result == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps --include=dev
+
+      - name: Build installer
+        run: npm run dist:installer
+
+      - name: Upload installer artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: knoux-windows-installer
+          path: release/**/*
+          if-no-files-found: error

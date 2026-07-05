@@ -69,7 +69,7 @@ export default function LabsPage() {
 
   const toggleService = (id: string) => {
     const service = PRODUCTION_SERVICES.find((item) => item.id === id);
-    if (!service?.implemented) return;
+    if (!service?.implemented || service.status !== "Active") return;
     setEnabledServices((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -131,7 +131,7 @@ export default function LabsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
         {PRODUCTION_SERVICES.filter((service) => ["Guarded", "Planned", "Missing", "Disabled"].includes(service.status)).map((service, index) => (
           <motion.div
             key={service.id}
@@ -151,13 +151,11 @@ export default function LabsPage() {
                   </span>
                   <button
                     onClick={() => toggleService(service.id)}
-                    disabled={!service.implemented}
-                    className={`w-10 h-5 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${
-                      enabledServices[service.id] ? "bg-knoux-purple justify-end" : "bg-knoux-purple/15 justify-start"
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
+                    disabled={!service.implemented || service.status !== "Active"}
+                    className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${service.status === "Active" && service.implemented ? "bg-knoux-purple text-white" : "bg-slate-100 text-slate-500"} disabled:cursor-not-allowed disabled:opacity-60`}
                     aria-label={`Toggle ${service.displayName}`}
                   >
-                    <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
+                    {service.status === "Active" ? (enabledServices[service.id] ? "On" : "Standby") : service.status}
                   </button>
                 </div>
               </div>
@@ -177,13 +175,9 @@ export default function LabsPage() {
 
             <div className="mt-4 pt-3 border-t border-knoux-purple/5 flex items-center justify-between gap-3">
               <span className="text-[10px] text-knoux-muted-text font-mono truncate">{service.channel || "internal"}</span>
-              {enabledServices[service.id] ? (
-                <span className="text-[10px] font-black text-emerald-700 flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> ENABLED
-                </span>
-              ) : (
-                <span className="text-[10px] font-black text-slate-500">DISABLED</span>
-              )}
+              <span className={`text-[10px] font-black ${service.status === "Active" ? "text-emerald-700" : service.status === "Guarded" ? "text-amber-700" : service.status === "Ready" ? "text-blue-700" : "text-slate-500"}`}>
+                {service.status === "Active" ? "Action available" : service.status === "Ready" ? "Ready" : service.status === "Guarded" ? "Guarded" : service.status}
+              </span>
             </div>
           </motion.div>
         ))}

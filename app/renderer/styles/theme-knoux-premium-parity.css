@@ -1,0 +1,88 @@
+/* KNOUX premium visual parity pass (Phase 3).
+   Additive layer only: harmonizes stray slate/gray panels into the lavender
+   (light) / dark-purple (night) identity, strengthens contrast, and adds
+   accessible keyboard focus rings. No layout redesign. */
+
+/* --- Night mode: remap solid white card fractions missed by the base theme --- */
+html[data-theme="night"] .bg-white\/45,
+html[data-theme="night"] .bg-white\/55,
+html[data-theme="night"] .bg-white\/65,
+html[data-theme="night"] .bg-white\/68,
+html[data-theme="night"] .bg-white\/72,
+html[data-theme="night"] .bg-white\/78,
+html[data-theme="night"] .bg-white\/88,
+html[data-theme="night"] .bg-white\/95 {
+  background-color: var(--knoux-card) !important;
+}
+
+/* --- Night mode: service/tool cards render as dark-purple glass (was near-white) --- */
+html[data-theme="night"] #developer-studio-container article,
+html[data-theme="night"] #security-workspace-container article {
+  background: linear-gradient(180deg, rgba(36, 20, 58, 0.92), rgba(24, 12, 42, 0.84)) !important;
+  border-color: var(--knoux-card-border) !important;
+}
+
+/* --- Night mode: replace off-theme slate surfaces with dark-purple glass --- */
+html[data-theme="night"] .dark\:bg-slate-800\/50,
+html[data-theme="night"] .dark\:bg-slate-800,
+html[data-theme="night"] .dark\:bg-slate-700,
+html[data-theme="night"] .dark\:bg-slate-900\/50,
+html[data-theme="night"] .dark\:bg-slate-900 {
+  background-color: var(--knoux-card) !important;
+}
+
+html[data-theme="night"] .dark\:hover\:bg-slate-600:hover,
+html[data-theme="night"] .dark\:hover\:bg-slate-700:hover,
+html[data-theme="night"] .dark\:hover\:bg-slate-800:hover {
+  background-color: var(--knoux-card-elevated) !important;
+}
+
+html[data-theme="night"] .dark\:border-slate-700,
+html[data-theme="night"] .dark\:border-slate-700\/80,
+html[data-theme="night"] .dark\:border-slate-600 {
+  border-color: var(--knoux-card-border) !important;
+}
+
+html[data-theme="night"] .dark\:hover\:border-violet-700:hover {
+  border-color: var(--knoux-card-border-strong) !important;
+}
+
+html[data-theme="night"] .dark\:text-slate-100,
+html[data-theme="night"] .dark\:text-slate-200,
+html[data-theme="night"] .dark\:text-slate-300 {
+  color: var(--knoux-text-primary) !important;
+}
+
+html[data-theme="night"] .dark\:text-slate-400,
+html[data-theme="night"] .dark\:text-slate-500 {
+  color: var(--knoux-text-secondary) !important;
+}
+
+/* --- Light mode: keep neutral slate surfaces on the lavender track --- */
+.bg-slate-200 { background-color: color-mix(in srgb, var(--knoux-purple) 10%, #ffffff) !important; }
+.hover\:bg-slate-200:hover { background-color: color-mix(in srgb, var(--knoux-purple) 16%, #ffffff) !important; }
+
+/* --- Accessible keyboard focus rings (brand purple) --- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--knoux-purple);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* --- Premium polish: firmer heading weight + roomier primary buttons --- */
+.knoux-premium-card h2,
+.knoux-premium-card h3,
+.knoux-section h2,
+.knoux-section h3 {
+  letter-spacing: -0.01em;
+}
+
+.btn-knoux-primary {
+  min-height: 40px;
+  padding-inline: 1.1rem;
+}
