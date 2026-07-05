@@ -9,10 +9,12 @@ type ScanStatus = "ready" | "active" | "success" | "warning" | "error";
 
 const cleanDecodedText = (value: unknown) => String(value || "").trim();
 const isLinkValue = (value: string) => /^https?:\/\//i.test(value);
+const isLocalhost = () => ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
 export default function BarcodeScannerPage({ onAddNewItem }: BarcodeScannerPageProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const controlsRef = useRef<{ stop?: () => void } | null>(null);
+  const readerRef = useRef<any>(null);
   const [status, setStatus] = useState("Ready. Choose a camera, start live scan, upload an image, or paste a value manually.");
   const [statusTone, setStatusTone] = useState<ScanStatus>("ready");
   const [result, setResult] = useState("");
@@ -27,17 +29,27 @@ export default function BarcodeScannerPage({ onAddNewItem }: BarcodeScannerPageP
   };
 
   const stopCamera = () => {
-    try { controlsRef.current?.stop?.(); } catch { /* scanner is already stopped */ }
+    try { controlsRef.current?.stop?.(); } catch { /* already stopped */ }
+    try { readerRef.current?.reset?.(); } catch { /* browser reader may not expose reset */ }
     controlsRef.current = null;
+    readerRef.current = null;
     setScanning(false);
     const video = videoRef.current;
     const stream = video?.srcObject as MediaStream | null;
     stream?.getTracks?.().forEach((track) => track.stop());
-    if (video) video.srcObject = null;
+    if (video) {
+      video.pause();
+      video.srcObject = null;
+      video.removeAttribute("src");
+      video.load();
+    }
   };
 
   const refreshCameras = async () => {
-    if (!navigator.mediaDevices?.enumerateDevices) return;
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      setMessage("Camera enumeration is unavailable in this browser. Use image upload or manual paste.", "warning");
+      return;
+    }
     try {
       const allDevices = await navigator.mediaDevices.enumerateDevices();
       const videoDevices = allDevices.filter((device) => device.kind === "videoinput");
@@ -76,31 +88,57 @@ export default function BarcodeScannerPage({ onAddNewItem }: BarcodeScannerPageP
   };
 
   const startCamera = async () => {
-    if (!navigator.mediaDevices?.getUserMedia) { setMessage("Camera access is unavailable in this browser. Use image upload or manual paste.", "error"); return; }
+    if (!window.isSecureContext && !isLocalhost()) {
+      setMessage("Camera scan requires HTTPS or localhost. Open the app through https://knoux.store or Electron.", "error");
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setMessage("Camera access is unavailable in this browser. Use image upload or manual paste.", "error");
+      return;
+    }
+
     stopCamera();
-    setMessage("Requesting camera permission and starting live ZXing decoding...", "active");
+    setMessage("Requesting camera permission and starting local ZXing decoding...", "active");
+
     try {
       const { BrowserMultiFormatReader } = await import("@zxing/browser");
       const reader: any = new BrowserMultiFormatReader();
+      readerRef.current = reader;
       const video = videoRef.current;
       if (!video) { setMessage("Camera preview is not ready. Reopen the scanner and try again.", "error"); return; }
+
       const constraints: MediaStreamConstraints = {
         video: deviceId ? { deviceId: { exact: deviceId } } : { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
         audio: false,
       };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      video.srcObject = stream;
+      video.muted = true;
+      video.playsInline = true;
+      await video.play();
+
       const onFrame = async (scanResult: any, scanError: any) => {
         if (scanResult && await handleDecoded(scanResult)) return;
         const errorName = scanError?.name || scanError?.constructor?.name || "";
-        if (errorName && !["NotFoundException", "ChecksumException", "FormatException"].includes(errorName)) setMessage(`Camera is active. Improve lighting or move closer. ${errorName}`, "warning");
+        if (errorName && !["NotFoundException", "ChecksumException", "FormatException"].includes(errorName)) {
+          setMessage(`Camera is active. Improve lighting or move closer. ${errorName}`, "warning");
+        }
       };
-      const controls = typeof reader.decodeFromConstraints === "function" ? await reader.decodeFromConstraints(constraints, video, onFrame) : await reader.decodeFromVideoDevice(deviceId || undefined, video, onFrame);
+
+      const controls = typeof reader.decodeFromVideoElement === "function"
+        ? await reader.decodeFromVideoElement(video, onFrame)
+        : await reader.decodeFromVideoDevice(deviceId || undefined, video, onFrame);
+
       controlsRef.current = controls || reader;
       setScanning(true);
       await refreshCameras();
       setMessage("Camera active. Point at a QR code or barcode. Frames are decoded locally.", "active");
     } catch (error: any) {
       stopCamera();
-      const message = error?.name === "NotAllowedError" ? "Camera permission denied. Enable camera permission from the browser address bar, then press Start again." : error?.message || "ZXing scanner failed to start. Use image upload or manual paste.";
+      const message = error?.name === "NotAllowedError"
+        ? "Camera permission denied. Enable camera permission from the browser address bar, then press Start again."
+        : error?.message || "ZXing scanner failed to start. Use image upload or manual paste.";
       setMessage(message, "error");
     }
   };
@@ -109,12 +147,24 @@ export default function BarcodeScannerPage({ onAddNewItem }: BarcodeScannerPageP
     const { BrowserMultiFormatReader } = await import("@zxing/browser");
     const reader: any = new BrowserMultiFormatReader();
     const img = new Image();
+    img.alt = "barcode-scan-source";
+    img.style.position = "fixed";
+    img.style.left = "-10000px";
+    img.style.top = "-10000px";
     img.src = url;
-    await img.decode().catch(() => undefined);
-    const scanResult = typeof reader.decodeFromImageElement === "function" ? await reader.decodeFromImageElement(img) : await reader.decodeFromImageUrl(url);
-    const text = cleanDecodedText(scanResult?.getText?.() || scanResult?.text || scanResult);
-    if (!text) throw new Error("No readable barcode or QR code was found.");
-    await commitResult(text);
+    document.body.appendChild(img);
+    try {
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("Unable to load uploaded image."));
+      });
+      const scanResult = typeof reader.decodeFromImageElement === "function" ? await reader.decodeFromImageElement(img) : await reader.decodeFromImageUrl(url);
+      const text = cleanDecodedText(scanResult?.getText?.() || scanResult?.text || scanResult);
+      if (!text) throw new Error("No readable barcode or QR code was found.");
+      await commitResult(text);
+    } finally {
+      img.remove();
+    }
   };
 
   const scanImage = async (file: File) => {
