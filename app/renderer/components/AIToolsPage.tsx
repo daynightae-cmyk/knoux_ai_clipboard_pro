@@ -20,6 +20,7 @@ import {
   History,
   Languages,
 } from "lucide-react";
+import { detectSensitiveTypes } from "../services/runtimeServices";
 
 interface AIToolsPageProps {
   inputText: string;
@@ -45,6 +46,8 @@ export default function AIToolsPage({
   const [history, setHistory] = useState<AIHistoryItem[]>([]);
   const [copied, setCopied] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const sensitiveTypes = detectSensitiveTypes(inputText);
+  const aiGuarded = sensitiveTypes.length > 0;
 
   const aiOperations = [
     { id: "summarize", label: "Summarize", desc: "Extract key bullet summaries", color: "from-purple-500 to-indigo-500", icon: FileText },
@@ -73,6 +76,11 @@ export default function AIToolsPage({
 
   const handleAIAction = async (actionId: string) => {
     if (!inputText.trim()) return;
+    if (aiGuarded) {
+      setApiError("Sensitive content detected. AI actions are guarded.");
+      setResult("");
+      return;
+    }
     setLoading(true);
     setApiError(null);
     setResult("");
@@ -99,7 +107,8 @@ export default function AIToolsPage({
       localStorage.setItem("knoux_ai_history", JSON.stringify(updatedHistory));
     } catch (error: any) {
       console.error(error);
-      setApiError(error.message || "An unexpected network anomaly has halted the AI request.");
+      const message = error.message || "An unexpected network anomaly has halted the AI request.";
+      setApiError(/OpenRouter is not configured|missing|key/i.test(message) ? "provider_not_configured" : message);
     } finally {
       setLoading(false);
     }
@@ -145,6 +154,13 @@ export default function AIToolsPage({
               className="w-full p-4 rounded-2xl border border-knoux-purple/15 bg-[#FCFAFF] focus:bg-white text-xs text-knoux-dark-text outline-none focus:border-knoux-purple focus:ring-4 focus:ring-knoux-purple/5 transition-all font-mono leading-relaxed"
             />
 
+            {aiGuarded && (
+              <div className="p-3 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 text-xs font-semibold flex items-start gap-2">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <span>Sensitive content detected. AI actions are guarded. Detected: {sensitiveTypes.join(", ")}.</span>
+              </div>
+            )}
+
             {/* Translation details overlay if typing translation */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <div className="text-[11px] text-knoux-muted-text font-mono">
@@ -185,20 +201,20 @@ export default function AIToolsPage({
                   <button
                     key={op.id}
                     onClick={() => handleAIAction(op.id)}
-                    disabled={loading || !inputText.trim()}
+                    disabled={loading || !inputText.trim() || aiGuarded}
                     className={`p-3 rounded-2xl border bg-white border-knoux-purple/5 hover:border-knoux-purple/20 hover:shadow-md transition-all text-left flex items-start gap-3 cursor-pointer group ${
-                      !inputText.trim() ? "opacity-40 cursor-not-allowed" : ""
+                      !inputText.trim() || aiGuarded ? "opacity-40 cursor-not-allowed" : ""
                     }`}
                   >
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-knoux-purple to-knoux-neon text-white flex items-center justify-center shrink-0">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div className="space-y-0.5 overflow-hidden">
-                      <span className="text-xs font-bold text-knoux-dark-text group-hover:text-knoux-purple transition-colors block">
+                    <span className="text-xs font-bold text-knoux-dark-text group-hover:text-knoux-purple transition-colors block">
                         {op.label} {isTranslate && `(${targetLanguage})`}
                       </span>
                       <span className="text-[10px] text-knoux-muted-text truncate block">
-                        {op.desc}
+                        {aiGuarded ? "Guarded until sensitive content is removed" : op.desc}
                       </span>
                     </div>
                   </button>

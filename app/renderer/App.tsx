@@ -15,7 +15,8 @@ import StudioPage from "./components/StudioPage";
 import BarcodeScannerPage from "./components/BarcodeScannerPage";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
-import { compactLocalStore, readSystemClipboard, writeSystemClipboard } from "./services/runtimeServices";
+import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
+import { autoTags, detectClipboardType, hashContent, importCurrentClipboardFromRuntime } from "./services/clientClipboardServices";
 
 const DEFAULT_SETTINGS: AppSettings = {
   themeMode: "system",
@@ -114,10 +115,35 @@ export default function App() {
   const handleAddNewItem = async (content: string, type: ClipboardType, source = "System Note") => {
     const clean = content.trim();
     if (!clean) return;
-    const isLink = clean.startsWith("http://") || clean.startsWith("https://");
-    const shouldSecure = privacyMode || /secure|vault|password|token|key/i.test(source + " " + clean);
+    const inferredType = detectClipboardType(clean);
+    const hash = hashContent(clean);
+    const existing = items.find((item) => hashContent(item.content) === hash);
+    if (existing && !existing.pinned) {
+      triggerToast(settings.language === "ar" ? "تم تجاهل نسخة مكررة." : "Duplicate clip avoided.");
+      return;
+    }
+    const detectedTags = autoTags(clean);
+    const shouldSecure = privacyMode || detectSensitiveTypes(`${source}\n${clean}`).length > 0;
     const id = `clip-${Date.now()}`;
-    const item: ClipboardItem = { id, content: clean, type: isLink ? "link" : type, timestamp: new Date().toISOString(), pinned: false, favorite: false, tags: isLink ? ["link"] : shouldSecure ? ["secure", "vault"] : ["snippet"], source, isSecure: shouldSecure, folder: shouldSecure ? "Secure" : "General" };
+    const folder = detectedTags.includes("code")
+      ? "Code"
+      : detectedTags.includes("link")
+        ? "Links"
+        : shouldSecure
+          ? "Important"
+          : "General";
+    const item: ClipboardItem = {
+      id,
+      content: clean,
+      type: inferredType === "text" ? type : inferredType,
+      timestamp: new Date().toISOString(),
+      pinned: false,
+      favorite: false,
+      tags: Array.from(new Set([...(detectedTags.length ? detectedTags : ["snippet"]), ...(shouldSecure ? ["secret"] : [])])),
+      source,
+      isSecure: shouldSecure,
+      folder,
+    };
     const nextItems = [item, ...items].slice(0, settings.maxHistorySize);
     saveClips(nextItems);
     triggerToast(settings.language === "ar" ? "تم حفظ العنصر في مساحة KNOUX." : "Snippet committed to KNOUX workspace.");
@@ -153,8 +179,8 @@ export default function App() {
   const handleRefreshClipboard = async () => {
     setIsRefreshing(true);
     try {
-      const text = await readSystemClipboard();
-      if (text?.trim()) await handleAddNewItem(text, "text", "Browser Clipboard");
+      const text = await importCurrentClipboardFromRuntime();
+      if (text?.trim()) await handleAddNewItem(text, "text", "Current Clipboard Import");
       else triggerToast("Clipboard is empty or permission is denied.");
     } finally {
       setTimeout(() => setIsRefreshing(false), 600);

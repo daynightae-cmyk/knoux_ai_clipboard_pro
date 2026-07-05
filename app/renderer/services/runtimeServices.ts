@@ -53,6 +53,11 @@ export function compactLocalStore(items: ClipboardItem[]): StorageHealth {
 export function detectSensitiveTypes(value: string): string[] {
   const text = String(value || "");
   const checks = [
+    { type: "password", matched: /\b(password|passwd|pwd)\s*[:=]\s*\S+/i.test(text) },
+    { type: "api-key", matched: /\b(api[_-]?key|client[_-]?secret|secret[_-]?key)\s*[:=]\s*["']?[A-Za-z0-9_\-]{16,}/i.test(text) },
+    { type: "token", matched: /\b(bearer|token|access[_-]?token|refresh[_-]?token)\s*[:=]?\s*["']?[A-Za-z0-9._\-]{20,}/i.test(text) },
+    { type: "private-key", matched: /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/i.test(text) },
+    { type: "secret-env-line", matched: /^[A-Z0-9_]*(SECRET|TOKEN|KEY|PASSWORD)[A-Z0-9_]*\s*=\s*.+/im.test(text) },
     { type: "credential-like", matched: /(credential|password|bearer|private|access)/i.test(text) },
     { type: "email", matched: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(text) },
     { type: "phone", matched: /\+?\d[\d\s().-]{7,}/.test(text) },

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ClipboardItem, ClipboardType, NavTab } from "../types";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -31,7 +31,26 @@ import {
   FolderPlus,
   FolderMinus,
   CheckSquare,
+  Briefcase,
+  Wifi,
+  WifiOff,
+  Scissors,
 } from "lucide-react";
+import {
+  buildDailySummary,
+  CLIENT_SERVICE_CARDS,
+  cleanText,
+  DEFAULT_COLLECTIONS,
+  duplicateSummary,
+  exportCsvFile,
+  exportJsonFile,
+  extractEntities,
+  groupClipsByDate,
+  isElectronRuntime,
+  removeDuplicates,
+  STATIC_TEMPLATES,
+} from "../services/clientClipboardServices";
+import { detectSensitiveTypes } from "../services/runtimeServices";
 
 interface ClipboardWorkspaceProps {
   items: ClipboardItem[];
@@ -66,6 +85,8 @@ export default function ClipboardWorkspace({
   const [newContent, setNewContent] = useState("");
   const [newType, setNewType] = useState<ClipboardType>("text");
   const [revealedSecureId, setRevealedSecureId] = useState<string | null>(null);
+  const [businessMode, setBusinessMode] = useState("All");
+  const [serviceNotice, setServiceNotice] = useState("Local vault ready.");
 
   // Folders State
   const [folders, setFolders] = useState<string[]>(() => {
@@ -77,7 +98,7 @@ export default function ClipboardWorkspace({
         return ["General", "Work", "Personal", "Code Scripts"];
       }
     }
-    return ["General", "Work", "Personal", "Code Scripts"];
+    return ["General", ...DEFAULT_COLLECTIONS, "Code Scripts"];
   });
   const [selectedFolder, setSelectedFolder] = useState<string>("all");
   const [newFolderName, setNewFolderName] = useState("");
@@ -85,6 +106,15 @@ export default function ClipboardWorkspace({
   // Multi-Select State
   const [isMultiSelect, setIsMultiSelect] = useState(false);
   const [selectedItemIds, setSelectedItemIds] = useState<Set<string>>(new Set());
+  const grouped = useMemo(() => groupClipsByDate(items), [items]);
+  const duplicates = useMemo(() => duplicateSummary(items), [items]);
+  const daily = useMemo(() => buildDailySummary(items), [items]);
+  const runtimeLabel = isElectronRuntime()
+    ? "Electron Runtime"
+    : navigator.onLine
+      ? "Web Limited Runtime"
+      : "Offline";
+  const providerLabel = "AI Provider Missing until OpenRouter check passes";
 
   const saveFolders = (newFolders: string[]) => {
     setFolders(newFolders);
@@ -224,6 +254,54 @@ export default function ClipboardWorkspace({
     linkElement.click();
   };
 
+  const handleCleanSelected = () => {
+    if (!selectedItem) {
+      setServiceNotice("Select a clip before cleaning text.");
+      return;
+    }
+    const cleaned = cleanText(selectedItem.content);
+    onAddNewItem(cleaned, selectedItem.type, "Smart Text Cleaner");
+    setServiceNotice("Cleaned copy saved to the local vault.");
+  };
+
+  const handleExtractSelected = () => {
+    if (!selectedItem) {
+      setServiceNotice("Select a clip before extracting entities.");
+      return;
+    }
+    const entities = extractEntities(selectedItem.content);
+    const lines = [
+      "Extracted entities",
+      `Emails: ${entities.emails.join(", ") || "none"}`,
+      `Phones: ${entities.phones.join(", ") || "none"}`,
+      `URLs: ${entities.urls.join(", ") || "none"}`,
+      `Possible addresses: ${entities.possibleAddresses.join(" | ") || "none"}`,
+    ];
+    onAddNewItem(lines.join("\n"), "note", "Entity Extractor");
+    setServiceNotice("Extraction result saved. No remote metadata was fetched.");
+  };
+
+  const handleRemoveDuplicates = () => {
+    const cleaned = removeDuplicates(items);
+    onUpdateItems(cleaned);
+    setServiceNotice(`Removed ${items.length - cleaned.length} duplicate unpinned clips.`);
+  };
+
+  const handleTemplate = (content: string, label: string) => {
+    onAddNewItem(content, "note", `Template: ${label}`);
+    setServiceNotice(`${label} saved as a copy template.`);
+  };
+
+  const handleExportCsv = () => {
+    exportCsvFile("knoux-visible-clips.csv", filteredItems);
+    setServiceNotice("Visible clip list exported as CSV.");
+  };
+
+  const handleExportJson = () => {
+    exportJsonFile("knoux-clipboard-vault.json", { exportedAt: new Date().toISOString(), items });
+    setServiceNotice("Local clipboard vault exported as JSON.");
+  };
+
   const handleCardClick = (item: ClipboardItem) => {
     if (isMultiSelect) {
       const next = new Set(selectedItemIds);
@@ -255,6 +333,12 @@ export default function ClipboardWorkspace({
     // Folder filter integration
     const inFolder = selectedFolder === "all" || (item.folder || "General") === selectedFolder;
     if (!inFolder) return false;
+
+    if (businessMode === "Developer" && item.type !== "code" && !item.tags.includes("code")) return false;
+    if (businessMode === "Office" && item.type === "code") return false;
+    if (businessMode === "Customer Support" && !(item.tags.includes("email") || item.tags.includes("reply") || (item.folder || "").includes("Replies"))) return false;
+    if (businessMode === "E-commerce" && !(item.tags.includes("invoice") || item.tags.includes("tracking") || (item.folder || "").includes("Shipping"))) return false;
+    if (businessMode === "Personal" && (item.folder || "General") !== "Personal") return false;
 
     // 1. Text search filter
     if (searchQuery.trim()) {
@@ -319,6 +403,77 @@ export default function ClipboardWorkspace({
 
   return (
     <div id="clipboard-workspace-root" className="h-[calc(100vh-64px)] flex flex-col select-none">
+      <div className="px-4 pt-4 bg-transparent">
+        <div className="knoux-section p-4 space-y-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div>
+              <div className="inline-flex items-center gap-2 knoux-badge knoux-badge-active"><Briefcase className="w-3 h-3" /> Client services active</div>
+              <h2 className="mt-2 text-lg font-black text-knoux-dark-text">Smart Clipboard Inbox</h2>
+              <p className="text-xs text-knoux-muted-text">Today {grouped.Today.length} · Yesterday {grouped.Yesterday.length} · This Week {grouped["This Week"].length} · Older {grouped.Older.length}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-[10px] font-black">
+              <span className={`knoux-badge ${navigator.onLine ? "knoux-badge-active" : "knoux-badge-guarded"}`}>{navigator.onLine ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}{runtimeLabel}</span>
+              <span className="knoux-badge knoux-badge-ready">{providerLabel}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { label: "Today", value: daily.clips },
+              { label: "Sensitive", value: daily.sensitive },
+              { label: "Pinned", value: daily.pinned },
+              { label: "Duplicates", value: duplicates.duplicateCount },
+            ].map((metric) => (
+              <div key={metric.label} className="knoux-premium-card p-3">
+                <div className="text-[10px] text-knoux-muted-text font-black uppercase">{metric.label}</div>
+                <div className="text-xl font-black text-knoux-dark-text font-mono">{metric.value}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {["All", "Developer", "Office", "Customer Support", "E-commerce", "Personal"].map((mode) => (
+              <button key={mode} onClick={() => setBusinessMode(mode)} className={`px-3 py-2 rounded-xl text-xs font-black border transition ${businessMode === mode ? "bg-knoux-purple text-white border-knoux-purple" : "bg-white/60 text-knoux-dark-text border-knoux-purple/10 hover:border-knoux-purple/30"}`}>
+                {mode}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-2">
+            <button onClick={handleCleanSelected} className="btn-knoux-secondary h-10 text-xs px-3"><Scissors className="w-4 h-4" /> Clean Text</button>
+            <button onClick={handleExtractSelected} className="btn-knoux-secondary h-10 text-xs px-3"><Search className="w-4 h-4" /> Extract</button>
+            <button onClick={handleRemoveDuplicates} disabled={duplicates.duplicateCount === 0} className="btn-knoux-secondary h-10 text-xs px-3"><Trash2 className="w-4 h-4" /> Dedupe</button>
+            <button onClick={handleExportJson} className="btn-knoux-secondary h-10 text-xs px-3"><Download className="w-4 h-4" /> JSON</button>
+            <button onClick={handleExportCsv} className="btn-knoux-secondary h-10 text-xs px-3"><Download className="w-4 h-4" /> CSV</button>
+            <button onClick={() => setActiveTab("ai")} className="btn-knoux-secondary h-10 text-xs px-3"><Sparkles className="w-4 h-4" /> AI Guarded</button>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+            <div className="knoux-premium-card p-3">
+              <div className="text-[10px] text-knoux-muted-text font-black uppercase mb-2">One-click templates</div>
+              <div className="flex flex-wrap gap-2">
+                {STATIC_TEMPLATES.map((template) => (
+                  <button key={template.id} onClick={() => handleTemplate(template.content, template.label)} className="px-2.5 py-1.5 rounded-lg border border-knoux-purple/10 bg-white/60 text-[10px] text-knoux-dark-text font-bold hover:text-knoux-purple">
+                    {template.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="knoux-premium-card p-3">
+              <div className="text-[10px] text-knoux-muted-text font-black uppercase mb-2">Service card status</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-28 overflow-y-auto pr-1">
+                {CLIENT_SERVICE_CARDS.slice(0, 10).map((service) => (
+                  <div key={service.id} className="flex items-center justify-between gap-2 text-[10px]">
+                    <span className="text-knoux-dark-text font-bold truncate">{service.displayName}</span>
+                    <span className={`knoux-badge knoux-badge-${service.status.toLowerCase()}`}>{service.status}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <p className="text-[11px] text-knoux-muted-text font-semibold">{serviceNotice}</p>
+        </div>
+      </div>
       {/* Top filter toolbar and custom creator button */}
       <div className="p-4 border-b border-knoux-purple/10 bg-white/40 backdrop-blur-sm shrink-0 flex flex-wrap items-center justify-between gap-3">
         {/* Horizontal scrollable Filter Chips */}
@@ -744,9 +899,15 @@ export default function ClipboardWorkspace({
                           </span>
                         )}
 
-                        {item.isSecure && (
+                  {item.isSecure && (
                           <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
-                            <Lock className="w-2.5 h-2.5" /> Secure Vault
+                        <Lock className="w-2.5 h-2.5" /> Secure Vault
+                      </span>
+                    )}
+
+                        {detectSensitiveTypes(item.content).length > 0 && (
+                          <span className="text-[10px] font-extrabold text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                            <Lock className="w-2.5 h-2.5" /> AI Guarded
                           </span>
                         )}
 

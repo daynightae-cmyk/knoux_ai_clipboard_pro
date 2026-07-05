@@ -19,6 +19,8 @@ import {
   ShieldCheck,
   Sparkles,
   Zap,
+  PackageCheck,
+  Clipboard,
 } from "lucide-react";
 import {
   PRODUCTION_SERVICES,
@@ -29,11 +31,12 @@ import {
 
 const categoryIcon: Record<ProductionService["category"], JSX.Element> = {
   AI: <Sparkles className="w-5 h-5 text-purple-500" />,
-  Clipboard: <Blocks className="w-5 h-5 text-blue-500" />,
+  Clipboard: <Clipboard className="w-5 h-5 text-blue-500" />,
+  "Client Tools": <Blocks className="w-5 h-5 text-indigo-500" />,
   Security: <Fingerprint className="w-5 h-5 text-emerald-500" />,
-  Storage: <Database className="w-5 h-5 text-indigo-500" />,
-  System: <ServerCog className="w-5 h-5 text-sky-500" />,
-  Experience: <Eye className="w-5 h-5 text-rose-500" />,
+  Barcode: <Eye className="w-5 h-5 text-rose-500" />,
+  Developer: <ServerCog className="w-5 h-5 text-sky-500" />,
+  Packaging: <PackageCheck className="w-5 h-5 text-amber-500" />,
 };
 
 const tierStyle: Record<ProductionService["tier"], string> = {
@@ -86,8 +89,7 @@ export default function LabsPage() {
                 Service Labs converted into a controlled production registry.
               </h2>
               <p className="text-xs text-knoux-muted-text leading-relaxed max-w-2xl">
-                This page no longer presents vague experiments. It shows the real service map: OpenRouter, Electron IPC,
-                secure vault, storage adapters, monitoring, guarded fallbacks, and the next provider slots.
+                This page only shows registry state for active, guarded, and planned services. Planned capabilities stay disabled until real handlers and packaging are verified.
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
@@ -130,7 +132,7 @@ export default function LabsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        {PRODUCTION_SERVICES.map((service, index) => (
+        {PRODUCTION_SERVICES.filter((service) => ["Guarded", "Planned", "Missing", "Disabled"].includes(service.status)).map((service, index) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 12 }}

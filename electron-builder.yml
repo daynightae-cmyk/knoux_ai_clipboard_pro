@@ -1,6 +1,6 @@
-appId: com.knoux.clipboardai
-productName: Knoux Clipboard AI
-copyright: "Copyright © 2024 Abu Retaj"
+appId: store.knoux.ai.clipboard.pro
+productName: Knoux AI Clipboard Pro
+copyright: "Copyright © 2026 KNOUX — Eng. Sadek Elgazar"
 
 # Build Settings
 directories:
@@ -33,7 +33,7 @@ files:
 
 # Windows Configuration
 win:
-  icon: "assets/app-icon.ico"
+  icon: "assets/icons/icon.ico"
   target:
     - portable
     - nsis
@@ -45,12 +45,15 @@ nsis:
   oneClick: false
   perMachine: false
   allowToChangeInstallationDirectory: true
-  deleteAppDataOnUninstall: true
+  deleteAppDataOnUninstall: false
   displayLanguageSelector: false
-  uninstallDisplayName: "Knoux Clipboard AI (Uninstall)"
+  uninstallDisplayName: "Knoux AI Clipboard Pro (Uninstall)"
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: "Knoux Clipboard AI"
+  shortcutName: "Knoux AI Clipboard Pro"
+  installerIcon: "assets/icons/icon.ico"
+  uninstallerIcon: "assets/icons/icon.ico"
+  installerHeaderIcon: "assets/icons/icon.ico"
   runAfterFinish: true
 
 # macOS Configuration
@@ -69,13 +72,13 @@ linux:
     - deb
     - rpm
   category: Utility
-  description: "Advanced AI Clipboard Manager"
+  description: "AI-powered clipboard manager by KNOUX"
   synopsis: "Productivity Tool"
-  maintainer: "Abu Retaj <support@knoux.com>"
+  maintainer: "Eng. Sadek Elgazar (Knoux) <knuux7@gmail.com>"
 
 # Auto Update Configuration
 publish:
   provider: github
-  owner: knoux
-  repo: clipboard-ai
+  owner: KnouxOPS
+  repo: knoux-ai-clipboard-pro
   releaseType: release
