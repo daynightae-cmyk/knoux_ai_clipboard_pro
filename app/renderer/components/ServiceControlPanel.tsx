@@ -52,7 +52,7 @@ export default function ServiceControlPanel({ items, onStatus }: Props) {
     setBusyId(null);
   };
 
-  const useSample = (service: ProductionService) => {
+  const applySample = (service: ProductionService) => {
     setInput(buildServiceSample(service));
     onStatus?.(`${service.displayName} sample loaded`);
   };
@@ -108,7 +108,7 @@ export default function ServiceControlPanel({ items, onStatus }: Props) {
                   </div>
                   <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <button disabled={busyId === service.id} onClick={() => run(service)} className="btn-knoux-primary text-[11px]"><Play className="w-3.5 h-3.5" /> {busyId === service.id ? "Running" : labels[0]}</button>
-                    <button onClick={() => useSample(service)} className="btn-knoux-secondary text-[11px]"><FileText className="w-3.5 h-3.5" /> {labels[1]}</button>
+                    <button onClick={() => applySample(service)} className="btn-knoux-secondary text-[11px]"><FileText className="w-3.5 h-3.5" /> {labels[1]}</button>
                     <button onClick={() => copy(`${service.displayName}\nStatus: ${service.status}\nRuntime: ${service.runtimeType}\nHandler: ${service.actionHandler || "local"}\nFallback: ${service.fallback}\n\nLast output:\n${result?.title === service.displayName ? result.output : "Run this service to generate output."}`)} className="btn-knoux-secondary text-[11px]"><Copy className="w-3.5 h-3.5" /> {labels[2]}</button>
                   </div>
                 </article>
