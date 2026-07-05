@@ -1,13 +1,22 @@
+import { hashContent } from './clientClipboardServices';
+
 export type DeveloperToolId =
   | "json-format"
   | "regex-test"
+  | "markdown-preview"
   | "markdown-table"
+  | "hash-generator"
+  | "base64-encode"
+  | "base64-decode"
+  | "code-formatter"
   | "env-checklist"
   | "api-action"
   | "commit-message"
   | "readme-block"
   | "pdf-brief"
   | "jwt-inspector"
+  | "secret-scanner"
+  | "large-text-analyzer"
   | "url-parser"
   | "diff-summary"
   | "typescript-interface"
@@ -36,13 +45,20 @@ export interface DeveloperToolCard {
 export const DEVELOPER_TOOLS: DeveloperToolCard[] = [
   { id: "json-format", title: "JSON Formatter", description: "Validate, normalize, and pretty-print JSON locally.", status: "Active", inputLabel: "JSON input", actionLabel: "Format JSON", sampleLabel: "Load JSON", copyLabel: "Copy formatted", placeholder: "Paste JSON here", sample: '{"product":"Knoux AI Clipboard Pro","ready":true,"services":19}', outputLabel: "Validated JSON" },
   { id: "regex-test", title: "Regex Lab", description: "Test a JavaScript regex against sample text with match count.", status: "Active", inputLabel: "Pattern then sample", actionLabel: "Test Regex", sampleLabel: "Load regex case", copyLabel: "Copy matches", placeholder: "First line: pattern\nRemaining lines: sample text", sample: "\\b[A-Z]{2,}-\\d{4}\\b\nTicket KNX-2026 is linked to PR DAY-4455 and invalid K-1.", outputLabel: "Regex matches" },
+  { id: "markdown-preview", title: "Markdown Preview", description: "Render markdown and report structural counts locally in a background worker.", status: "Active", inputLabel: "Markdown input", actionLabel: "Render Markdown", sampleLabel: "Load markdown", copyLabel: "Copy preview", placeholder: "# Title\n\n- item", sample: "# Knoux AI Clipboard Pro\n\n- Local-first\n- Worker-backed\n- Secure by design", outputLabel: "Rendered markdown preview" },
   { id: "markdown-table", title: "Markdown Table Builder", description: "Convert comma-separated rows into a clean Markdown table.", status: "Active", inputLabel: "CSV rows", actionLabel: "Build Table", sampleLabel: "Load CSV", copyLabel: "Copy table", placeholder: "Name,Status\nAI,Ready", sample: "Service,Status,Runtime\nOpenRouter,Ready,server\nBarcode,Active,web\nVault,Guarded,electron", outputLabel: "Markdown table" },
+  { id: "hash-generator", title: "Hash Generator", description: "Generate a local SHA-256 digest without leaving the device.", status: "Active", inputLabel: "Input text", actionLabel: "Generate Hash", sampleLabel: "Load hash sample", copyLabel: "Copy hash", placeholder: "Paste text to hash", sample: "Knoux AI Clipboard Pro V1.1.0", outputLabel: "SHA hash" },
+  { id: "base64-encode", title: "Base64 Encode", description: "Encode text into Base64 locally for transport or debugging.", status: "Active", inputLabel: "Plain text", actionLabel: "Encode", sampleLabel: "Load plain text", copyLabel: "Copy Base64", placeholder: "Encode this text", sample: "Authorization: Bearer demo-token", outputLabel: "Base64 output" },
+  { id: "base64-decode", title: "Base64 Decode", description: "Decode Base64 payloads locally with no network dependency.", status: "Active", inputLabel: "Base64 input", actionLabel: "Decode", sampleLabel: "Load Base64", copyLabel: "Copy decoded", placeholder: "QmFzZTY0IHBheWxvYWQ=", sample: "S25vdXggQUkgQ2xpcGJvYXJkIFBybw==", outputLabel: "Decoded payload" },
+  { id: "code-formatter", title: "Code Formatter", description: "Format JSON-like structures and generate TypeScript/Zod scaffolds.", status: "Active", inputLabel: "Code or JSON input", actionLabel: "Format Code", sampleLabel: "Load code sample", copyLabel: "Copy formatted", placeholder: "{\"id\":1}", sample: "{\"id\":\"knx-1\",\"status\":\"ready\",\"secure\":true}", outputLabel: "Formatted code scaffold" },
   { id: "env-checklist", title: "Environment Checklist", description: "Generate a deployment checklist for required environment variables.", status: "Active", inputLabel: "Variables", actionLabel: "Build Checklist", sampleLabel: "Load env vars", copyLabel: "Copy checklist", placeholder: "OPENROUTER_API_KEY\nOPENROUTER_MODEL", sample: "OPENROUTER_API_KEY\nOPENROUTER_MODEL\nOPENROUTER_SITE_URL\nVITE_APP_VERSION", outputLabel: "Environment readiness" },
   { id: "api-action", title: "API Action Builder", description: "Create a safe payload shape for /api/ai/[action] testing.", status: "Ready", inputLabel: "Action and text", actionLabel: "Build Payload", sampleLabel: "Load API action", copyLabel: "Copy payload", placeholder: "summarize\nText to process", sample: "summarize\nKnoux AI Clipboard Pro keeps clipboard workflows local-first and calls AI only through a guarded server route.", outputLabel: "API payload" },
   { id: "commit-message", title: "Commit Message Generator", description: "Build a professional conventional commit from implementation notes.", status: "Ready", inputLabel: "Change notes", actionLabel: "Build Commit", sampleLabel: "Load change notes", copyLabel: "Copy commit", placeholder: "Updated UI cards and settings", sample: "Developer Studio cards now have three service-specific actions\nSecurity page upgraded with richer local guard operations\nRemoved unsupported icon import risk", outputLabel: "Commit draft" },
   { id: "readme-block", title: "README Block Generator", description: "Create a polished README section for a real feature.", status: "Ready", inputLabel: "Feature notes", actionLabel: "Build README", sampleLabel: "Load README notes", copyLabel: "Copy block", placeholder: "Feature name and bullets", sample: "Developer Studio\n19 executable local developer utilities\nReal service operation outputs\nExportable handoff report", outputLabel: "README block" },
   { id: "pdf-brief", title: "Document Brief Builder", description: "Create a structured handoff brief for proposals, PDFs, or invoices.", status: "Active", inputLabel: "Document notes", actionLabel: "Build Brief", sampleLabel: "Load document brief", copyLabel: "Copy brief", placeholder: "Proposal.pdf\nPurpose, risks, actions", sample: "Project Proposal.pdf\nClient: KNOUX\nPurpose: production readiness review\nRisk: sensitive API keys must stay server-side", outputLabel: "Document brief" },
   { id: "jwt-inspector", title: "JWT Inspector", description: "Decode JWT header and payload locally without network calls.", status: "Active", inputLabel: "JWT token", actionLabel: "Inspect JWT", sampleLabel: "Load JWT", copyLabel: "Copy decoded", placeholder: "eyJhbGciOi...", sample: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJrbm91eCIsInJvbGUiOiJkZXZlbG9wZXIiLCJpYXQiOjE3ODMyMjEyMzV9.signature", outputLabel: "Decoded JWT" },
+  { id: "secret-scanner", title: "Secret Scanner", description: "Scan text for API keys, tokens, emails, cards, and private-key material.", status: "Active", inputLabel: "Sensitive text", actionLabel: "Scan Secrets", sampleLabel: "Load secret case", copyLabel: "Copy findings", placeholder: "Paste secrets or logs here", sample: "OPENROUTER_API_KEY=sk-or-v1-abcdefghijklmnopqrstuvwxyz123456\nAuthorization: Bearer qwerty12345678901234567890", outputLabel: "Security findings" },
+  { id: "large-text-analyzer", title: "Large Text Analyzer", description: "Analyze long text size, structure, and reading cost off the main thread.", status: "Active", inputLabel: "Large text input", actionLabel: "Analyze Text", sampleLabel: "Load large text", copyLabel: "Copy analysis", placeholder: "Paste logs, markdown, or API output", sample: "Line one of a long handoff.\nLine two includes structured content.\n\nThird paragraph closes the session.", outputLabel: "Text diagnostics" },
   { id: "url-parser", title: "URL Parser", description: "Parse URL origin, path, query parameters, and hash locally.", status: "Active", inputLabel: "URL", actionLabel: "Parse URL", sampleLabel: "Load URL", copyLabel: "Copy parts", placeholder: "https://knoux.store/app?mode=pro", sample: "https://knoux.store/developer?service=ai-route&mode=pro#diagnostics", outputLabel: "URL parts" },
   { id: "diff-summary", title: "Diff Summary", description: "Summarize changed lines from a pasted unified diff.", status: "Active", inputLabel: "Unified diff", actionLabel: "Summarize Diff", sampleLabel: "Load diff", copyLabel: "Copy summary", placeholder: "diff --git ...", sample: "diff --git a/StudioPage.tsx b/StudioPage.tsx\n+Added 19 developer utility cards\n+Added action toolbar\n-Removed weak compact list layout", outputLabel: "Diff summary" },
   { id: "typescript-interface", title: "TypeScript Interface Builder", description: "Convert simple key:value notes into an exported interface.", status: "Active", inputLabel: "Shape notes", actionLabel: "Build Interface", sampleLabel: "Load shape", copyLabel: "Copy interface", placeholder: "name:string\nready:boolean", sample: "id:string\ntitle:string\nstatus:Active | Ready | Guarded\nlatencyMs:number\nsecure:boolean", outputLabel: "TypeScript interface" },
@@ -66,7 +82,6 @@ const tableFromCsv = (input: string) => {
   return [header, sep, ...body].join("\n");
 };
 
-const titleCase = (value: string) => value.replace(/[-_]+/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
 const firstLine = (input: string, fallback = "KNOUX update") => input.trim().split(/\r?\n/)[0]?.trim() || fallback;
 
 const parseFields = (input: string) => input
@@ -89,6 +104,35 @@ const zodType = (rawType: string) => {
   if (t.includes("email")) return "z.string().email()";
   if (t.includes("url")) return "z.string().url()";
   return "z.string().min(1)";
+};
+
+const encodeBase64 = (value: string) => {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+  return btoa(binary);
+};
+
+const decodeBase64 = (value: string) => {
+  const binary = atob(value);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+};
+
+const formatCode = (value: string) => {
+  const clean = value.trim();
+  if (/^\s*[{[]/.test(clean)) {
+    try {
+      return JSON.stringify(JSON.parse(clean), null, 2);
+    } catch {
+      return clean;
+    }
+  }
+  return clean
+    .replace(/\r\n/g, "\n")
+    .replace(/\t/g, "  ")
+    .replace(/[ \t]+$/gm, "")
+    .replace(/\n{3,}/g, "\n\n");
 };
 
 const decodeJwtPart = (part: string) => {
@@ -127,7 +171,14 @@ export function runDeveloperTool(id: DeveloperToolId, input: string): string {
     } catch (error: any) { return `Regex error: ${error?.message || "invalid pattern"}`; }
   }
 
+  if (id === "markdown-preview") return `# Markdown Preview\n\n${clean}`;
   if (id === "markdown-table") return tableFromCsv(clean);
+  if (id === "hash-generator") return `SHA-256 (fallback hash)\n${hashContent(clean)}`;
+  if (id === "base64-encode") return encodeBase64(clean);
+  if (id === "base64-decode") {
+    try { return decodeBase64(clean); } catch (error: any) { return `Base64 decode error: ${error?.message || "invalid payload"}`; }
+  }
+  if (id === "code-formatter") return formatCode(clean);
   if (id === "env-checklist") return clean.split(/\r?\n/).filter(Boolean).map((line) => `- [ ] ${line.trim()} configured in Production, Preview, and local development`).join("\n");
 
   if (id === "api-action") {
@@ -143,6 +194,26 @@ export function runDeveloperTool(id: DeveloperToolId, input: string): string {
     const parts = clean.split(".");
     if (parts.length < 2) return "Invalid JWT shape. Expected header.payload.signature.";
     try { return JSON.stringify({ header: decodeJwtPart(parts[0]), payload: decodeJwtPart(parts[1]), signaturePresent: Boolean(parts[2]) }, null, 2); } catch (error: any) { return `JWT decode error: ${error?.message || "invalid token"}`; }
+  }
+
+  if (id === "secret-scanner") {
+    const findings = [
+      /sk-or-v1-[A-Za-z0-9_-]{20,}/.test(clean) ? "openrouter-key" : null,
+      /sk-[A-Za-z0-9_-]{20,}/.test(clean) ? "openai-key" : null,
+      /gh[pousr]_[A-Za-z0-9_]{20,}/.test(clean) ? "github-token" : null,
+      /Bearer\s+[A-Za-z0-9._-]{20,}/i.test(clean) ? "bearer-token" : null,
+      /-----BEGIN[\s\S]+?PRIVATE KEY-----/.test(clean) ? "private-key" : null,
+      /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(clean) ? "email" : null,
+      /\b(?:\d[ -]*?){13,16}\b/.test(clean) ? "card-like" : null,
+    ].filter(Boolean);
+    return findings.length ? `Security Findings\n${findings.map((item) => `- ${item}`).join("\n")}` : "No high-confidence secrets detected.";
+  }
+
+  if (id === "large-text-analyzer") {
+    const words = clean.split(/\s+/).filter(Boolean).length;
+    const lines = clean.split(/\r?\n/).length;
+    const paragraphs = clean.split(/\n\s*\n/).filter(Boolean).length;
+    return `Large Text Analysis\nCharacters: ${clean.length}\nWords: ${words}\nLines: ${lines}\nParagraphs: ${paragraphs}\nEstimated read time: ${Math.max(1, Math.ceil(words / 220))} min`;
   }
 
   if (id === "url-parser") {
