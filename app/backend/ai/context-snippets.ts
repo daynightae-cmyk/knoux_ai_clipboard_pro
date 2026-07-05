@@ -97,7 +97,7 @@ class ContextAwareSnippets {
       if (triggerMatch) score += 0.4;
       
       // Context matching
-      const contextScore = this.calculateContextScore(snippet, currentContext);
+      const contextScore = await this.calculateContextScore(snippet, currentContext);
       score += contextScore * 0.3;
       
       // Usage frequency
@@ -195,6 +195,8 @@ class ContextAwareSnippets {
         '$dayOfWeek': context.dayOfWeek,
         '$workMode': context.workMode,
         '$language': context.language,
+        '$projectType': context.projectType,
+        '$userMood': context.userMood,
       };
 
       // $var === "literal"
@@ -540,11 +542,11 @@ app.{methodLower}('{endpoint}', async (req, res) => {
     return template;
   }
 
-  private calculateContextScore(snippet: SmartSnippet, context: SnippetContext): number {
+  private async calculateContextScore(snippet: SmartSnippet, context: SnippetContext): Promise<number> {
     let score = 0;
     
     for (const rule of snippet.contexts) {
-      if (this.evaluateCondition(rule.condition, context)) {
+      if (await this.evaluateCondition(rule.condition, context)) {
         score += rule.priority * 0.1;
       }
     }
