@@ -18,4 +18,6 @@ const svc = (id: string, displayName: string, status: ServiceStatus, dependency:
   channel: actionHandler,
 });
 
-export const WINDOWS_PACKAGING_SERVICES: ProductionService[] = [];
+export const WINDOWS_PACKAGING_SERVICES: ProductionService[] = [
+  svc("windows-installer-branding", "Windows Installer Branding", "Ready", "electron-builder NSIS", "Standard NSIS branding is configured after the green build gate.", "Use default NSIS visuals until installer artifacts are generated.", "package.json build.nsis"),
+];
