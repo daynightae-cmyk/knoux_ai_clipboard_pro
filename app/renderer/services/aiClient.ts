@@ -52,22 +52,6 @@ export async function checkProviderRoute(action = "chat") {
   };
 }
 
-export function getLocalOpenRouterSummary() {
-  return { configured: false, model: "server-route-only", keyPreview: "", electronOnly: false, status: "frontend_key_storage_disabled" };
-}
-
-export function saveLocalOpenRouterConfig() {
-  throw new Error("frontend_key_storage_disabled");
-}
-
-export function clearLocalOpenRouterConfig() {
-  localStorage.removeItem("knoux_openrouter_local");
-}
-
-export async function testLocalOpenRouterKey() {
-  throw new Error("frontend_key_storage_disabled");
-}
-
 export async function runKnouxAIAction(input: RunAIActionInput): Promise<RunAIActionResult> {
   const cleanText = input.text?.trim();
   if (!cleanText) throw new Error("No clipboard text provided.");
