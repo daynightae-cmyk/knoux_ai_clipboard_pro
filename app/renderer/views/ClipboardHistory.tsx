@@ -4,6 +4,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useClipboard } from '../hooks/useClipboard';
+import { downloadJson } from '../../shared/download-utils';
 import { useTheme } from '../contexts/ThemeContext';
 import { logger } from '../../shared/logger';
 import {
@@ -227,14 +228,7 @@ const ClipboardHistory: React.FC = () => {
       selectedItems.has(item.id)
     );
     
-    const data = JSON.stringify(itemsToExport, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `clipboard-export-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadJson(`clipboard-export-${Date.now()}.json`, itemsToExport);
     
     logger.info('Items exported', { count: selectedItems.size });
   }, [selectedItems, clipboard.items]);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, X, AlertTriangle } from 'lucide-react';
 import i18n from '../../utils/i18n';
+import { copyToClipboard } from '../../../shared/clipboard-utils';
 
 export function Base64Card() {
   const t = (key: string, fallback: string) => i18n.t(key, fallback);
@@ -44,7 +45,7 @@ export function Base64Card() {
 
   const handleCopy = (text: string) => {
     if (text) {
-      navigator.clipboard.writeText(text);
+      copyToClipboard(text);
     }
   };
 

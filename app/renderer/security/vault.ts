@@ -1,36 +1,26 @@
 import { encryptVaultText, decryptVaultText } from "./crypto";
 import { VaultAuditEvent, VaultEntry } from "./securityTypes";
+import { readJsonStorage, writeJsonStorage } from "../../shared/storage-utils";
 
 const VAULT_KEY = "knoux_secure_vault_entries";
 const AUDIT_KEY = "knoux_secure_vault_audit";
 
-const readJson = <T>(key: string, fallback: T): T => {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
-const writeJson = <T>(key: string, value: T) => localStorage.setItem(key, JSON.stringify(value));
-
 export function readVaultEntries(): VaultEntry[] {
-  return readJson<VaultEntry[]>(VAULT_KEY, []);
+  return readJsonStorage<VaultEntry[]>(VAULT_KEY, []);
 }
 
 export function writeVaultEntries(entries: VaultEntry[]) {
-  writeJson(VAULT_KEY, entries);
+  writeJsonStorage(VAULT_KEY, entries);
 }
 
 export function appendVaultAudit(type: VaultAuditEvent["type"], detail: string) {
-  const events = readJson<VaultAuditEvent[]>(AUDIT_KEY, []);
+  const events = readJsonStorage<VaultAuditEvent[]>(AUDIT_KEY, []);
   const next = [{ id: `audit-${Date.now()}`, type, detail, createdAt: new Date().toISOString() }, ...events].slice(0, 200);
-  writeJson(AUDIT_KEY, next);
+  writeJsonStorage(AUDIT_KEY, next);
 }
 
 export function readVaultAudit(): VaultAuditEvent[] {
-  return readJson<VaultAuditEvent[]>(AUDIT_KEY, []);
+  return readJsonStorage<VaultAuditEvent[]>(AUDIT_KEY, []);
 }
 
 export async function addEncryptedVaultEntry(title: string, plainText: string, password: string, type: VaultEntry["type"] = "secret") {

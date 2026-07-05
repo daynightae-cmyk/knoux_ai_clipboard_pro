@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, RotateCcw, Download, Upload, Monitor, Moon, Sun, Globe, Bell, Shield, Cpu, HardDrive, Zap } from 'lucide-react';
+import { triggerDownload } from '../../shared/download-utils';
 
 interface SettingsData {
   language: 'en' | 'ar';
@@ -107,13 +108,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     try {
       const result = await window.electron?.ipcRenderer.invoke('settings:export');
       if (result?.success) {
-        const blob = new Blob([result.data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'knoux-settings.json';
-        a.click();
-        URL.revokeObjectURL(url);
+        triggerDownload(result.data, 'knoux-settings.json', 'application/json');
       }
     } catch (error) {
       console.error('Failed to export settings:', error);

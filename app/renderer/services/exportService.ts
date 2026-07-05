@@ -1,4 +1,5 @@
 import { ClipboardItem } from '../types';
+import { triggerDownload as sharedTriggerDownload } from '../../shared/download-utils';
 
 /**
  * Converts an array of clipboard items into a single Markdown string.
@@ -42,18 +43,6 @@ export function exportClipsToMarkdown(clips: Partial<ClipboardItem>[]): string {
 
 /**
  * Triggers a file download in the browser.
- * @param content - The string content to download.
- * @param filename - The name of the file to be downloaded.
- * @param contentType - The MIME type of the content.
+ * Re-exports the shared implementation for backward compatibility.
  */
-export function triggerDownload(content: string, filename: string, contentType: string) {
-  const blob = new Blob([content], { type: contentType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
+export const triggerDownload = sharedTriggerDownload;

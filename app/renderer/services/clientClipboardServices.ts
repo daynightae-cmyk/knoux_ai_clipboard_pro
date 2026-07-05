@@ -1,5 +1,6 @@
 import { ClipboardItem, ClipboardType } from "../types";
 import { detectSensitiveTypes } from "./runtimeServices";
+import { downloadJson, downloadCsv, downloadMarkdown } from "../../shared/download-utils";
 
 export type ClientServiceStatus = "Active" | "Ready" | "Guarded" | "Planned" | "Missing" | "Disabled";
 
@@ -187,36 +188,18 @@ export function buildDailySummary(items: ClipboardItem[]) {
 }
 
 export function exportJsonFile(filename: string, payload: unknown) {
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadJson(filename, payload);
 }
 
 export function exportCsvFile(filename: string, items: ClipboardItem[]) {
   const header = ["id", "type", "source", "timestamp", "pinned", "favorite", "tags", "content"];
   const rows = items.map((item) => [item.id, item.type, item.source, item.timestamp, String(item.pinned), String(item.favorite), item.tags.join("|"), item.content.replace(/\r?\n/g, " ")]);
   const csv = [header, ...rows].map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadCsv(filename, csv);
 }
 
 export function exportMarkdownFile(filename: string, markdown: string) {
-  const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadMarkdown(filename, markdown);
 }
 
 export function isElectronRuntime() {

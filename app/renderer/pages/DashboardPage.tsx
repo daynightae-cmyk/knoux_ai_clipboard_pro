@@ -24,6 +24,7 @@ import {
 import { useClipboard } from "../hooks/useClipboard";
 import DigitalClock from "../components/DigitalClock";
 import i18n from "../utils/i18n";
+import { formatBytes as sharedFormatBytes } from "../../shared/format-utils";
 
 interface DashboardStats {
   totalItems: number;
@@ -115,13 +116,7 @@ const DashboardPage: React.FC = () => {
     });
   }, [clipboard.items]);
 
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-  };
+  const formatBytes = sharedFormatBytes;
 
   const cards: CardData[] = [
     {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ClipboardItem as ClipboardItemType } from '../../shared/types';
+import { formatRelativeTimeAr } from '../../shared/format-utils';
 import { 
   Clock, 
   Tag, 
@@ -42,26 +43,7 @@ const ClipboardItem: React.FC<ClipboardItemProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const formatTimestamp = (timestamp: string): string => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    
-    if (diffMs < 60000) {
-      return 'الآن';
-    } else if (diffMs < 3600000) {
-      const minutes = Math.floor(diffMs / 60000);
-      return `${minutes} دقيقة`;
-    } else if (diffMs < 86400000) {
-      const hours = Math.floor(diffMs / 3600000);
-      return `${hours} ساعة`;
-    } else if (diffMs < 604800000) {
-      const days = Math.floor(diffMs / 86400000);
-      return `${days} يوم`;
-    } else {
-      return date.toLocaleDateString('ar-EG');
-    }
-  };
+  const formatTimestamp = (timestamp: string): string => formatRelativeTimeAr(timestamp);
 
   const getContentIcon = () => {
     switch (item.format) {

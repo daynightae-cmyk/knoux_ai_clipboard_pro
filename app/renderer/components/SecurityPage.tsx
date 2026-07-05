@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { AlertTriangle, Check, ClipboardCheck, Copy, Database, Download, EyeOff, FileCheck, Fingerprint, History, KeyRound, Lock, Radar, ShieldAlert, ShieldCheck, Sparkles, Unlock, Wand2, Zap } from "lucide-react";
 import { PRODUCTION_SCORE } from "../services/productionCatalog";
 import { detectSensitiveTypes as detectRuntimeSensitiveTypes } from "../services/runtimeServices";
+import { copyToClipboard } from "../../shared/clipboard-utils";
+import { downloadJson } from "../../shared/download-utils";
 
 interface SecurityPageProps {
   privacyMode: boolean;
@@ -80,7 +82,7 @@ export default function SecurityPage({ privacyMode, setPrivacyMode, itemsCount }
   };
 
   const copy = async (value: string, label: string) => {
-    await navigator.clipboard.writeText(value || "");
+    await copyToClipboard(value || "");
     pushAudit({ action: "COPY_SECURE_OUTPUT", msg: `${label} copied to system clipboard.`, severity: "info" });
   };
 
@@ -121,14 +123,7 @@ export default function SecurityPage({ privacyMode, setPrivacyMode, itemsCount }
   };
 
   const exportAudit = () => {
-    const payload = JSON.stringify({ product: "Knoux AI Clipboard Pro", exportedAt: new Date().toISOString(), riskLevel, riskScore, detectionSensitivity, redactionStrictness, aiRiskThreshold, auditTrail }, null, 2);
-    const blob = new Blob([payload], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "knoux-security-log.json";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadJson("knoux-security-log.json", { product: "Knoux AI Clipboard Pro", exportedAt: new Date().toISOString(), riskLevel, riskScore, detectionSensitivity, redactionStrictness, aiRiskThreshold, auditTrail });
     pushAudit({ action: "SECURITY_LOG_EXPORTED", msg: "Security log JSON exported locally.", severity: "success" });
   };
 

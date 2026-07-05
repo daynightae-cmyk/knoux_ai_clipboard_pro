@@ -35,6 +35,8 @@ import {
 } from 'lucide-react';
 import { llog } from '../../shared/localized-logger';
 import { useAI } from '../hooks/useAI';
+import { copyToClipboard as sharedCopyToClipboard } from '../../shared/clipboard-utils';
+import { downloadJson } from '../../shared/download-utils';
 import {
   AIAnalysis,
   AISuggestion,
@@ -390,9 +392,8 @@ export const AIProcessor: React.FC<AIProcessorProps> = ({
     setTimeout(() => setSuccessMessage(null), 2000);
   };
 
-  // Copy to clipboard
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    sharedCopyToClipboard(text);
     setSuccessMessage('Copied to clipboard');
     setTimeout(() => setSuccessMessage(null), 2000);
   };
@@ -410,15 +411,7 @@ export const AIProcessor: React.FC<AIProcessorProps> = ({
       suggestions
     };
 
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ai-process-${Date.now()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    downloadJson(`ai-process-${Date.now()}.json`, result);
 
     setSuccessMessage('Results downloaded');
     setTimeout(() => setSuccessMessage(null), 2000);

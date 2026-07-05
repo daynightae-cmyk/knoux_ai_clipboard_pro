@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Copy, X, Wand2, AlertTriangle } from 'lucide-react';
 import i18n from '../../utils/i18n';
+import { copyToClipboard } from '../../../shared/clipboard-utils';
 
 export function JsonFormatterCard() {
   const t = (key: string, fallback: string) => i18n.t(key, fallback);
@@ -31,7 +32,7 @@ export function JsonFormatterCard() {
 
   const handleCopy = () => {
     if (output) {
-      navigator.clipboard.writeText(output);
+      copyToClipboard(output);
     }
   };
 

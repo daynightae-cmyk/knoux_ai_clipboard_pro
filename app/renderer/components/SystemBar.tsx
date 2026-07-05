@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle, Info, Zap, HardDrive, Clock } from 'lucide-react';
+import { getStatusColor as sharedGetStatusColor, getStatusBg as sharedGetStatusBg } from '../../shared/status-colors';
 
 interface SystemHealth {
   status: 'healthy' | 'warning' | 'critical';
@@ -96,23 +97,9 @@ const SystemBar: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'healthy': return 'text-green-400';
-      case 'warning': return 'text-yellow-400';
-      case 'critical': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
+  const getStatusColor = sharedGetStatusColor;
 
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case 'healthy': return 'bg-green-500/10 border-green-500/30';
-      case 'warning': return 'bg-yellow-500/10 border-yellow-500/30';
-      case 'critical': return 'bg-red-500/10 border-red-500/30';
-      default: return 'bg-gray-500/10 border-gray-500/30';
-    }
-  };
+  const getStatusBg = sharedGetStatusBg;
 
   const StatusIcon = health.status === 'healthy'
     ? <CheckCircle className="w-5 h-5 text-green-400" />

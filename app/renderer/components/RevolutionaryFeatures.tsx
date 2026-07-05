@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 import {
   Activity,
   Atom,
@@ -184,7 +185,7 @@ export const RevolutionaryFeatures: React.FC = () => {
 
   const applyPrediction = async (prediction: QuantumPrediction) => {
     try {
-      await navigator.clipboard.writeText(prediction.content);
+      await copyToClipboard(prediction.content);
       console.log(`🔮 Applied quantum prediction: ${prediction.content}`);
       await window.electronAPI?.invoke?.('quantum:update-accuracy', prediction.id, true);
     } catch (error) {

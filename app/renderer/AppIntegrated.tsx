@@ -7,6 +7,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { copyToClipboard } from '../shared/clipboard-utils';
 import {
   ClipboardCopy,
   Search,
@@ -240,7 +241,7 @@ function AppIntegrated() {
   // ==================== HANDLERS ====================
 
   const handleCopyItem = useCallback((item: ClipboardItemData) => {
-    navigator.clipboard.writeText(item.content);
+    copyToClipboard(item.content);
     const serviceManager = getServiceManager();
     serviceManager.getUIService().showNotification(`Copied to clipboard! ✨`, 'success');
   }, []);

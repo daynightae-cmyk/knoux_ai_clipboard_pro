@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { logger } from '../../shared/logger';
+import { formatDateTimeArEg } from '../../shared/format-utils';
 import {
   Shield,
   Lock,
@@ -159,10 +160,7 @@ const SecurityCenter: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ar-EG') + ' ' + date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-  };
+  const formatDate = formatDateTimeArEg;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-6">

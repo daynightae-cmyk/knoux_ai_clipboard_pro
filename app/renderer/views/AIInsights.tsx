@@ -6,6 +6,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAI } from '../hooks/useAI';
 import { useTheme } from '../contexts/ThemeContext';
 import { logger } from '../../shared/logger';
+import { triggerDownload } from '../../shared/download-utils';
+import { formatDateTimeCompact } from '../../shared/format-utils';
 import {
   Brain,
   TrendingUp,
@@ -172,13 +174,7 @@ const AIInsights: React.FC = () => {
         filename = `ai-insights-${Date.now()}.csv`;
       }
       
-      const blob = new Blob([content], { type: format === 'json' ? 'application/json' : 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
+      triggerDownload(content, filename, format === 'json' ? 'application/json' : 'text/csv');
       
       logger.info('Insights exported', { format, insights: insights.length });
     } catch (error) {
@@ -196,10 +192,7 @@ const AIInsights: React.FC = () => {
     return <span className={`font-bold ${color}`}>{percentage}%</span>;
   };
 
-  const formatTimestamp = (timestamp: string) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-  };
+  const formatTimestamp = (timestamp: string) => formatDateTimeCompact(timestamp);
 
   const renderOverview = () => (
     <div className="space-y-6">

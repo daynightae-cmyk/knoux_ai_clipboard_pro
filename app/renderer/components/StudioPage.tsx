@@ -8,6 +8,8 @@ import ServiceControlPanel from "./ServiceControlPanel";
 import { WorkspaceHero, StatusSummaryCard, SectionHeader, ToolCard } from "./studio/StudioKit";
 import { LivePreviewPanel, type PreviewRun } from "./studio/LivePreviewPanel";
 import i18n from "../utils/i18n";
+import { copyToClipboard } from "../../shared/clipboard-utils";
+import { downloadText, downloadJson } from "../../shared/download-utils";
 
 interface Props { items?: ClipboardItem[]; }
 type ApiCheck = { ok: boolean; status?: string; provider?: string; model?: string; error?: string } | null;
@@ -107,7 +109,7 @@ export default function StudioPage({ items = [] }: Props) {
   }), [items.length, secure, pinned, activeServices, readyServices, guardedServices, readiness]);
 
   const copy = async (text: string) => {
-    await navigator.clipboard.writeText(text || "");
+    await copyToClipboard(text || "");
     setStatus(t("studio.copied", "Copied to clipboard"));
   };
 
@@ -193,24 +195,12 @@ export default function StudioPage({ items = [] }: Props) {
 
   const exportPreview = () => {
     if (!currentRun?.output) return;
-    const blob = new Blob([currentRun.output], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `knoux-${currentRun.tool.toLowerCase().replace(/\s+/g, "-")}-output.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadText(`knoux-${currentRun.tool.toLowerCase().replace(/\s+/g, "-")}-output.txt`, currentRun.output);
     setStatus(t("studio.exported", "Result exported"));
   };
 
   const download = () => {
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "knoux-developer-handoff.json";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadJson("knoux-developer-handoff.json", report);
     setStatus(t("studio.reportTitle", "Developer handoff exported"));
   };
 
