@@ -1,9 +1,4 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-export type ClipboardType = "text" | "code" | "link" | "image" | "note";
+export type ClipboardType = "text" | "code" | "link" | "image" | "note" | "pdf" | "file";
 
 export interface ClipboardItem {
   id: string;
