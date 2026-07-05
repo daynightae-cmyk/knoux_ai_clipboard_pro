@@ -18,7 +18,7 @@
     "installer:prepare": "pwsh -ExecutionPolicy Bypass -File ./scripts/prepare-installer-assets.ps1",
     "dist": "npm run build && npm run installer:prepare && electron-builder --win --dir",
     "dist:installer": "npm run build && npm run installer:prepare && electron-builder --win nsis portable",
-    "pack": "npm run build && electron-builder --dir",
+    "pack": "npm run build && npm run installer:prepare && electron-builder --dir",
     "doctor": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-production-doctor.ps1",
     "knoux:build-local": "pwsh -ExecutionPolicy Bypass -File ./scripts/knoux-build-local.ps1",
     "test": "vitest run",
