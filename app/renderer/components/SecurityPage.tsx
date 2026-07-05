@@ -58,7 +58,7 @@ export default function SecurityPage({ privacyMode, setPrivacyMode, itemsCount }
   const [vaultUnlocked, setVaultUnlocked] = useState<boolean>(false);
   const [redactedPreview, setRedactedPreview] = useState<string>("");
   const [vaultContent, setVaultContent] = useState<string>(
-    "OPENROUTER_API_KEY=sk-or-v1-REPLACE_ME_12345678901234567890\nadmin@knoux.store\n4242 4242 4242 4242\nKNOUX_SECURE_NOTE=Guarded local buffer."
+    "OPENROUTER_API_KEY=sk-or-v1-REPLACE_ME_12345678901234567890\nadmin@knoux.store\n4242 4242 4242 4242\nBearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.sampletokenvalue123456\nKNOUX_SECURE_NOTE=Guarded local buffer."
   );
   const [auditTrail, setAuditTrail] = useState<AuditEntry[]>([
     { action: "OPENROUTER_PROXY_READY", msg: "Server-side AI route is isolated from client secrets.", time: nowTime(), severity: "success" },
@@ -139,7 +139,7 @@ export default function SecurityPage({ privacyMode, setPrivacyMode, itemsCount }
     return "text-blue-700 bg-blue-50 border-blue-100";
   };
 
-  const guardClasses = ["Api Key", "Token", "Secret Env Line", "Private Key", "Card Like", "Email", "Phone", "Password"];
+  const guardClasses = ["Password", "Api Key", "Token", "Bearer Token", "Access Token", "Refresh Token", "Private Key", "Secret Env Line", "Credential Like Text", "Email", "Phone", "Card Like Number"];
 
   return (
     <div id="security-workspace-container" className="p-6 space-y-6 w-full max-w-none mx-auto select-none">
