@@ -26,6 +26,8 @@ import StatusCard from '../components/StatusCard';
 import ActionButton from '../components/ActionButton';
 import ItemPreview from '../components/ItemPreview';
 import { dashboardConfig } from '../config/dashboardConfig';
+import { formatLocaleDate, formatLocaleTime } from '../../shared/format-utils';
+import { getStatusColor as sharedGetStatusColor } from '../../shared/status-colors';
 import './Dashboard.css';
 
 interface SystemStatus {
@@ -54,7 +56,7 @@ const Dashboard: React.FC = () => {
 
   // Memoized formatting functions
   const formatTime = useCallback((date: Date) => {
-    return date.toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US', {
+    return formatLocaleTime(date, isRTL ? 'ar-SA' : 'en-US', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
@@ -63,22 +65,10 @@ const Dashboard: React.FC = () => {
   }, [isRTL]);
 
   const formatDate = useCallback((date: Date) => {
-    return date.toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatLocaleDate(date, isRTL ? 'ar-SA' : 'en-US');
   }, [isRTL]);
 
-  const getStatusColor = useCallback((status: string) => {
-    switch (status) {
-      case 'active': return 'text-green-400';
-      case 'idle': return 'text-yellow-400';
-      case 'error': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  }, []);
+  const getStatusColor = useCallback((status: string) => sharedGetStatusColor(status), []);
 
   const getStatusIcon = useCallback((status: string) => {
     switch (status) {

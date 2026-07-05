@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ProductionService, ServiceStatus } from '../services/productionCatalog';
 import { CheckCircle, AlertTriangle, Zap, Settings, Copy, Play, XCircle, Clock, ShieldOff, Loader } from 'lucide-react';
 import i18n from '../utils/i18n';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 
 interface ServiceCardProps {
   service: ProductionService;
@@ -79,7 +80,7 @@ export function ServiceCard({ service, onAction }: ServiceCardProps) {
             <span>{isRunning ? t('common.running', 'Running...') : t('common.execute', 'Execute')}</span>
           </button>
           <button disabled={!isActionable} className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"><Settings className="w-4 h-4" /></button>
-          <button disabled={!output} onClick={() => navigator.clipboard.writeText(output || '')} className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"><Copy className="w-4 h-4" /></button>
+          <button disabled={!output} onClick={() => copyToClipboard(output || '')} className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-sm font-bold flex items-center justify-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"><Copy className="w-4 h-4" /></button>
         </div>
       </div>
     </div>

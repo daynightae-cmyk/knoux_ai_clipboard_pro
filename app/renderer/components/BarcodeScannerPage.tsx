@@ -3,6 +3,7 @@ import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 import { Camera, Upload, X, Copy, Save, ScanLine, AlertTriangle, ClipboardPaste } from 'lucide-react';
 import { motion } from 'framer-motion';
 import i18n from '../utils/i18n';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 
 // Assuming this type is available from a shared types file
 interface ClipboardItem {
@@ -87,7 +88,7 @@ export default function BarcodeScannerPage({ onSaveToHub }: BarcodeScannerPagePr
   };
 
   const handleCopy = () => {
-    if (result) navigator.clipboard.writeText(result);
+    if (result) copyToClipboard(result);
   };
 
   const handleSave = () => {

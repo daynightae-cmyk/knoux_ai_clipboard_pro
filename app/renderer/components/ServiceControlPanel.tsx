@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Activity, Copy, Database, FileText, Play, ShieldCheck, SlidersHorizontal, Sparkles, Wand2 } from "lucide-react";
 import { ClipboardItem } from "../types";
+import { copyToClipboard } from "../../shared/clipboard-utils";
 import { PRODUCTION_SERVICES, ProductionService, ServiceCategory } from "../services/productionCatalog";
 import { buildServiceSample, runServiceOperation, serviceActionLabels, ServiceOperationResult } from "../services/serviceOperations";
 
@@ -39,7 +40,7 @@ export default function ServiceControlPanel({ items, onStatus }: Props) {
   const guardedCount = runnable.filter((service) => service.status === "Guarded").length;
 
   const copy = async (text: string) => {
-    await navigator.clipboard.writeText(text || "");
+    await copyToClipboard(text || "");
     onStatus?.("Copied service output");
   };
 

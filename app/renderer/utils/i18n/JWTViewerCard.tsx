@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Copy, X, Lock, AlertTriangle } from 'lucide-react';
 import i18n from '../../utils/i18n';
+import { copyToClipboard } from '../../../shared/clipboard-utils';
 
 // Helper to decode Base64Url
 function base64UrlDecode(str: string): string {
@@ -61,7 +62,7 @@ export function JWTViewerCard() {
   };
 
   const handleCopy = (content: object) => {
-    navigator.clipboard.writeText(JSON.stringify(content, null, 2));
+    copyToClipboard(JSON.stringify(content, null, 2));
   };
 
   return (

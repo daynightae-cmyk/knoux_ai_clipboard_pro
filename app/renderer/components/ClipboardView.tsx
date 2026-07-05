@@ -34,6 +34,8 @@ import {
 } from 'lucide-react';
 import { llog } from '../../shared/localized-logger';
 import { useAI } from '../hooks/useAI';
+import { formatRelativeTime, formatBytes } from '../../shared/format-utils';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 import { 
   ClipboardItem, 
   ContentClassification,
@@ -366,7 +368,7 @@ export const ClipboardView: React.FC<ClipboardViewProps> = ({
     
     switch (action) {
       case 'copy':
-        navigator.clipboard.writeText(item.content);
+        copyToClipboard(item.content);
         break;
       case 'favorite':
         toggleFavorite(item.id);
@@ -521,26 +523,9 @@ export const ClipboardView: React.FC<ClipboardViewProps> = ({
     }
   };
 
-  // Format helpers
-  const formatDate = (date: Date) => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
+  const formatDate = (date: Date) => formatRelativeTime(date);
 
-  const formatSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / 1048576).toFixed(1)} MB`;
-  };
+  const formatSize = (bytes: number) => formatBytes(bytes, 1);
 
   const getContentIcon = (item: ClipboardItem) => {
     const type = item.classification.primaryType;

@@ -6,6 +6,8 @@ import { WorkspaceHero, StatusSummaryCard, SectionHeader } from "./studio/Studio
 import { QAResultCard } from "./studio/QAResultCard";
 import { LivePreviewPanel, type PreviewRun } from "./studio/LivePreviewPanel";
 import i18n from "../utils/i18n";
+import { copyToClipboard } from "../../shared/clipboard-utils";
+import { downloadMarkdown } from "../../shared/download-utils";
 
 const categoryIcon: Record<QACategory, LucideIcon> = {
   i18n: Languages,
@@ -90,7 +92,7 @@ export default function QALabPage() {
 
   const copyCheck = async (check: QACheckResult) => {
     const text = [check.title, check.summary, "", ...check.details].join("\n");
-    await navigator.clipboard.writeText(text);
+    await copyToClipboard(text);
   };
 
   const showReport = () => {
@@ -110,13 +112,7 @@ export default function QALabPage() {
   };
 
   const exportReport = () => {
-    const blob = new Blob([buildQaReport(results)], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "knoux-qa-session-report.md";
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadMarkdown("knoux-qa-session-report.md", buildQaReport(results));
   };
 
   const runtimeMode = window.electron?.ipcRenderer ? t("qa.desktop", "Desktop") : t("qa.web", "Web");
@@ -210,7 +206,7 @@ export default function QALabPage() {
               subtitle={t("qa.monitorWaiting", "Run checks to stream live results")}
               current={currentRun}
               history={history}
-              onCopy={() => currentRun && navigator.clipboard.writeText(currentRun.output)}
+              onCopy={() => currentRun && copyToClipboard(currentRun.output)}
               onExport={exportReport}
               onClear={() => { setCurrentRun(null); setHistory([]); setActiveId(null); }}
               onSelectHistory={(run) => setCurrentRun(run)}

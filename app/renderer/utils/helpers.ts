@@ -1,40 +1,19 @@
 /**
  * Knoux Clipboard AI - Helper Utilities
  * Common utility functions for the application
+ *
+ * NOTE: formatBytes, formatDate, copyToClipboard, and readFromClipboard
+ * are re-exported from the shared layer for backward compatibility.
+ * New code should import directly from app/shared/*.
  */
 
-/**
- * Format bytes to human-readable format
- */
-export function formatBytes(bytes: number, decimals: number = 2): string {
-  if (bytes === 0) return '0 Bytes';
+import { formatBytes as _formatBytes } from '../../shared/format-utils';
+import { formatRelativeTime } from '../../shared/format-utils';
+import { copyToClipboard as _copyToClipboard, readFromClipboard as _readFromClipboard } from '../../shared/clipboard-utils';
 
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+export const formatBytes = _formatBytes;
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
-
-/**
- * Format date to readable format
- */
-export function formatDate(date: Date | number | string): string {
-  const d = new Date(date);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
-
-  return d.toLocaleDateString();
-}
+export const formatDate = formatRelativeTime;
 
 /**
  * Truncate text with ellipsis
@@ -152,43 +131,11 @@ export async function withTimeout<T>(
   }
 }
 
-/**
- * Copy text to clipboard (fallback for old browsers)
- */
-export async function copyToClipboard(text: string): Promise<boolean> {
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } else {
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const success = document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return success;
-    }
-  } catch (_error) {
-    return false;
-  }
-}
+export const copyToClipboard = _copyToClipboard;
 
-/**
- * Read text from clipboard (fallback for old browsers)
- */
 export async function readFromClipboard(): Promise<string | null> {
-  try {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      return await navigator.clipboard.readText();
-    }
-    return null;
-  } catch (_error) {
-    return null;
-  }
+  const result = await _readFromClipboard();
+  return result || null;
 }
 
 /**

@@ -1,4 +1,6 @@
 import { ClipboardItem } from "../types";
+import { copyToClipboard, readFromClipboard } from "../../shared/clipboard-utils";
+import { readJsonStorage } from "../../shared/storage-utils";
 
 export interface StorageHealth {
   bytes: number;
@@ -15,13 +17,8 @@ export interface GuardScanResult {
 }
 
 export function getStoredClips(): ClipboardItem[] {
-  try {
-    const raw = localStorage.getItem("knoux_clips");
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  const parsed = readJsonStorage<ClipboardItem[]>("knoux_clips", []);
+  return Array.isArray(parsed) ? parsed : [];
 }
 
 export function getStorageHealth(items: ClipboardItem[] = getStoredClips()): StorageHealth {
@@ -80,21 +77,6 @@ export function scanText(value: string): GuardScanResult {
   };
 }
 
-export async function readSystemClipboard(): Promise<string> {
-  if (!navigator.clipboard?.readText) return "";
-  try {
-    return await navigator.clipboard.readText();
-  } catch {
-    return "";
-  }
-}
+export const readSystemClipboard = readFromClipboard;
 
-export async function writeSystemClipboard(value: string): Promise<boolean> {
-  if (!navigator.clipboard?.writeText) return false;
-  try {
-    await navigator.clipboard.writeText(value);
-    return true;
-  } catch {
-    return false;
-  }
-}
+export const writeSystemClipboard = copyToClipboard;

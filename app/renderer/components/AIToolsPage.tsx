@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { checkProviderRoute, deriveAIStatus, runKnouxAIAction } from "../services/aiClient";
 import i18n from "../utils/i18n";
+import { copyToClipboard } from "../../shared/clipboard-utils";
 import {
   Sparkles,
   FileText,
@@ -137,7 +138,7 @@ export default function AIToolsPage({
 
   const handleCopyResult = () => {
     if (!result) return;
-    navigator.clipboard.writeText(result);
+    copyToClipboard(result);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

@@ -7,6 +7,7 @@ import {
   EmotionType,
   PoetryStyle 
 } from '../../backend/ai/creative-engine';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 
 interface IPC {
   invoke: (channel: string, ...args: any[]) => Promise<any>;
@@ -67,7 +68,7 @@ export const CreativeStudio: React.FC = () => {
 
   const handleApplyToClipboard = () => {
     if (output?.enhanced) {
-      navigator.clipboard.writeText(output.enhanced);
+      copyToClipboard(output.enhanced);
       if (window.electron?.ipcRenderer) {
         window.electron.ipcRenderer.invoke('copy-to-clipboard', output.enhanced);
       }

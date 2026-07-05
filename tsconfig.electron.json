@@ -33,6 +33,11 @@
     "app/tests/**/*",
     "app/backend/ai/**/*",
     "app/backend/services/**/*",
-    "app/backend/storage/**/*"
+    "app/backend/storage/**/*",
+    "app/shared/clipboard-utils.ts",
+    "app/shared/download-utils.ts",
+    "app/shared/storage-utils.ts",
+    "app/shared/status-colors.ts",
+    "app/shared/format-utils.ts"
   ]
 }

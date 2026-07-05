@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getStatusColor as sharedGetStatusColor, getStatusIcon as sharedGetStatusIcon } from '../../shared/status-colors';
 
 interface ServiceTest {
   name: string;
@@ -250,23 +251,9 @@ export const ServiceTester: React.FC = () => {
     setTesting(false);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'success': return 'text-green-500';
-      case 'failed': return 'text-red-500';
-      case 'testing': return 'text-yellow-500';
-      default: return 'text-gray-500';
-    }
-  };
+  const getStatusColor = sharedGetStatusColor;
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'success': return '✓';
-      case 'failed': return '✗';
-      case 'testing': return '⟳';
-      default: return '○';
-    }
-  };
+  const getStatusIcon = sharedGetStatusIcon;
 
   const categories = [...new Set(serviceTests.map(t => t.category))];
   const summary = {

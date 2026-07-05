@@ -6,6 +6,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
+import { formatBytes as sharedFormatBytes, formatLocaleDate } from '../../shared/format-utils';
+import { copyToClipboard } from '../../shared/clipboard-utils';
 // import { logger } from '../../shared/logger'; // Uncomment if logger exists
 
 import {
@@ -52,24 +54,16 @@ interface ClipboardPreviewProps {
 
 // --- Helper Functions ---
 
-const formatBytes = (bytes: number, decimals = 2) => {
-  if (!bytes) return '0 Bytes';
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-};
+const formatBytes = sharedFormatBytes;
 
 const formatDate = (timestamp: number) => {
-  return new Intl.DateTimeFormat('en-US', {
+  return formatLocaleDate(new Date(timestamp), 'en-US', {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
     day: 'numeric',
     month: 'short',
-  }).format(new Date(timestamp));
+  });
 };
 
 // --- Main Component ---
@@ -96,7 +90,7 @@ const ClipboardPreview: React.FC<ClipboardPreviewProps> = ({
     if (onCopy) {
       onCopy(item.value);
     } else {
-      navigator.clipboard.writeText(item.value);
+      copyToClipboard(item.value);
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
