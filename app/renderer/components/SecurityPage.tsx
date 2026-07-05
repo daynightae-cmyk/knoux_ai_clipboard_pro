@@ -16,6 +16,7 @@ import {
   Unlock,
 } from "lucide-react";
 import { PRODUCTION_SCORE } from "../services/productionCatalog";
+import { detectSensitiveTypes as detectRuntimeSensitiveTypes } from "../services/runtimeServices";
 
 interface SecurityPageProps {
   privacyMode: boolean;
@@ -33,13 +34,7 @@ type AuditEntry = {
 const nowTime = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
 function detectSensitiveTypes(value: string) {
-  const checks = [
-    { type: "API Key", matched: /(?:sk-|pk_|OPENROUTER_API_KEY|API_KEY|SECRET|TOKEN)/i.test(value) },
-    { type: "Email", matched: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(value) },
-    { type: "Phone", matched: /\+?\d[\d\s().-]{7,}/.test(value) },
-    { type: "Credit Card", matched: /\b(?:\d[ -]*?){13,16}\b/.test(value) },
-  ];
-  return checks.filter((check) => check.matched).map((check) => check.type);
+  return detectRuntimeSensitiveTypes(value).map((type) => type.replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase()));
 }
 
 export default function SecurityPage({
@@ -52,11 +47,11 @@ export default function SecurityPage({
   const [vaultPassword, setVaultPassword] = useState<string>("");
   const [vaultUnlocked, setVaultUnlocked] = useState<boolean>(false);
   const [vaultContent, setVaultContent] = useState<string>(
-    "KNOUX_SECURE_NOTE=Encrypted local vault content is decrypted only in temporary UI memory."
+    "KNOUX_SECURE_NOTE=Guarded local buffer. Electron encryption is available only through the verified IPC bridge."
   );
   const [auditTrail, setAuditTrail] = useState<AuditEntry[]>([
     { action: "OPENROUTER_PROXY_READY", msg: "Server-side AI route is isolated from client secrets.", time: nowTime(), severity: "success" },
-    { action: "AES_GCM_BRIDGE_GUARDED", msg: "Electron security IPC exposes an authenticated AES-256-GCM payload format for Electron-scoped vault operations.", time: nowTime(), severity: "success" },
+    { action: "AES_GCM_BRIDGE_GUARDED", msg: "Electron security IPC exposes AES-GCM operations; web localStorage is not described as fully encrypted.", time: nowTime(), severity: "success" },
     { action: "CLIPBOARD_GUARD_ACTIVE", msg: "Credential-like text patterns are scanned before reuse.", time: nowTime(), severity: "info" },
   ]);
 
@@ -121,7 +116,7 @@ export default function SecurityPage({
               <div className="text-4xl font-black text-emerald-950 font-mono">{securityScore}/100</div>
             </div>
             <div className="relative pt-2 border-t border-emerald-100 space-y-2 text-left text-xs text-emerald-900 leading-normal">
-              <div className="flex justify-between font-mono"><span>AES-256-GCM IPC:</span><span className="font-bold">GUARDED</span></div>
+              <div className="flex justify-between font-mono"><span>AES-GCM Electron IPC:</span><span className="font-bold">GUARDED</span></div>
               <div className="flex justify-between font-mono"><span>OpenRouter secret isolation:</span><span className="font-bold">SERVER-SIDE</span></div>
               <div className="flex justify-between font-mono"><span>Credential pattern guard:</span><span className="font-bold">ACTIVE</span></div>
             </div>
@@ -133,7 +128,7 @@ export default function SecurityPage({
             </h4>
             <div className="space-y-2 text-xs leading-normal">
               <div className="flex justify-between"><span className="text-knoux-muted-text">Web layer:</span><span className="text-knoux-dark-text font-bold">localStorage + Vercel API</span></div>
-              <div className="flex justify-between"><span className="text-knoux-muted-text">Electron layer:</span><span className="text-knoux-dark-text font-bold">IPC + AES bridge</span></div>
+              <div className="flex justify-between"><span className="text-knoux-muted-text">Electron layer:</span><span className="text-knoux-dark-text font-bold">IPC guarded AES bridge</span></div>
               <div className="flex justify-between"><span className="text-knoux-muted-text">Secure clips loaded:</span><span className="text-knoux-dark-text font-mono font-bold">{itemsCount}</span></div>
               <div className="flex justify-between"><span className="text-knoux-muted-text">Persistence sprint:</span><span className="text-knoux-dark-text font-mono">SQLite hardening next</span></div>
             </div>
@@ -144,7 +139,7 @@ export default function SecurityPage({
               <Radar className="w-4 h-4 text-knoux-purple" /> Live Guard Classes
             </h4>
             <div className="grid grid-cols-2 gap-2">
-              {["API Key", "Email", "Phone", "Credit Card"].map((label) => (
+              {["Api Key", "Token", "Secret Env Line", "Private Key", "Card Like"].map((label) => (
                 <div key={label} className={`rounded-xl border p-2 text-[10px] font-black flex items-center justify-between ${sensitiveTypes.includes(label) ? "border-amber-100 bg-amber-50 text-amber-700" : "border-emerald-100 bg-emerald-50 text-emerald-700"}`}>
                   <span>{label}</span>
                   {sensitiveTypes.includes(label) ? <AlertTriangle className="w-3.5 h-3.5" /> : <Check className="w-3.5 h-3.5" />}
@@ -212,7 +207,7 @@ export default function SecurityPage({
               <KeyRound className="w-4 h-4 text-knoux-purple" /> Secure Password-Protected Vault
             </h4>
             <p className="text-[11px] text-knoux-muted-text leading-relaxed">
-              Uses a temporary decrypt window in the UI. In Electron production, encryption/decryption is delegated to the AES-256-GCM security IPC bridge.
+              Uses a guarded temporary visibility window in the UI. In Electron production, encryption/decryption is delegated to the security IPC bridge only where available.
             </p>
             {!vaultUnlocked ? (
               <form onSubmit={handleVaultUnlock} className="flex flex-wrap items-center gap-3 max-w-xl pt-2">

@@ -21,6 +21,13 @@ export default function StudioPage({ items = [] }: Props) {
   const [busy, setBusy] = useState(false);
   const secure = items.filter((item) => item.isSecure).length;
   const pinned = items.filter((item) => item.pinned).length;
+  const groupedServices = useMemo(() => {
+    return PRODUCTION_SERVICES.reduce<Record<string, typeof PRODUCTION_SERVICES>>((acc, service) => {
+      acc[service.category] = acc[service.category] || [];
+      acc[service.category].push(service);
+      return acc;
+    }, {});
+  }, []);
 
   const report = useMemo(() => ({
     product: "Knoux AI Clipboard Pro",
@@ -92,21 +99,32 @@ export default function StudioPage({ items = [] }: Props) {
 
           <section className="glass-panel p-5 space-y-4">
             <h2 className="font-black text-knoux-dark-text flex items-center gap-2"><ShieldCheck className="w-5 h-5 text-knoux-purple" /> Service Reality Matrix</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {PRODUCTION_SERVICES.map((service) => (
-                <div key={service.id} className="rounded-2xl border border-knoux-purple/10 bg-white/75 p-3 text-xs space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <b className="text-knoux-dark-text">{service.displayName}</b>
-                    <span className="text-[10px] font-black text-knoux-purple uppercase">{service.status}</span>
+            <div className="space-y-5">
+              {Object.entries(groupedServices).map(([category, services]) => (
+                <div key={category} className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-knoux-purple/10 pb-2">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-knoux-dark-text">{category}</h3>
+                    <span className="knoux-badge">{services.length} services</span>
                   </div>
-                  <p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p>
-                  <div className="grid grid-cols-2 gap-2 text-[10px] text-knoux-muted-text">
-                    <span>Runtime: {service.runtimeType}</span>
-                    <span>Config: {service.requiresConfig ? "Required" : "No"}</span>
-                    <span>Implemented: {service.implemented ? "Yes" : "No"}</span>
-                    <span>Handler: {service.actionHandler || "None"}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {services.map((service) => (
+                      <div key={service.id} className="knoux-premium-card p-3 text-xs space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <b className="text-knoux-dark-text">{service.displayName}</b>
+                          <span className={`knoux-badge knoux-badge-${service.status.toLowerCase()}`}>{service.status}</span>
+                        </div>
+                        <p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p>
+                        <div className="grid grid-cols-2 gap-2 text-[10px] text-knoux-muted-text">
+                          <span>Runtime: {service.runtimeType}</span>
+                          <span>Config: {service.requiresConfig ? "Required" : "No"}</span>
+                          <span>Implemented: {service.implemented ? "Yes" : "No"}</span>
+                          <span>Handler: {service.actionHandler || "None"}</span>
+                        </div>
+                        {service.disabledReason && <p className="text-[10px] text-amber-700">{service.disabledReason}</p>}
+                        <p className="text-[10px] text-knoux-muted-text">Fallback: {service.fallback}</p>
+                      </div>
+                    ))}
                   </div>
-                  {service.disabledReason && <p className="text-[10px] text-amber-700">{service.disabledReason}</p>}
                 </div>
               ))}
             </div>

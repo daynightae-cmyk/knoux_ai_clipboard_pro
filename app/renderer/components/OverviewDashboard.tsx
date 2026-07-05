@@ -82,18 +82,16 @@ export default function OverviewDashboard({
   const [isScanningHealth, setIsScanningHealth] = useState<boolean>(false);
   const [healthScores, setHealthScores] = useState({
     aiEngine: "Ready",
-    clipboardMonitor: "Active",
+    clipboardMonitor: "Guarded",
     localStorage: "Active",
   });
   const [diagnosticsRun, setDiagnosticsRun] = useState<boolean>(false);
 
   // Recent AI processed activities timeline (5 items)
   const [activities, setActivities] = useState<ActivityItem[]>([
-    { id: "act-1", title: "Summarized text selection with OpenRouter AI", type: "Summarization", time: "2m ago", iconName: "sparkles", color: "text-amber-500 bg-amber-50 border-amber-100" },
-    { id: "act-2", title: "Compiled TypeScript snippet logic", type: "Code Optimization", time: "15m ago", iconName: "code", color: "text-blue-500 bg-blue-50 border-blue-100" },
-    { id: "act-3", title: "Translated German README text block", type: "Translation", time: "42m ago", iconName: "globe", color: "text-purple-500 bg-purple-50 border-purple-100" },
-    { id: "act-4", title: "Indexed metadata schema parameters", type: "Data Extraction", time: "1h ago", iconName: "cpu", color: "text-indigo-500 bg-indigo-50 border-indigo-100" },
-    { id: "act-5", title: "Flagged local credential-like string for privacy review", type: "Security Masking", time: "2h ago", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
+    { id: "act-1", title: "Local clipboard vault loaded from persisted records", type: "Local Vault", time: "Now", iconName: "cpu", color: "text-indigo-500 bg-indigo-50 border-indigo-100" },
+    { id: "act-2", title: "Sensitive data guard scanner is available offline", type: "Security Guard", time: "Now", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
+    { id: "act-3", title: "OpenRouter AI is ready only after provider configuration", type: "AI Ready", time: "Now", iconName: "sparkles", color: "text-amber-500 bg-amber-50 border-amber-100" },
   ]);
 
   // --- NEW WORKSPACE HANDLERS ---
@@ -104,8 +102,8 @@ export default function OverviewDashboard({
     setMaintenanceSuccess(false);
     setTimeout(() => {
       setIsMaintenanceRunning(false);
-      setDbSize(0.85);
-      setDbUsagePct(8.5);
+      setDbSize(Math.max(0.01, totalClips * 0.012));
+      setDbUsagePct(Math.min(100, totalClips * 0.12));
       setMaintenanceSuccess(true);
       // Automatically hide success banner after 4 seconds
       setTimeout(() => setMaintenanceSuccess(false), 4000);
@@ -121,7 +119,7 @@ export default function OverviewDashboard({
       setDiagnosticsRun(true);
       setHealthScores({
         aiEngine: "Ready",
-        clipboardMonitor: "Active",
+        clipboardMonitor: "Guarded",
         localStorage: "Active",
       });
       setTimeout(() => setDiagnosticsRun(false), 3000);
@@ -148,18 +146,7 @@ export default function OverviewDashboard({
       };
       setActivities((prev) => [newActivity, ...prev].slice(0, 5));
     } else if (actionType === "ocr") {
-      const text = "Extracted OCR Text: 'Eng. Sadek Elgazar - Abu Dhabi UAE. Knoux AI Clipboard Pro v1.0.0. Secure offline architecture.'";
-      onAddNewItem(text, "note", "OCR Scanner");
-
-      const newActivity: ActivityItem = {
-        id: `act-${Date.now()}`,
-        title: "Prepared image text extraction workflow for the Barcode Scanner page",
-        type: "Text Extraction",
-        time: "Just now",
-        iconName: "cpu",
-        color: "text-indigo-500 bg-indigo-50 border-indigo-100",
-      };
-      setActivities((prev) => [newActivity, ...prev].slice(0, 5));
+      setActiveTab("barcode");
     } else if (actionType === "secure") {
       const text = "PRIVACY-GUARDED: Knoux local note containing sensitive credential-like text. Keep Privacy Enforcer enabled before reuse.";
       onAddNewItem(text, "note", "Secure Vault");
@@ -282,11 +269,11 @@ export default function OverviewDashboard({
             },
             {
               title: "Extract Text",
-              desc: "Runs high-precision simulated OCR text extraction on the latest clipboard item.",
+              desc: "Opens the real barcode scanner. OCR text extraction is not claimed in this build.",
               action: () => handleQuickAction("ocr"),
               icon: FileText,
               color: "text-indigo-600 bg-indigo-50 border-indigo-100 hover:border-indigo-300",
-              buttonText: "Run OCR Scan",
+              buttonText: "Open Scanner",
             },
             {
               title: "Secure Note",
@@ -498,9 +485,9 @@ export default function OverviewDashboard({
                 },
                 {
                   name: "Clipboard Monitor",
-                  desc: "Auto background monitoring daemon",
+                  desc: "Electron monitor guarded; web runtime uses manual import",
                   status: isScanningHealth ? "Guarded" : healthScores.clipboardMonitor,
-                  pillStatus: (isScanningHealth ? "warning" : "info") as "warning" | "info",
+                  pillStatus: "warning" as "warning",
                   icon: Clipboard,
                   colorClass: "bg-indigo-600 text-white border-indigo-100",
                 },
@@ -575,7 +562,7 @@ export default function OverviewDashboard({
                     Maintenance Success
                   </div>
                   <p className="text-[10px] text-emerald-600">
-                    Expired logs cleared, tables vacuumed, database optimized.
+                    Local renderer store compacted. No database vacuum is claimed for the web runtime.
                   </p>
                 </motion.div>
               )}
