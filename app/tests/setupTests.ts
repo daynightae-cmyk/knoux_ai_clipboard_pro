@@ -1,17 +1,20 @@
 // Test setup for Knoux Clipboard AI
 import '@testing-library/jest-dom';
+import { afterEach, vi } from 'vitest';
 import { TextEncoder, TextDecoder } from 'util';
+
+(globalThis as any).jest = vi;
 
 // Mock Electron APIs
 global.window.knoux = {
   // App lifecycle
-  isAppReady: jest.fn(() => true),
-  onAppReady: jest.fn((callback) => callback()),
-  quitApp: jest.fn(() => Promise.resolve({ success: true })),
-  restartApp: jest.fn(() => Promise.resolve({ success: true })),
+  isAppReady: vi.fn(() => true),
+  onAppReady: vi.fn((callback) => callback()),
+  quitApp: vi.fn(() => Promise.resolve({ success: true })),
+  restartApp: vi.fn(() => Promise.resolve({ success: true })),
   
   // Settings
-  getSettings: jest.fn(() => Promise.resolve({
+  getSettings: vi.fn(() => Promise.resolve({
     success: true,
     data: {
       theme: 'dark',
@@ -23,21 +26,21 @@ global.window.knoux = {
       encryptSensitive: true
     }
   })),
-  saveSettings: jest.fn(() => Promise.resolve({ success: true })),
-  resetSettings: jest.fn(() => Promise.resolve({ success: true })),
+  saveSettings: vi.fn(() => Promise.resolve({ success: true })),
+  resetSettings: vi.fn(() => Promise.resolve({ success: true })),
   
   // Clipboard
-  getClipboardHistory: jest.fn(() => Promise.resolve({
+  getClipboardHistory: vi.fn(() => Promise.resolve({
     success: true,
     data: [],
     total: 0
   })),
-  clearClipboardHistory: jest.fn(() => Promise.resolve({
+  clearClipboardHistory: vi.fn(() => Promise.resolve({
     success: true,
     deletedCount: 0
   })),
-  copyToClipboard: jest.fn(() => Promise.resolve({ success: true })),
-  getCurrentClipboard: jest.fn(() => Promise.resolve({
+  copyToClipboard: vi.fn(() => Promise.resolve({ success: true })),
+  getCurrentClipboard: vi.fn(() => Promise.resolve({
     success: true,
     data: {
       id: 'test-id',
@@ -48,11 +51,11 @@ global.window.knoux = {
   })),
   
   // AI
-  getAIStatus: jest.fn(() => Promise.resolve({
+  getAIStatus: vi.fn(() => Promise.resolve({
     success: true,
     data: { status: 'ready', model: 'test-model' }
   })),
-  processWithAI: jest.fn(() => Promise.resolve({
+  processWithAI: vi.fn(() => Promise.resolve({
     success: true,
     data: {
       content: 'Processed content',
@@ -61,9 +64,9 @@ global.window.knoux = {
   })),
   
   // System
-  openDevTools: jest.fn(),
-  showNotification: jest.fn(() => Promise.resolve({ success: true })),
-  getSystemInfo: jest.fn(() => Promise.resolve({
+  openDevTools: vi.fn(),
+  showNotification: vi.fn(() => Promise.resolve({ success: true })),
+  getSystemInfo: vi.fn(() => Promise.resolve({
     success: true,
     data: {
       platform: 'win32',
@@ -77,33 +80,33 @@ global.window.knoux = {
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn()
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
   }))
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn()
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn()
 }));
 
 // Mock crypto
 Object.defineProperty(global.self, 'crypto', {
   value: {
-    getRandomValues: jest.fn(arr => arr),
+    getRandomValues: vi.fn(arr => arr),
     subtle: {
-      digest: jest.fn(),
-      encrypt: jest.fn(),
-      decrypt: jest.fn()
+      digest: vi.fn(),
+      encrypt: vi.fn(),
+      decrypt: vi.fn()
     }
   }
 });
@@ -111,8 +114,8 @@ Object.defineProperty(global.self, 'crypto', {
 // Mock clipboard
 Object.assign(navigator, {
   clipboard: {
-    writeText: jest.fn(() => Promise.resolve()),
-    readText: jest.fn(() => Promise.resolve('Test clipboard content'))
+    writeText: vi.fn(() => Promise.resolve()),
+    readText: vi.fn(() => Promise.resolve('Test clipboard content'))
   }
 });
 
@@ -123,19 +126,19 @@ global.TextDecoder = TextDecoder;
 // Mock console for cleaner tests
 global.console = {
   ...console,
-  log: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  debug: jest.fn()
+  log: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+  debug: vi.fn()
 };
 
 // Test timeout
-jest.setTimeout(10000);
+vi.setConfig({ testTimeout: 10000 });
 
 // Cleanup after each test
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 // Global test utilities

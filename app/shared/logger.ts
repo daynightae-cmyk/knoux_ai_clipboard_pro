@@ -59,6 +59,7 @@ export interface LoggerConfig {
 }
 
 type IpcBridge = { send?: (channel: string, payload: unknown) => void };
+declare const window: { require?: (name: string) => { ipcRenderer?: IpcBridge } } | undefined;
 
 const LEVEL_NAMES: Record<LogLevel, string> = {
   [LogLevel.ERROR]: 'ERROR',
@@ -115,7 +116,7 @@ class KnouxLogger {
 
     if (browserRuntime) {
       try {
-        const electronApi = (window as unknown as { require?: (name: string) => { ipcRenderer?: IpcBridge } }).require?.('electron');
+        const electronApi = window?.require?.('electron');
         this.ipcRenderer = electronApi?.ipcRenderer || null;
       } catch {
         this.ipcRenderer = null;

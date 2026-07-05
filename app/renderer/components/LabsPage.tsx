@@ -19,6 +19,8 @@ import {
   ShieldCheck,
   Sparkles,
   Zap,
+  PackageCheck,
+  Clipboard,
 } from "lucide-react";
 import {
   PRODUCTION_SERVICES,
@@ -29,11 +31,12 @@ import {
 
 const categoryIcon: Record<ProductionService["category"], JSX.Element> = {
   AI: <Sparkles className="w-5 h-5 text-purple-500" />,
-  Clipboard: <Blocks className="w-5 h-5 text-blue-500" />,
+  Clipboard: <Clipboard className="w-5 h-5 text-blue-500" />,
+  "Client Tools": <Blocks className="w-5 h-5 text-indigo-500" />,
   Security: <Fingerprint className="w-5 h-5 text-emerald-500" />,
-  Storage: <Database className="w-5 h-5 text-indigo-500" />,
-  System: <ServerCog className="w-5 h-5 text-sky-500" />,
-  Experience: <Eye className="w-5 h-5 text-rose-500" />,
+  Barcode: <Eye className="w-5 h-5 text-rose-500" />,
+  Developer: <ServerCog className="w-5 h-5 text-sky-500" />,
+  Packaging: <PackageCheck className="w-5 h-5 text-amber-500" />,
 };
 
 const tierStyle: Record<ProductionService["tier"], string> = {
@@ -45,15 +48,17 @@ const tierStyle: Record<ProductionService["tier"], string> = {
 };
 
 const statusStyle: Record<ProductionService["status"], string> = {
-  ACTIVE: "bg-emerald-500",
-  READY: "bg-blue-500",
-  GUARDED: "bg-amber-500",
-  NEXT: "bg-slate-400",
+  Active: "bg-emerald-500",
+  Ready: "bg-blue-500",
+  Guarded: "bg-amber-500",
+  Planned: "bg-slate-400",
+  Missing: "bg-red-500",
+  Disabled: "bg-slate-500",
 };
 
 export default function LabsPage() {
   const [enabledServices, setEnabledServices] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(PRODUCTION_SERVICES.map((service) => [service.id, service.status !== "NEXT"]))
+    Object.fromEntries(PRODUCTION_SERVICES.map((service) => [service.id, service.implemented && service.status !== "Disabled"]))
   );
 
   const readiness = getServiceReadinessPercent();
@@ -63,6 +68,8 @@ export default function LabsPage() {
   );
 
   const toggleService = (id: string) => {
+    const service = PRODUCTION_SERVICES.find((item) => item.id === id);
+    if (!service?.implemented || service.status !== "Active") return;
     setEnabledServices((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
@@ -82,8 +89,7 @@ export default function LabsPage() {
                 Service Labs converted into a controlled production registry.
               </h2>
               <p className="text-xs text-knoux-muted-text leading-relaxed max-w-2xl">
-                This page no longer presents vague experiments. It shows the real service map: OpenRouter, Electron IPC,
-                secure vault, storage adapters, monitoring, guarded fallbacks, and the next provider slots.
+                This page only shows registry state for active, guarded, and planned services. Planned capabilities stay disabled until real handlers and packaging are verified.
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
@@ -125,8 +131,8 @@ export default function LabsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-        {PRODUCTION_SERVICES.map((service, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+        {PRODUCTION_SERVICES.filter((service) => ["Guarded", "Planned", "Missing", "Disabled"].includes(service.status)).map((service, index) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 12 }}
@@ -145,12 +151,11 @@ export default function LabsPage() {
                   </span>
                   <button
                     onClick={() => toggleService(service.id)}
-                    className={`w-10 h-5 rounded-full transition-all flex items-center cursor-pointer p-0.5 ${
-                      enabledServices[service.id] ? "bg-knoux-purple justify-end" : "bg-knoux-purple/15 justify-start"
-                    }`}
-                    aria-label={`Toggle ${service.title}`}
+                    disabled={!service.implemented || service.status !== "Active"}
+                    className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${service.status === "Active" && service.implemented ? "bg-knoux-purple text-white" : "bg-slate-100 text-slate-500"} disabled:cursor-not-allowed disabled:opacity-60`}
+                    aria-label={`Toggle ${service.displayName}`}
                   >
-                    <div className="w-4 h-4 rounded-full bg-white shadow-sm" />
+                    {service.status === "Active" ? (enabledServices[service.id] ? "On" : "Standby") : service.status}
                   </button>
                 </div>
               </div>
@@ -161,21 +166,18 @@ export default function LabsPage() {
                   <span className="text-[10px] font-black text-knoux-muted-text uppercase tracking-wider">{service.status}</span>
                 </div>
                 <h3 className="text-sm font-black text-knoux-dark-text group-hover:text-knoux-purple transition-colors">
-                  {service.title}
+                  {service.displayName}
                 </h3>
                 <p className="text-[11px] text-knoux-muted-text leading-relaxed">{service.description}</p>
+                {service.disabledReason && <p className="text-[10px] text-amber-700 leading-relaxed">{service.disabledReason}</p>}
               </div>
             </div>
 
             <div className="mt-4 pt-3 border-t border-knoux-purple/5 flex items-center justify-between gap-3">
               <span className="text-[10px] text-knoux-muted-text font-mono truncate">{service.channel || "internal"}</span>
-              {enabledServices[service.id] ? (
-                <span className="text-[10px] font-black text-emerald-700 flex items-center gap-1">
-                  <Zap className="w-3 h-3" /> ENABLED
-                </span>
-              ) : (
-                <span className="text-[10px] font-black text-slate-500">DISABLED</span>
-              )}
+              <span className={`text-[10px] font-black ${service.status === "Active" ? "text-emerald-700" : service.status === "Guarded" ? "text-amber-700" : service.status === "Ready" ? "text-blue-700" : "text-slate-500"}`}>
+                {service.status === "Active" ? "Action available" : service.status === "Ready" ? "Ready" : service.status === "Guarded" ? "Guarded" : service.status}
+              </span>
             </div>
           </motion.div>
         ))}

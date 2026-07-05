@@ -3,6 +3,135 @@
     "title": "KNOUX AI Clipboard",
     "tagline": "Smart Clipboard with AI Intelligence"
   },
+  "shell": {
+    "sidebar": {
+      "overview": "Overview",
+      "clipboard": "Clipboard Hub",
+      "search": "Deep Search",
+      "ai": "AI Co-Pilot",
+      "barcode": "Barcode Scanner",
+      "security": "Security & Trust",
+      "preferences": "Preferences",
+      "developer": "Developer Studio",
+      "labs": "Experimental Labs",
+      "about": "About Knoux",
+      "advancedWorkspace": "Advanced Workspace",
+      "ready": "Ready",
+      "privacyLocked": "Privacy Locked",
+      "secureEnvironment": "Secure Environment",
+      "localVaultActive": "Local Vault Active",
+      "statusReady": "Ready",
+      "statusPrivacyLocked": "Privacy Locked",
+      "statusSecureEnvironment": "Secure Environment",
+      "statusLocalVaultActive": "Local Vault Active",
+      "productTag": "A Knoux Product",
+      "version": "v1.0.0",
+      "aiReadyBadge": "Ready",
+      "toggleInspectorTitle": "Toggle system metrics panel",
+      "qa": "Testing / QA Lab"
+    },
+    "topbar": {
+      "searchPlaceholder": "Search clip history, code snippets, secure vaults (Ctrl+K)...",
+      "clear": "CLEAR",
+      "refreshTitle": "Refresh clipboard stream",
+      "togglePrivacy": "Enable Privacy Lock",
+      "disablePrivacy": "Disable Privacy Lock",
+      "openAi": "Open AI Smart Assistant",
+      "openSettings": "Open Preferences",
+      "themeTitle": "Theme",
+      "aiGuarded": "AI Provider Guarded",
+      "systemCore": "KNOUX_SYSTEM_CORE",
+      "pageTitles": {
+        "overview": "Workspace Overview",
+        "clipboard": "Clipboard Hub",
+        "search": "Universal Search",
+        "ai": "Knoux AI Co-Pilot",
+        "security": "Security & Local Vault",
+        "settings": "Preferences",
+        "labs": "Experimental Labs",
+        "developer": "Developer Studio",
+        "barcode": "Barcode Scanner",
+        "about": "About KNOUX",
+        "default": "Knoux AI Clipboard",
+        "qa": "Testing / QA Lab"
+      }
+    }
+  },
+  "overview": {
+    "heroTitle": "Elevate Your Flow with Knoux AI",
+    "heroDescription": "Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.",
+    "launchClipboard": "Launch Clipboard Hub",
+    "deployAi": "Deploy AI Assistant",
+    "quickActionsTitle": "One-Tap Quick Clipboard Actions",
+    "recentClipsTitle": "Recent Clipboard Clips",
+    "recentActivityTitle": "Recent AI-Processed Actions",
+    "emptyState": "Your clipboard is currently clean",
+    "emptyDescription": "Copy any text or code on your system to register records.",
+    "seeCompleteHub": "See complete hub",
+    "timelineLog": "Timeline Log",
+    "metrics": {
+      "activeHistory": "Active History",
+      "pinnedSnippets": "Pinned Snippets",
+      "aiEnhancements": "AI Enhancements",
+      "guardedItems": "Guarded Items",
+      "productivityBoost": "Productivity Boost"
+    },
+    "quickActions": {
+      "formatCode": {
+        "title": "Format as Code",
+        "desc": "Wraps and formats the latest text as a clean executable TypeScript snippet.",
+        "button": "Format Clip"
+      },
+      "extractText": {
+        "title": "Extract Text",
+        "desc": "Opens the real barcode scanner. OCR text extraction is not claimed in this build.",
+        "button": "Open Scanner"
+      },
+      "secureNote": {
+        "title": "Secure Note",
+        "desc": "Stores a local privacy-guarded note and marks it for sensitive-content review.",
+        "button": "Commit Secret"
+      }
+    },
+    "health": {
+      "title": "System Service Health",
+      "diagnostics": "Diagnostics",
+      "scanning": "Scanning...",
+      "healthy": "All on-device Knoux processes checked out healthy.",
+      "aiEngine": {
+        "name": "AI Engine",
+        "desc": "OpenRouter local/cloud inference interface"
+      },
+      "clipboardMonitor": {
+        "name": "Clipboard Monitor",
+        "desc": "Electron monitor guarded; web runtime uses manual import"
+      },
+      "localStorage": {
+        "name": "Local Storage",
+        "desc": "Renderer localStorage plus guarded Electron IPC where available"
+      }
+    },
+    "storage": {
+      "title": "Storage Health",
+      "localActive": "Local Active",
+      "cacheSize": "Local Cache Size:",
+      "capacityUsed": "% Capacity used",
+      "localStore": "Local renderer store",
+      "maintenanceSuccess": "Maintenance Success",
+      "maintenanceNote": "Local renderer store compacted. No database vacuum is claimed for the web runtime.",
+      "runMaintenance": "Run Maintenance",
+      "optimizing": "Optimizing & Vacuuming..."
+    },
+    "privacy": {
+      "title": "Your privacy is non-negotiable",
+      "desc": "Knoux never streams clipboard logs or keystrokes to external trackers. AI requests are strictly anonymized."
+    },
+    "copy": "Copy",
+    "ai": "AI",
+    "copyItemTitle": "Copy item again",
+    "sendToAiTitle": "Send to Knoux AI",
+    "sourceLabel": "• Source:"
+  },
   "clipboard": {
     "title": "Clipboard History",
     "search": "Search clipboard items...",
@@ -11,16 +140,525 @@
     "delete": "Delete",
     "pin": "Pin",
     "unpin": "Unpin",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "smartInbox": "Smart Clipboard Inbox",
+    "serviceNotice": "Local vault ready."
+  },
+  "search": {
+    "title": "Universal Semantic Search Core",
+    "placeholder": "Type content query keywords, source app names, tags, or file extensions...",
+    "recommended": "Recommended Searches:",
+    "queryMatches": "Query Matches ({count} items found)",
+    "awaitingQuery": "Awaiting Query Input",
+    "emptyStateTitle": "Ready for search retrieval",
+    "emptyStateDescription": "Type inside the search bar above or click any suggested term to scan local clipboard records.",
+    "noMatchesTitle": "No matches in local database",
+    "noMatchesDescription": "Try search expansion terms or clear active filters. Knoux has scanned {count} records in temporary memory.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "dateAtTime": "{date} at {time}",
+    "sourcePrefix": "• {source}"
+  },
+  "about": {
+    "heroTitle": "Knoux AI Clipboard Pro",
+    "heroTagline": "Your clipboard. Upgraded by AI.",
+    "creativeDirector": "Creative Director",
+    "developerConnections": "Direct Developer Connections",
+    "philosophy": "Platform Engineering Philosophy",
+    "footer": "© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.",
+    "stableRelease": "Stable Release v1.0.0",
+    "officialStore": "Official Knoux Store:",
+    "creatorTitle": "Eng. Sadek Elgazar (Knoux)",
+    "creatorDescription": "Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.",
+    "contact": {
+      "website": "Website",
+      "github": "GitHub",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp",
+      "email": "Email Support"
+    },
+    "features": {
+      "circularUI": {
+        "title": "Circular UI Design Language",
+        "desc": "Crafted strictly following the circular medallion design system to match Sadek's approved visual guides."
+      },
+      "privacyLocal": {
+        "title": "Privacy local-first sandboxing",
+        "desc": "Clipboard records stay local in the renderer unless you explicitly use a guarded AI action. Electron vault encryption is scoped to its IPC bridge."
+      },
+      "serverProxy": {
+        "title": "Server-side OpenRouter proxying",
+        "desc": "Harnesses server-side OpenRouter models to format, analyze, translate, and explain clipboard logs safely."
+      }
+    }
+  },
+  "settings": {
+    "title": "Preferences",
+    "productionBadge": "KNOUX Production Settings",
+    "heroTitle": "Operational controls for AI, storage, security, and deployment readiness.",
+    "heroSubtitle": "Language / اللغة",
+    "appearance": "Appearance",
+    "themeMode": "Theme Mode",
+    "uiDensity": "UI Density",
+    "glowAccent": "Glow / Transparency Accent",
+    "providerDiagnostics": "AI Provider Diagnostics",
+    "providerDescription": "AI execution is routed through the server endpoint only.",
+    "providerStatus": "Status",
+    "providerModel": "Model",
+    "providerRuntime": "Runtime",
+    "providerCheck": "Check Server Provider",
+    "providerChecking": "Checking...",
+    "aiStorage": "AI & Storage",
+    "autoAnalyze": "Auto Analyze",
+    "cloudSync": "Cloud Sync",
+    "historyLimit": "History limit",
+    "backup": "Backup",
+    "exportJson": "Export JSON",
+    "importJson": "Import JSON",
+    "dangerZone": "Danger Zone",
+    "resetPreferences": "Reset Preferences",
+    "clearHistory": "Clear History",
+    "confirmClear": "Confirm Clear",
+    "defaultsRestored": "Defaults restored.",
+    "historyCleared": "History cleared.",
+    "settingsUpdated": "Settings updated.",
+    "backupExported": "Backup exported.",
+    "backupImported": "Imported {count} records.",
+    "invalidBackup": "Invalid KNOUX backup file.",
+    "confirmClearHint": "Press Clear History again to confirm.",
+    "providerNotChecked": "Provider Not Checked",
+    "providerServerOnly": "Server Route Only",
+    "cloudGuarded": "Cloud Sync: Guarded",
+    "guardedNotice": "Cloud sync is disabled until a real sync backend exists.",
+    "backupNotice": "Provider runtime configuration is excluded from backup exports.",
+    "metrics": {
+      "readiness": "Readiness",
+      "clips": "Clips",
+      "aiItems": "AI Items",
+      "secure": "Secure"
+    },
+    "nav": {
+      "overview": "Overview",
+      "aiProvider": "AI Provider",
+      "clipboard": "Clipboard",
+      "barcode": "Barcode",
+      "security": "Security",
+      "labs": "Labs"
+    },
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "densities": {
+      "compact": "Compact",
+      "comfortable": "Comfortable",
+      "spacious": "Spacious"
+    },
+    "glows": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "labs": {
+    "badge": "KNOUX Production Control Deck",
+    "heroTitle": "Service Labs converted into a controlled production registry.",
+    "heroDescription": "This page only shows registry state for active, guarded, and planned services. Planned capabilities stay disabled until real handlers and packaging are verified.",
+    "metrics": {
+      "readiness": "Readiness",
+      "activeServices": "Active Services",
+      "openRouter": "OpenRouter",
+      "security": "Security"
+    },
+    "deployment": {
+      "title": "Deployment Signal",
+      "status": "Web Build Ready",
+      "vercel": "Vercel",
+      "electron": "Electron",
+      "fallback": "Fallback",
+      "vercelDesc": "uses web-only renderer build and /api/ai/[action].",
+      "electronDesc": "uses preload-safe IPC channels and OpenRouter helper.",
+      "fallbackDesc": "explicit local deterministic result, never fake live success."
+    },
+    "cards": {
+      "actionAvailable": "Action available",
+      "ready": "Ready",
+      "guarded": "Guarded",
+      "active": "Active",
+      "planned": "Planned",
+      "missing": "Missing",
+      "disabled": "Disabled",
+      "on": "On",
+      "standby": "Standby",
+      "internal": "internal"
+    },
+    "scores": {
+      "aiCore": "AI Core",
+      "aiCoreNote": "Live API + Electron helper + fallback",
+      "storagePath": "Storage Path",
+      "storagePathNote": "Memory adapter ready; SQLite hard persistence next",
+      "experienceLayer": "Experience Layer",
+      "experienceLayerNote": "Clear status instead of placeholder success"
+    },
+    "services": "services"
+  },
+  "studio": {
+    "heroTitle": "KNOUX Developer Studio",
+    "heroDescription": "Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.",
+    "statusLabel": "Developer Control Deck",
+    "reportTitle": "Developer handoff exported",
+    "metrics": {
+      "readiness": "Readiness",
+      "tools": "Tools",
+      "workers": "Workers",
+      "aiRoute": "AI Route"
+    },
+    "utilsSection": {
+      "badge": "19 Developer Utilities",
+      "heading": "Every developer card has three specific actions.",
+      "desc": "Run the local utility, load a valid service-specific sample, or copy the last output. Worker-backed tools reduce main-thread blocking for large inputs.",
+      "lastStatus": "Last status:"
+    },
+    "toolBench": {
+      "title": "Active Tool Bench",
+      "output": "Output",
+      "run": "Run",
+      "running": "Running",
+      "sample": "Sample",
+      "copy": "Copy"
+    },
+    "handoff": {
+      "title": "Handoff Report",
+      "download": "Download JSON",
+      "copy": "Copy JSON"
+    },
+    "aiRoute": {
+      "title": "AI Route Diagnostics",
+      "checkNow": "Check Now",
+      "provider": "Provider",
+      "model": "Model",
+      "status": "Status"
+    },
+    "matrix": {
+      "title": "Service Reality Matrix",
+      "runtime": "Runtime:",
+      "config": "Config:",
+      "implemented": "Implemented:",
+      "handler": "Handler:",
+      "fallback": "Fallback:",
+      "yes": "Yes",
+      "no": "No",
+      "required": "Required",
+      "none": "None"
+    },
+    "commands": {
+      "title": "Build & Packaging Commands"
+    },
+    "liveReport": "Live Report",
+    "active": "Active",
+    "ready": "Ready",
+    "guarded": "Guarded",
+    "workerBadge": "Worker",
+    "jsonFormatter": {
+      "title": "JSON Formatter",
+      "description": "Paste your JSON data to format it beautifully.",
+      "inputLabel": "Input",
+      "outputLabel": "Formatted Output",
+      "placeholder": "Paste JSON here...",
+      "format": "Format",
+      "error": "Invalid JSON format."
+    },
+    "base64": {
+      "title": "Base64 Encoder / Decoder",
+      "description": "Encode text to Base64 or decode Base64 back to text.",
+      "plainLabel": "Plain Text",
+      "base64Label": "Base64",
+      "encode": "Encode",
+      "decode": "Decode",
+      "error": "Invalid Base64 string for decoding."
+    },
+    "jwtViewer": {
+      "title": "JWT Viewer",
+      "description": "Decode and inspect JSON Web Tokens locally.",
+      "inputLabel": "JWT Token",
+      "placeholder": "Paste your JWT here...",
+      "headerLabel": "Header",
+      "payloadLabel": "Payload",
+      "signatureNotice": "Signature verification is a guarded action and requires a secret key. This tool only decodes the token.",
+      "errorInvalid": "Invalid JWT structure. It must have 3 parts separated by dots.",
+      "errorDecode": "Failed to decode or parse JWT. Check if it is a valid token."
+    },
+    "statusReady": "Ready",
+    "copied": "Copied to clipboard",
+    "checkingAi": "Checking AI route...",
+    "aiReady": "AI route is ready",
+    "aiGuarded": "AI route guarded",
+    "aiNotChecked": "AI route not checked",
+    "sampleLoaded": "sample loaded",
+    "running": "running",
+    "inWorker": "in a background worker",
+    "completed": "completed",
+    "outputCopied": "output copied",
+    "exported": "Result exported",
+    "heroBadge": "KNOUX Developer Control Deck",
+    "heroSubtitle": "Premium local-first developer workspace",
+    "heroDesc": "Run real developer utilities, inspect AI route health, and export a truthful handoff report. Every tool executes locally and streams results into the live preview — no fake states.",
+    "readiness": "Readiness",
+    "tools": "tools",
+    "workerBacked": "worker-backed",
+    "workspaceHealth": "Workspace Health",
+    "availableTools": "Available Tools",
+    "guardedUntil": "Guarded until verified",
+    "localFirst": "Local-first",
+    "nonBlocking": "Non-blocking",
+    "activeServices": "Active Services",
+    "readyServices": "Ready Services",
+    "records": "Clipboard Records",
+    "secure": "secure",
+    "pinned": "pinned",
+    "utilitiesTitle": "Developer Utilities",
+    "utilitiesDesc": "Run any card, load its sample, or copy the last output. Results stream into the live preview with logs, JSON, and history.",
+    "utilities": "utilities",
+    "activeBench": "Active Tool Bench",
+    "run": "Run",
+    "sample": "Sample",
+    "copy": "Copy",
+    "worker": "Worker",
+    "mainThread": "Main thread",
+    "hasResult": "Has result",
+    "livePreview": "Live Preview",
+    "previewWaiting": "Run any tool to stream output here",
+    "previewEmpty": "Run any developer tool to see live output, logs, JSON, and run history.",
+    "aiDiagnostics": "AI Route Diagnostics",
+    "checkNow": "Check Now",
+    "provider": "Provider",
+    "model": "Model",
+    "notChecked": "not checked",
+    "status": "Status",
+    "realityMatrix": "Service Reality Matrix",
+    "services": "services",
+    "buildCommands": "Build & Packaging Commands",
+    "downloadJson": "Download JSON",
+    "copyJson": "Copy JSON"
   },
   "ai": {
     "title": "AI Features",
     "patternRecognition": "Pattern Recognition",
     "gamified": "Gamified Experience",
     "analytics": "Analytics Dashboard",
-    "predictions": "AI Predictions"
+    "predictions": "AI Predictions",
+    "errors": {
+      "unexpected": "An unexpected network anomaly has halted the AI request."
+    },
+    "status": {
+      "label": "AI status",
+      "guard": "Sensitive content detected. AI actions are guarded."
+    },
+    "workspace": {
+      "title": "Target Clipboard Text Block",
+      "clearInput": "Clear Input",
+      "placeholder": "Paste any system logs, emails, creative content, or code segments here...",
+      "guardNotice": "Guarded until sensitive content is removed",
+      "stats": {
+        "volume": "Character Volume",
+        "words": "Words",
+        "targetLanguage": "Target Language"
+      },
+      "operatorTitle": "Select AI Operator",
+      "outputTitle": "OpenRouter Processed Output",
+      "working": "Knoux OpenRouter AI Working...",
+      "emptyTitle": "Ready for Prompt",
+      "emptyDescription": "Select any of the AI operator actions on the left side to compile real OpenRouter outputs.",
+      "copyLabel": "Copy to System Clipboard",
+      "copySuccess": "Copied Successfully",
+      "commitLabel": "Commit as Snippet Card",
+      "auditTitle": "Knoux AI Workspace Audit Trail"
+    },
+    "operations": {
+      "summarize": {
+        "label": "Summarize",
+        "desc": "Extract key bullet summaries"
+      },
+      "enhance": {
+        "label": "Enhance Text",
+        "desc": "Elevate readability and grammar"
+      },
+      "rewrite": {
+        "label": "Rewrite Corp",
+        "desc": "Rephrase into corporate style"
+      },
+      "translate": {
+        "label": "Translate",
+        "desc": "Localize semantics accurately"
+      },
+      "analyze": {
+        "label": "Deep Analyze",
+        "desc": "Get structural & entity insights"
+      },
+      "classify": {
+        "label": "Suggest Tags",
+        "desc": "Classify logical category tags"
+      },
+      "extract": {
+        "label": "Extract Points",
+        "desc": "Pull lists, actions, & details"
+      },
+      "reply": {
+        "label": "Smart Reply",
+        "desc": "Draft professional responder emails"
+      },
+      "explain-code": {
+        "label": "Explain Code",
+        "desc": "Explain scripts and optimize code"
+      },
+      "format-text": {
+        "label": "Format Markdown",
+        "desc": "Beautify unstructured raw text"
+      }
+    }
+  },
+  "barcode": {
+    "title": "Barcode & QR Code Scanner",
+    "description": "Scan codes using your device camera, an image file, or by pasting content.",
+    "controlsTitle": "Controls",
+    "startCamera": "Start Camera",
+    "stopCamera": "Stop Camera",
+    "scanImage": "Scan Image",
+    "pasteLabel": "Or paste content to scan",
+    "pastePlaceholder": "Paste a URL to an image or barcode data",
+    "scan": "Scan",
+    "resultTitle": "Scan Result",
+    "noResult": "Start the camera or upload an image to begin scanning.",
+    "noResultShort": "No code detected.",
+    "copied": "Result copied to clipboard!",
+    "saved": "Result saved to Clipboard Hub!",
+    "error": {
+      "noCamera": "Camera not available or permission denied.",
+      "scanFailed": "Could not decode barcode from the source.",
+      "generic": "An unexpected error occurred."
+    },
+    "status": {
+      "requestingPermission": "Requesting camera permission...",
+      "scanning": "Scanning..."
+    }
+  },
+  "security": {
+    "hero": {
+      "badge": "Advanced Security Dashboard",
+      "title": "Security & Vault Command Center",
+      "desc": "Local scanner, redaction engine, AI upload guard, vault visibility window, high-contrast audit logs, and explicit Electron IPC boundaries. Web storage is local-first, not advertised as encrypted."
+    },
+    "metrics": {
+      "score": "Score",
+      "risk": "Risk",
+      "records": "Records",
+      "classes": "Classes"
+    },
+    "risk": {
+      "high": "High",
+      "medium": "Medium",
+      "clean": "Clean"
+    },
+    "toggles": {
+      "title": "Interactive Guard Toggles",
+      "guarded": "Guarded",
+      "active": "Active",
+      "off": "Off"
+    },
+    "detection": {
+      "title": "Detection Controls"
+    },
+    "storage": {
+      "title": "Runtime Storage Metrics",
+      "webLayer": "Web layer:",
+      "webValue": "local-first storage",
+      "electronLayer": "Electron layer:",
+      "electronValue": "IPC guarded bridge",
+      "secureClips": "Secure clips loaded:",
+      "aiUploadGuard": "AI upload guard:",
+      "active": "Active",
+      "off": "Off"
+    },
+    "liveClasses": {
+      "title": "Live Guard Classes"
+    },
+    "credentialShield": {
+      "title": "Credential Shield Scanner",
+      "desc": "Run a deterministic local scan, generate a redacted preview, then copy only safe output.",
+      "runScan": "Run Guard Scan",
+      "scanning": "Scanning...",
+      "redactPreview": "Redact Preview",
+      "copyRedacted": "Copy Redacted",
+      "activeBuffer": "Active secure buffer",
+      "redactedOutput": "Redacted safe output"
+    },
+    "actionCards": {
+      "aiFirewall": "AI Upload Firewall",
+      "aiFirewallDesc": "Risk threshold {threshold}%. {status}",
+      "aiFirewallActive": "Guard is active.",
+      "aiFirewallOff": "Guard is disabled.",
+      "redactionEngine": "Local Redaction Engine",
+      "redactionEngineDesc": "Strictness {strictness}%. Output is generated locally.",
+      "auditExport": "Audit Export",
+      "auditExportDesc": "Retention keeps last {retention} security events.",
+      "checkAiGuard": "Check AI guard",
+      "buildRedaction": "Build redaction",
+      "exportAudit": "Export audit"
+    },
+    "vault": {
+      "title": "Secure Password-Protected Vault",
+      "desc": "This is a guarded temporary visibility window. Electron encryption/decryption requires a trusted IPC bridge; web storage remains local-first only.",
+      "passphrasePlaceholder": "Enter 6+ character passphrase...",
+      "openVault": "Open Vault",
+      "tempWindow": "TEMPORARY VISIBILITY WINDOW",
+      "lock": "Lock"
+    },
+    "audit": {
+      "title": "Security Operations Audit Trail",
+      "filterAll": "all",
+      "exportLog": "Export Security Log JSON",
+      "copyLatest": "Copy Latest Audit",
+      "clearLogs": "Clear Session Logs",
+      "noEntries": "No audit entries match this filter."
+    },
+    "productionNote": {
+      "title": "Production Security Note",
+      "desc": "Client-side secrets are never required. OpenRouter keys belong in Vercel/Electron environment variables only. Local web storage is not described as encrypted.",
+      "badge": "Hardened Local Guard"
+    },
+    "scanner": {
+      "title": "Sensitive Data Scanner",
+      "description": "Scan text for potential secrets like API keys, private keys, or credit card numbers.",
+      "inputLabel": "Text to Scan",
+      "placeholder": "Paste text here to scan for sensitive data...",
+      "scan": "Scan Text",
+      "results": "Scan Results",
+      "noData": "No sensitive data found.",
+      "found": "Found {count} potential issue(s).",
+      "issueType": "Type",
+      "issueValue": "Matched Value",
+      "issueLocation": "Location"
+    },
+    "types": {
+      "api_key": "API Key",
+      "credit_card": "Credit Card",
+      "private_key": "Private Key",
+      "jwt": "JWT Token"
+    }
+  },
+  "export": {
+    "clips": {
+      "title": "Export Clips",
+      "description": "Export your selected clipboard items to various formats.",
+      "toMarkdown": "Export to Markdown",
+      "toPdf": "Export to PDF (Planned)",
+      "toJson": "Export to JSON"
+    }
   },
   "common": {
+    "running": "Running...",
+    "execute": "Execute",
     "loading": "Loading...",
     "error": "Error occurred",
     "retry": "Retry",
@@ -29,6 +667,53 @@
     "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
-    "close": "Close"
+    "close": "Close",
+    "clear": "Clear",
+    "copy": "Copy"
+  },
+  "qa": {
+    "suite": "QA Suite",
+    "logI18n": "Auditing i18n dictionaries…",
+    "logRuntime": "Verifying runtime honesty & status badges…",
+    "logTools": "Executing tool self-checks…",
+    "logSecurity": "Probing security scanners…",
+    "checksComplete": "checks complete",
+    "passed": "Passed",
+    "warnings": "Warnings",
+    "failed": "Failed",
+    "readiness": "Readiness",
+    "category": "Category",
+    "status": "Status",
+    "sessionReport": "Session Report",
+    "desktop": "Desktop",
+    "web": "Web",
+    "never": "Never",
+    "heroBadge": "KNOUX Testing & QA Lab",
+    "heroTitle": "Testing / QA Lab",
+    "heroSubtitle": "Honest, code-aware quality checks",
+    "heroDesc": "Run real quality checkers against the live app: i18n parity, runtime honesty, status-badge consistency, tool self-checks, and security scanners. Every result reflects the actual codebase — no mock results.",
+    "checks": "checks",
+    "runtime": "runtime",
+    "totalChecks": "Total Checks",
+    "lastRun": "Last Run",
+    "runtimeMode": "Runtime Mode",
+    "honest": "Honest runtime",
+    "running": "Running…",
+    "runAll": "Run All Checks",
+    "viewReport": "View Report",
+    "exportReport": "Export Report",
+    "readinessTitle": "Release Readiness by Area",
+    "readinessDesc": "Category rollup of passes, warnings, and failures across the checked surfaces.",
+    "checkersTitle": "Quality Checkers",
+    "checkersDesc": "Inspect any checker to stream its findings into the live monitor, or copy its report.",
+    "checkers": "checkers",
+    "pass": "Pass",
+    "warn": "Warn",
+    "fail": "Fail",
+    "inspect": "Inspect",
+    "report": "Report",
+    "monitor": "Test Monitor",
+    "monitorWaiting": "Run checks to stream live results",
+    "monitorEmpty": "Run the suite or inspect a checker to see live results, logs, JSON, and history."
   }
 }

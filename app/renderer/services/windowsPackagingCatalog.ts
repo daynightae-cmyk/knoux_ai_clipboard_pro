@@ -1,0 +1,41 @@
+import { ProductionService, ServiceStatus } from "./productionCatalog";
+
+const svc = (id: string, displayName: string, status: ServiceStatus, dependency: string, description: string, fallback: string, actionHandler: string, implemented = true): ProductionService => ({
+  id,
+  displayName,
+  title: displayName,
+  category: "Packaging",
+  status,
+  runtimeType: "windows-installer",
+  tier: status === "Planned" || status === "Missing" || status === "Disabled" ? "planned" : status === "Guarded" ? "guarded" : "live",
+  dependency,
+  implemented,
+  requiresConfig: false,
+  userFallback: fallback,
+  fallback,
+  actionHandler,
+  description,
+  channel: actionHandler,
+});
+
+export const WINDOWS_PACKAGING_SERVICES: ProductionService[] = [
+  svc("windows-installer-branding", "Windows Installer Branding", "Ready", "electron-builder NSIS", "Standard NSIS branding is configured after the green build gate.", "Use default NSIS visuals until installer artifacts are generated.", "package.json build.nsis"),
+  svc("installer-icon", "Installer Icon", "Ready", "assets/icons/icon.ico", "Installer icon is prepared from the official KNOUX product icon.", "Use the existing official application icon.", "scripts/prepare-installer-assets.ps1"),
+  svc("installer-header-icon", "Installer Header Icon", "Ready", "assets/icons/icon.ico", "Header icon is prepared from the official KNOUX product icon.", "Use the existing official application icon.", "scripts/prepare-installer-assets.ps1"),
+  svc("wizard-header-image", "Wizard Header Image", "Planned", "build/installer/wizard-header.bmp", "Premium NSIS header artwork is planned until local BMP generation is verified.", "Use installerHeaderIcon and default NSIS header area.", "asset-boundary", false),
+  svc("wizard-sidebar-image", "Wizard Sidebar Image", "Planned", "build/installer/wizard-sidebar.bmp", "Premium NSIS sidebar artwork is planned until local BMP generation is verified.", "Use default NSIS sidebar.", "asset-boundary", false),
+  svc("install-directory-selection", "Install Directory Selection", "Ready", "nsis.allowToChangeInstallationDirectory", "The NSIS wizard allows install directory selection.", "Default install directory remains available.", "package.json build.nsis"),
+  svc("desktop-shortcut", "Desktop Shortcut", "Ready", "nsis.createDesktopShortcut", "Desktop shortcut creation is configured through electron-builder NSIS.", "Create a shortcut manually if OS policy blocks it.", "package.json build.nsis"),
+  svc("start-menu-shortcut", "Start Menu Shortcut", "Ready", "nsis.createStartMenuShortcut", "Start Menu shortcut creation is configured through electron-builder NSIS.", "Launch from installation directory if shortcuts are blocked.", "package.json build.nsis"),
+  svc("launch-after-install", "Launch After Install", "Ready", "nsis.runAfterFinish", "Launch after install is enabled where supported.", "Launch manually from the shortcut after setup.", "package.json build.nsis"),
+  svc("start-with-windows", "Start With Windows", "Planned", "native auto-start integration", "Start with Windows remains planned until real auto-launch is verified.", "Launch manually.", "future-native-startup", false),
+  svc("safe-removal", "Safe Uninstall", "Ready", "nsis.deleteAppDataOnUninstall=false", "App data removal is disabled by default for safer Windows removal.", "Export data manually before removing the app if needed.", "package.json build.nsis"),
+  svc("preserve-user-data", "Preserve User Data", "Ready", "local-first data policy", "User data is preserved by default during app removal.", "Use JSON export for additional backup.", "package.json build.nsis"),
+  svc("premium-installer-copywriting", "Premium Installer Copywriting", "Planned", "custom NSIS copy phase", "Premium setup copy is documented but not injected as custom pages yet.", "Use standard NSIS copy until custom pages are verified.", "build/installer/README.md", false),
+  svc("full-custom-installer-ui", "Full Custom Installer UI", "Planned", "custom setup shell", "Fully custom setup wizard pages are planned for a later phase.", "Use standard NSIS installer now.", "future-installer-shell", false),
+  svc("custom-welcome-page", "Custom Welcome Page", "Planned", "custom page", "A custom KNOUX welcome page is planned, not active.", "Use standard NSIS welcome flow.", "future-custom-page", false),
+  svc("custom-feature-tour-page", "Custom Feature Tour Page", "Planned", "custom page", "A visual feature tour page is planned for later.", "Use app onboarding after install.", "future-custom-page", false),
+  svc("custom-setup-options-page", "Custom Setup Options Page", "Planned", "custom page", "Custom setup options remain planned until real options are implemented.", "Use standard NSIS options.", "future-custom-page", false),
+  svc("custom-installing-page", "Custom Installing Page", "Planned", "custom page", "Custom installing visuals are planned. Native progress must not be faked.", "Use native NSIS progress.", "future-custom-page", false),
+  svc("custom-finish-page", "Custom Finish Page", "Planned", "custom page", "Custom finish page is planned until implemented and verified.", "Use standard NSIS finish screen.", "future-custom-page", false),
+];

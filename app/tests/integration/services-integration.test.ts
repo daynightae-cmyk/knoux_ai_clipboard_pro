@@ -216,10 +216,13 @@ describe('Security Service Integration', () => {
   it('يجب أن تمنع الوصول غير المصرح', () => {
     const isAuthorized = false;
 
-    if (!isAuthorized) {
+    const accessGuard = () => {
+      if (!isAuthorized) {
       throw new Error('Access Denied');
-    }
+      }
+    };
 
+    expect(accessGuard).toThrow('Access Denied');
     expect(isAuthorized).toBe(false);
     console.log('✅ تم منع الوصول غير المصرح');
   });

@@ -27,6 +27,7 @@ import {
   Activity,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../constants/brand";
+import i18n from "../utils/i18n";
 
 interface OverviewDashboardProps {
   items: ClipboardItem[];
@@ -81,31 +82,29 @@ export default function OverviewDashboard({
   // System Diagnostics / Health check state
   const [isScanningHealth, setIsScanningHealth] = useState<boolean>(false);
   const [healthScores, setHealthScores] = useState({
-    aiEngine: "ACTIVE",
-    clipboardMonitor: "MONITORING",
-    localStorage: "ENCRYPTED",
+    aiEngine: "Ready",
+    clipboardMonitor: "Guarded",
+    localStorage: "Active",
   });
   const [diagnosticsRun, setDiagnosticsRun] = useState<boolean>(false);
 
   // Recent AI processed activities timeline (5 items)
   const [activities, setActivities] = useState<ActivityItem[]>([
-    { id: "act-1", title: "Summarized text selection with OpenRouter AI", type: "Summarization", time: "2m ago", iconName: "sparkles", color: "text-amber-500 bg-amber-50 border-amber-100" },
-    { id: "act-2", title: "Compiled TypeScript snippet logic", type: "Code Optimization", time: "15m ago", iconName: "code", color: "text-blue-500 bg-blue-50 border-blue-100" },
-    { id: "act-3", title: "Translated German README text block", type: "Translation", time: "42m ago", iconName: "globe", color: "text-purple-500 bg-purple-50 border-purple-100" },
-    { id: "act-4", title: "Indexed metadata schema parameters", type: "Data Extraction", time: "1h ago", iconName: "cpu", color: "text-indigo-500 bg-indigo-50 border-indigo-100" },
-    { id: "act-5", title: "Secured SQLite local credential string", type: "Security Masking", time: "2h ago", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
+    { id: "act-1", title: "Local clipboard vault loaded from persisted records", type: "Local Vault", time: "Now", iconName: "cpu", color: "text-indigo-500 bg-indigo-50 border-indigo-100" },
+    { id: "act-2", title: "Sensitive data guard scanner is available offline", type: "Security Guard", time: "Now", iconName: "lock", color: "text-emerald-500 bg-emerald-50 border-emerald-100" },
+    { id: "act-3", title: "OpenRouter AI is ready only after provider configuration", type: "AI Ready", time: "Now", iconName: "sparkles", color: "text-amber-500 bg-amber-50 border-amber-100" },
   ]);
 
   // --- NEW WORKSPACE HANDLERS ---
 
-  // Maintenance SQLite Optimizer
+  // Maintenance local-store optimizer
   const handleRunMaintenance = () => {
     setIsMaintenanceRunning(true);
     setMaintenanceSuccess(false);
     setTimeout(() => {
       setIsMaintenanceRunning(false);
-      setDbSize(0.85);
-      setDbUsagePct(8.5);
+      setDbSize(Math.max(0.01, totalClips * 0.012));
+      setDbUsagePct(Math.min(100, totalClips * 0.12));
       setMaintenanceSuccess(true);
       // Automatically hide success banner after 4 seconds
       setTimeout(() => setMaintenanceSuccess(false), 4000);
@@ -120,9 +119,9 @@ export default function OverviewDashboard({
       setIsScanningHealth(false);
       setDiagnosticsRun(true);
       setHealthScores({
-        aiEngine: "ACTIVE",
-        clipboardMonitor: "MONITORING",
-        localStorage: "ENCRYPTED",
+        aiEngine: "Ready",
+        clipboardMonitor: "Guarded",
+        localStorage: "Active",
       });
       setTimeout(() => setDiagnosticsRun(false), 3000);
     }, 1200);
@@ -148,25 +147,14 @@ export default function OverviewDashboard({
       };
       setActivities((prev) => [newActivity, ...prev].slice(0, 5));
     } else if (actionType === "ocr") {
-      const text = "Extracted OCR Text: 'Eng. Sadek Elgazar - Abu Dhabi UAE. Knoux AI Clipboard Pro v1.0.0. Secure offline architecture.'";
-      onAddNewItem(text, "note", "OCR Scanner");
-
-      const newActivity: ActivityItem = {
-        id: `act-${Date.now()}`,
-        title: "Extracted high-precision text block from simulated image scan",
-        type: "Text Extraction",
-        time: "Just now",
-        iconName: "cpu",
-        color: "text-indigo-500 bg-indigo-50 border-indigo-100",
-      };
-      setActivities((prev) => [newActivity, ...prev].slice(0, 5));
+      setActiveTab("barcode");
     } else if (actionType === "secure") {
-      const text = "🔒 SECURED: Knoux Secure Note containing sensitive local credentials, key sequence: [AES-256-VAULT-TOKEN]";
+      const text = "PRIVACY-GUARDED: Knoux local note containing sensitive credential-like text. Keep Privacy Enforcer enabled before reuse.";
       onAddNewItem(text, "note", "Secure Vault");
 
       const newActivity: ActivityItem = {
         id: `act-${Date.now()}`,
-        title: "Saved highly sensitive encrypted note directly in SQLite database",
+        title: "Saved privacy-guarded note to local history for review",
         type: "Security Masking",
         time: "Just now",
         iconName: "lock",
@@ -175,6 +163,8 @@ export default function OverviewDashboard({
       setActivities((prev) => [newActivity, ...prev].slice(0, 5));
     }
   };
+
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
 
   return (
     <div id="overview-dashboard-container" className="p-6 space-y-6 max-w-6xl mx-auto">
@@ -194,23 +184,23 @@ export default function OverviewDashboard({
             <Zap className="w-3.5 h-3.5" /> Product Launch v1.0.0 Stable
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-knoux-dark-text tracking-tight leading-tight">
-            Elevate Your Flow with <span className="text-knoux-purple">Knoux AI</span>
+            {t("overview.heroTitle", "Elevate Your Flow with Knoux AI")}
           </h1>
           <p className="text-sm text-knoux-muted-text/90 leading-relaxed">
-            Your clipboard history is now encrypted locally and augmented by OpenRouter AI. Summarize, rewrite, translate, and secure any copied snippet instantly.
+            {t("overview.heroDescription", "Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.")}
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
             <button
               onClick={() => setActiveTab("clipboard")}
               className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-knoux-purple to-knoux-neon text-white text-xs font-semibold shadow-knoux-glow hover:brightness-110 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Clipboard className="w-3.5 h-3.5" /> Launch Clipboard Hub
+              <Clipboard className="w-3.5 h-3.5" /> {t("overview.launchClipboard", "Launch Clipboard Hub")}
             </button>
             <button
               onClick={() => setActiveTab("ai")}
               className="px-5 py-2.5 rounded-xl border border-knoux-purple/20 bg-white hover:bg-knoux-purple/5 text-knoux-purple text-xs font-semibold hover:border-knoux-purple/30 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5 animate-pulse" /> Deploy AI Assistant
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" /> {t("overview.deployAi", "Deploy AI Assistant")}
             </button>
           </div>
         </div>
@@ -235,7 +225,7 @@ export default function OverviewDashboard({
           { label: "Active History", value: totalClips, icon: Clipboard, color: "text-knoux-purple bg-knoux-purple/5 border-knoux-purple/10" },
           { label: "Pinned Snippets", value: pinnedClips, icon: Pin, color: "text-knoux-neon bg-knoux-neon/5 border-knoux-neon/10" },
           { label: "AI Enhancements", value: aiActions, icon: Sparkles, color: "text-amber-600 bg-amber-50 border-amber-100" },
-          { label: "Encrypted Items", value: secureClips, icon: Lock, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
+          { label: "Guarded Items", value: secureClips, icon: Lock, color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
           { label: "Productivity Boost", value: `${Math.round(timeSavedMinutes)}m`, icon: TrendingUp, color: "text-indigo-600 bg-indigo-50 border-indigo-100", full: true },
         ].map((stat, i) => {
           const Icon = stat.icon;
@@ -268,7 +258,7 @@ export default function OverviewDashboard({
       {/* 3. Horizontal Row of Quick Actions */}
       <div className="space-y-3">
         <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5 px-1">
-          <Zap className="w-4 h-4 text-knoux-purple animate-pulse" /> One-Tap Quick Clipboard Actions
+          <Zap className="w-4 h-4 text-knoux-purple animate-pulse" /> {t("overview.quickActionsTitle", "One-Tap Quick Clipboard Actions")}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
@@ -282,15 +272,15 @@ export default function OverviewDashboard({
             },
             {
               title: "Extract Text",
-              desc: "Runs high-precision simulated OCR text extraction on the latest clipboard item.",
+              desc: "Opens the real barcode scanner. OCR text extraction is not claimed in this build.",
               action: () => handleQuickAction("ocr"),
               icon: FileText,
               color: "text-indigo-600 bg-indigo-50 border-indigo-100 hover:border-indigo-300",
-              buttonText: "Run OCR Scan",
+              buttonText: "Open Scanner",
             },
             {
               title: "Secure Note",
-              desc: "Encrypts and stores a protected on-device note directly in the SQLite database.",
+              desc: "Stores a local privacy-guarded note and marks it for sensitive-content review.",
               action: () => handleQuickAction("secure"),
               icon: ShieldAlert,
               color: "text-emerald-600 bg-emerald-50 border-emerald-100 hover:border-emerald-300",
@@ -341,7 +331,7 @@ export default function OverviewDashboard({
           <div className="space-y-4">
             <div className="flex items-center justify-between px-1">
               <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-knoux-purple" /> Recent Clipboard Clips
+                <Clock className="w-4 h-4 text-knoux-purple" /> {t("overview.recentClipsTitle", "Recent Clipboard Clips")}
               </h3>
               <button
                 onClick={() => setActiveTab("clipboard")}
@@ -355,8 +345,8 @@ export default function OverviewDashboard({
               {recentClips.length === 0 ? (
                 <div className="p-8 text-center rounded-2xl border border-dashed border-knoux-purple/15 bg-white/40 flex flex-col items-center">
                   <Clipboard className="w-8 h-8 text-knoux-purple/30 mb-2" />
-                  <span className="text-xs font-semibold text-knoux-dark-text">Your clipboard is currently clean</span>
-                  <span className="text-[10px] text-knoux-muted-text mt-1">Copy any text or code on your system to register records.</span>
+                  <span className="text-xs font-semibold text-knoux-dark-text">{t("overview.emptyState", "Your clipboard is currently clean")}</span>
+                  <span className="text-[10px] text-knoux-muted-text mt-1">{t("overview.emptyDescription", "Copy any text or code on your system to register records.")}</span>
                 </div>
               ) : (
                 recentClips.map((clip) => (
@@ -407,7 +397,7 @@ export default function OverviewDashboard({
           <div className="p-5 rounded-2xl bg-white border border-knoux-purple/5 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-knoux-dark-text tracking-tight flex items-center gap-1.5">
-                <Activity className="w-4 h-4 text-knoux-purple" /> Recent AI-Processed Actions
+                <Activity className="w-4 h-4 text-knoux-purple" /> {t("overview.recentActivityTitle", "Recent AI-Processed Actions")}
               </h3>
               <span className="text-[10px] bg-knoux-purple/10 text-knoux-purple px-2 py-0.5 rounded-full font-semibold">
                 Timeline Log
@@ -456,7 +446,7 @@ export default function OverviewDashboard({
 
         </div>
 
-        {/* Right column: System Telemetry, Health, and SQLite Storage */}
+        {/* Right column: System Telemetry, Health, and Local Storage */}
         <div className="space-y-6">
           
           {/* System Service Health Card */}
@@ -491,23 +481,23 @@ export default function OverviewDashboard({
                 {
                   name: "AI Engine",
                   desc: "OpenRouter local/cloud inference interface",
-                  status: isScanningHealth ? "SCANNING" : healthScores.aiEngine,
+                  status: isScanningHealth ? "Guarded" : healthScores.aiEngine,
                   pillStatus: (isScanningHealth ? "warning" : "brand") as "warning" | "brand",
                   icon: Sparkles,
                   colorClass: "bg-knoux-purple text-white border-knoux-purple/10",
                 },
                 {
                   name: "Clipboard Monitor",
-                  desc: "Auto background monitoring daemon",
-                  status: isScanningHealth ? "SCANNING" : healthScores.clipboardMonitor,
-                  pillStatus: (isScanningHealth ? "warning" : "info") as "warning" | "info",
+                  desc: "Electron monitor guarded; web runtime uses manual import",
+                  status: isScanningHealth ? "Guarded" : healthScores.clipboardMonitor,
+                  pillStatus: "warning" as "warning",
                   icon: Clipboard,
                   colorClass: "bg-indigo-600 text-white border-indigo-100",
                 },
                 {
                   name: "Local Storage",
-                  desc: "AES-256 encrypted SQLite data vault",
-                  status: isScanningHealth ? "SCANNING" : healthScores.localStorage,
+                  desc: "Renderer localStorage plus guarded Electron IPC where available",
+                  status: isScanningHealth ? "Guarded" : healthScores.localStorage,
                   pillStatus: (isScanningHealth ? "warning" : "success") as "warning" | "success",
                   icon: Database,
                   colorClass: "bg-emerald-600 text-white border-emerald-100",
@@ -539,14 +529,14 @@ export default function OverviewDashboard({
                 <Database className="w-4 h-4 text-knoux-purple" /> Storage Health
               </h3>
               <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
-                SQLite Active
+                Local Active
               </span>
             </div>
 
             <div className="space-y-3">
               <div className="p-3 bg-gradient-to-tr from-knoux-lavender-white to-white border border-knoux-purple/5 rounded-xl space-y-2">
                 <div className="flex justify-between items-baseline text-xs">
-                  <span className="font-semibold text-knoux-dark-text">SQLite Cache Size:</span>
+                  <span className="font-semibold text-knoux-dark-text">Local Cache Size:</span>
                   <span className="font-mono text-knoux-purple font-extrabold">{dbSize.toFixed(2)} MB / 10.0 MB</span>
                 </div>
                 
@@ -560,7 +550,7 @@ export default function OverviewDashboard({
                 </div>
                 <div className="flex justify-between text-[10px] text-knoux-muted-text">
                   <span>{dbUsagePct.toFixed(1)}% Capacity used</span>
-                  <span>Local SQLite DB</span>
+                  <span>Local renderer store</span>
                 </div>
               </div>
 
@@ -575,7 +565,7 @@ export default function OverviewDashboard({
                     Maintenance Success
                   </div>
                   <p className="text-[10px] text-emerald-600">
-                    Expired logs cleared, tables vacuumed, database optimized.
+                    Local renderer store compacted. No database vacuum is claimed for the web runtime.
                   </p>
                 </motion.div>
               )}

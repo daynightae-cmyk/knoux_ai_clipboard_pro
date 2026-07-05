@@ -3,14 +3,11 @@
  * Tests covering AI enhancements, pattern recognition, and heuristics
  */
 
-import { cleanup } from '@testing-library/react';
-
 // Note: In a real environment we would mock the ipcRenderer
 // and actual logic, but for structure we use Jest mocks.
 
 describe('AI Processor Module', () => {
   afterEach(() => {
-    cleanup();
     jest.clearAllMocks();
   });
 

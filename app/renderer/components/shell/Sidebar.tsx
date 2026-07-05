@@ -18,8 +18,10 @@ import {
   ChevronLeft,
   QrCode,
   Code2,
+  Beaker,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../../constants/brand";
+import i18n from "../../utils/i18n";
 
 interface SidebarProps {
   activeTab: NavTab;
@@ -40,25 +42,27 @@ export default function Sidebar({
   language = "en",
 }: SidebarProps) {
   const ar = language === "ar";
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
 
   const menuItems = [
-    { id: "overview" as NavTab, label: ar ? "لوحة التحكم" : "Overview", icon: LayoutDashboard },
-    { id: "clipboard" as NavTab, label: ar ? "مركز الحافظة" : "Clipboard Hub", icon: Clipboard },
-    { id: "search" as NavTab, label: ar ? "بحث عميق" : "Deep Search", icon: Search },
-    { id: "ai" as NavTab, label: ar ? "مساعد الذكاء" : "AI Co-Pilot", icon: Sparkles },
-    { id: "barcode" as NavTab, label: ar ? "ماسح الباركود" : "Barcode Scanner", icon: QrCode },
-    { id: "security" as NavTab, label: ar ? "الأمان والخزنة" : "Security & Trust", icon: ShieldCheck },
-    { id: "settings" as NavTab, label: ar ? "الإعدادات" : "Preferences", icon: Settings },
+    { id: "overview" as NavTab, label: t("shell.sidebar.overview", ar ? "لوحة التحكم" : "Overview"), icon: LayoutDashboard },
+    { id: "clipboard" as NavTab, label: t("shell.sidebar.clipboard", ar ? "مركز الحافظة" : "Clipboard Hub"), icon: Clipboard },
+    { id: "search" as NavTab, label: t("shell.sidebar.search", ar ? "بحث عميق" : "Deep Search"), icon: Search },
+    { id: "ai" as NavTab, label: t("shell.sidebar.ai", ar ? "مساعد الذكاء" : "AI Co-Pilot"), icon: Sparkles },
+    { id: "barcode" as NavTab, label: t("shell.sidebar.barcode", ar ? "ماسح الباركود" : "Barcode Scanner"), icon: QrCode },
+    { id: "security" as NavTab, label: t("shell.sidebar.security", ar ? "الأمان والثقة" : "Security & Trust"), icon: ShieldCheck },
+    { id: "settings" as NavTab, label: t("shell.sidebar.preferences", ar ? "الإعدادات" : "Preferences"), icon: Settings },
   ];
 
   const experimentalItems = [
-    { id: "developer" as NavTab, label: ar ? "استوديو المطورين" : "Developer Studio", icon: Code2 },
-    { id: "labs" as NavTab, label: ar ? "مختبرات متقدمة" : "Experimental Labs", icon: FlaskConical },
-    { id: "about" as NavTab, label: ar ? "عن كنوكس" : "About Knoux", icon: Info },
+    { id: "developer" as NavTab, label: t("shell.sidebar.developer", ar ? "استوديو المطورين" : "Developer Studio"), icon: Code2 },
+    { id: "qa" as NavTab, label: t("shell.sidebar.qa", ar ? "مختبر الاختبار والجودة" : "Testing / QA Lab"), icon: Beaker },
+    { id: "labs" as NavTab, label: t("shell.sidebar.labs", ar ? "مختبرات تجريبية" : "Experimental Labs"), icon: FlaskConical },
+    { id: "about" as NavTab, label: t("shell.sidebar.about", ar ? "عن كنوكس" : "About Knoux"), icon: Info },
   ];
 
   return (
-    <motion.aside id="shell-sidebar-container" animate={{ width: collapsed ? 78 : 280 }} transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }} className="h-screen sticky top-0 flex flex-col justify-between border-r border-white/10 bg-[#12081F]/75 backdrop-blur-2xl select-none shrink-0 z-20 shadow-[18px_0_70px_rgba(0,0,0,0.34)]">
+    <motion.aside id="shell-sidebar-container" animate={{ width: collapsed ? 78 : 280 }} transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }} className="h-screen sticky top-0 flex flex-col justify-between border-r border-white/12 bg-[#0A0612]/92 backdrop-blur-2xl select-none shrink-0 z-20 shadow-[18px_0_70px_rgba(0,0,0,0.42)]">
       <div>
         <div className="h-20 flex items-center justify-between px-4 border-b border-white/10 bg-white/[0.03]">
           <div className="flex items-center gap-3 overflow-hidden">
@@ -72,22 +76,22 @@ export default function Sidebar({
 
         <nav className="p-3 space-y-1.5">
           {menuItems.map((item) => { const Icon = item.icon; const isActive = activeTab === item.id; return (
-            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${isActive ? "text-white bg-gradient-to-r from-[#8A2BE2]/35 to-[#D946EF]/18 border-[#D8B8EC]/25 shadow-[0_0_34px_rgba(138,43,226,0.22)]" : "text-[#BFA7DB] border-transparent hover:text-white hover:bg-white/[0.06] hover:border-white/10"}`}>
-              {isActive && <motion.div layoutId="active-nav-bar-shell" className="absolute left-0 top-3 bottom-3 w-[4px] rounded-r-full bg-[#D8B8EC]" />}
-              <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#D8B8EC]" : "text-[#BFA7DB]"}`} />
+            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${isActive ? "text-white bg-gradient-to-r from-[#8A2BE2]/38 to-[#A678DD]/18 border-[#D8B8EC]/36 shadow-[0_0_26px_rgba(138,43,226,0.24)]" : "text-[#D8C8EE] border-transparent hover:text-white hover:bg-white/[0.07] hover:border-white/12"}`}>
+              {isActive && <motion.div layoutId="active-nav-bar-shell" className="absolute left-0 top-3 bottom-3 w-[4px] rounded-r-full bg-[#EFE0FB]" />}
+              <span className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 transition ${isActive ? "border-[#D8B8EC]/35 bg-white/12" : "border-white/8 bg-white/[0.035] group-hover:bg-white/8"}`}><Icon className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#EFE0FB]" : "text-[#D8C8EE]"}`} /></span>
               {!collapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="truncate">{item.label}</motion.span>}
-              {item.id === "ai" && !collapsed && <span className="ml-auto text-[9px] bg-gradient-to-r from-[#8A2BE2] to-[#D946EF] text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider">Live</span>}
+              {item.id === "ai" && !collapsed && <span className="ml-auto text-[9px] border border-blue-300/30 bg-blue-400/15 text-blue-100 px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider">Ready</span>}
             </button>
           ); })}
         </nav>
 
-        <div className="px-6 py-2"><div className="h-[1px] bg-white/10" />{!collapsed && <div className="text-[10px] font-black text-[#BFA7DB]/55 tracking-wider uppercase mt-3">{ar ? "الأدوات المتقدمة" : "Advanced Workspace"}</div>}</div>
+        <div className="px-6 py-2"><div className="h-[1px] bg-white/10" />{!collapsed && <div className="text-[10px] font-black text-[#BFA7DB]/55 tracking-wider uppercase mt-3">{t("shell.sidebar.advancedWorkspace", ar ? "الأدوات المتقدمة" : "Advanced Workspace")}</div>}</div>
 
         <nav className="p-3 space-y-1.5">
           {experimentalItems.map((item) => { const Icon = item.icon; const isActive = activeTab === item.id; return (
-            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${isActive ? "text-white bg-white/[0.08] border-[#D8B8EC]/25" : "text-[#BFA7DB] border-transparent hover:text-white hover:bg-white/[0.06] hover:border-white/10"}`}>
+            <button key={item.id} onClick={() => setActiveTab(item.id)} className={`w-full relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer group border ${isActive ? "text-white bg-white/[0.10] border-[#D8B8EC]/30" : "text-[#D8C8EE] border-transparent hover:text-white hover:bg-white/[0.07] hover:border-white/12"}`}>
               {isActive && <motion.div layoutId="active-nav-bar-shell" className="absolute left-0 top-3 bottom-3 w-[4px] rounded-r-full bg-[#A678DD]" />}
-              <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#D8B8EC]" : "text-[#BFA7DB]"}`} />
+              <span className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 transition ${isActive ? "border-[#D8B8EC]/35 bg-white/12" : "border-white/8 bg-white/[0.035] group-hover:bg-white/8"}`}><Icon className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${isActive ? "text-[#EFE0FB]" : "text-[#D8C8EE]"}`} /></span>
               {!collapsed && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="truncate">{item.label}</motion.span>}
             </button>
           ); })}

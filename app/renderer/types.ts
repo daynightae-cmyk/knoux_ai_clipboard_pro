@@ -1,9 +1,4 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-export type ClipboardType = "text" | "code" | "link" | "image" | "note";
+export type ClipboardType = "text" | "code" | "link" | "image" | "note" | "pdf" | "file";
 
 export interface ClipboardItem {
   id: string;
@@ -30,11 +25,13 @@ export type NavTab =
   | "settings"
   | "labs"
   | "developer"
+  | "qa"
   | "barcode"
   | "about";
 
 export interface AppSettings {
-  density: "compact" | "comfortable";
+  themeMode: "light" | "dark" | "system";
+  density: "compact" | "comfortable" | "spacious";
   glowIntensity: "low" | "medium" | "high";
   privacyMode: boolean;
   autoAnalyze: boolean;

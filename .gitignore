@@ -327,3 +327,5 @@ scan-output/
 *.env
 
 knoux_backup_before_ai_studio_ui_*/
+release-installer/
+release-portable/

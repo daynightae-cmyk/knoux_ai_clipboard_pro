@@ -1,0 +1,217 @@
+/* KNOUX UI hotfix — force mockup-grade readable glass layout across saved/system themes. */
+:root,
+html[data-theme="night"] {
+  color-scheme: light;
+  --knoux-bg: #fbf7ff;
+  --knoux-surface: rgba(255, 255, 255, 0.78);
+  --knoux-surface-raised: rgba(255, 255, 255, 0.92);
+  --knoux-surface-glass: rgba(255, 255, 255, 0.74);
+  --knoux-card: rgba(255, 255, 255, 0.78);
+  --knoux-card-elevated: rgba(255, 255, 255, 0.94);
+  --knoux-card-border: rgba(130, 38, 238, 0.14);
+  --knoux-card-border-strong: rgba(130, 38, 238, 0.30);
+  --knoux-text-primary: #140d26;
+  --knoux-text-secondary: #514467;
+  --knoux-text-muted: #746889;
+  --knoux-purple: #8226ee;
+  --knoux-purple-strong: #500fc8;
+  --knoux-accent: #a74ce7;
+  --knoux-glow: 0 18px 58px rgba(130, 38, 238, 0.13), 0 2px 14px rgba(80, 15, 200, 0.08);
+  --knoux-glow-strong: 0 32px 90px rgba(130, 38, 238, 0.22), 0 8px 30px rgba(28, 11, 78, 0.12);
+  --gradient-page-bg: radial-gradient(circle at 8% 10%, rgba(193, 124, 235, 0.42), transparent 28%), radial-gradient(circle at 88% 18%, rgba(130, 38, 238, 0.24), transparent 26%), radial-gradient(circle at 45% 90%, rgba(207, 180, 234, 0.38), transparent 36%), linear-gradient(135deg, #fff 0%, #fcfaff 40%, #f3e6fb 100%);
+}
+
+html,
+body,
+#root,
+.knoux-app-shell,
+.knoux-window {
+  direction: ltr !important;
+  background: var(--gradient-page-bg) !important;
+  color: var(--knoux-text-primary) !important;
+}
+
+.knoux-window > main,
+#clipboard-workspace-root,
+#ai-workspace-container,
+.knoux-section,
+.glass-panel,
+.glass-elevated,
+.knoux-premium-card {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+#shell-sidebar-container {
+  direction: rtl !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  color: var(--knoux-text-primary) !important;
+  border-right: 1px solid rgba(130, 38, 238, 0.14) !important;
+  box-shadow: 24px 0 80px rgba(130, 38, 238, 0.12) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+}
+
+#shell-sidebar-container * {
+  text-shadow: none !important;
+}
+
+#shell-sidebar-container span,
+#shell-sidebar-container button {
+  color: var(--knoux-text-primary) !important;
+}
+
+#shell-sidebar-container nav button {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--knoux-text-secondary) !important;
+}
+
+#shell-sidebar-container nav button:hover,
+#shell-sidebar-container nav button[class*="bg-gradient"],
+#shell-sidebar-container nav button[class*="bg-white/"] {
+  background: rgba(130, 38, 238, 0.10) !important;
+  border-color: rgba(130, 38, 238, 0.18) !important;
+  box-shadow: 0 14px 32px rgba(130, 38, 238, 0.12) !important;
+}
+
+.knoux-window > header,
+header.sticky {
+  height: 70px !important;
+  margin: 14px 18px 0 !important;
+  border: 1px solid rgba(130, 38, 238, 0.14) !important;
+  border-radius: 26px !important;
+  background: rgba(255, 255, 255, 0.76) !important;
+  box-shadow: 0 18px 58px rgba(130, 38, 238, 0.12) !important;
+  backdrop-filter: blur(26px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+}
+
+.glass-panel,
+.glass-elevated,
+.knoux-section,
+.knoux-premium-card,
+.knoux-glass-card,
+.knoux-glass-panel,
+.stat-card,
+#clipboard-workspace-root form,
+#clipboard-workspace-root .knoux-card-hover,
+#ai-workspace-container .rounded-3xl,
+#ai-workspace-container .rounded-2xl {
+  background: rgba(255, 255, 255, 0.74) !important;
+  color: var(--knoux-text-primary) !important;
+  border: 1px solid rgba(130, 38, 238, 0.14) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--knoux-glow) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+}
+
+.knoux-section,
+.glass-elevated {
+  border-radius: 34px !important;
+  padding: 28px !important;
+}
+
+.text-knoux-dark-text,
+[class*="text-knoux-dark-text"],
+h1, h2, h3, h4 {
+  color: var(--knoux-text-primary) !important;
+}
+
+.text-knoux-muted-text,
+[class*="text-knoux-muted-text"],
+p {
+  color: var(--knoux-text-secondary) !important;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.035em !important;
+  line-height: 1.05 !important;
+}
+
+p, span, button, label, input, textarea, select {
+  letter-spacing: -0.005em;
+}
+
+input,
+textarea,
+select {
+  color: var(--knoux-text-primary) !important;
+  background: rgba(255,255,255,0.80) !important;
+  border-color: rgba(130,38,238,0.16) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(81, 68, 103, 0.66) !important;
+}
+
+button[class*="from-knoux-purple"],
+button[class*="bg-knoux-purple"],
+.btn-knoux-primary,
+.knoux-premium-button {
+  background: linear-gradient(135deg, #c17ceb 0%, #8226ee 54%, #500fc8 100%) !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow: 0 16px 36px rgba(130, 38, 238, 0.24) !important;
+}
+
+.btn-knoux-secondary,
+button[class*="border-knoux-purple"] {
+  background: rgba(255, 255, 255, 0.68) !important;
+  color: #8226ee !important;
+  border-color: rgba(130, 38, 238, 0.16) !important;
+  box-shadow: 0 10px 26px rgba(130, 38, 238, 0.06) !important;
+}
+
+.knoux-premium-card:hover,
+#clipboard-workspace-root .knoux-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(130, 38, 238, 0.28) !important;
+  box-shadow: var(--knoux-glow-strong) !important;
+}
+
+#clipboard-workspace-root {
+  height: calc(100vh - 84px) !important;
+  padding: 18px 18px 0 !important;
+  gap: 16px;
+}
+
+#clipboard-workspace-root > div:first-child,
+#clipboard-workspace-root > div:nth-child(2) {
+  background: transparent !important;
+  padding-inline: 0 !important;
+}
+
+#clipboard-workspace-root .w-56 {
+  border: 1px solid rgba(130, 38, 238, 0.12) !important;
+  border-radius: 28px !important;
+  background: rgba(255, 255, 255, 0.68) !important;
+  box-shadow: var(--knoux-glow) !important;
+  margin-bottom: 18px;
+}
+
+#ai-workspace-container textarea {
+  min-height: 210px;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+}
+
+.knoux-doc-card {
+  background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.62)) !important;
+  border: 1px solid rgba(130,38,238,.14) !important;
+  border-radius: 26px !important;
+  box-shadow: var(--knoux-glow) !important;
+}
+
+.knoux-doc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 12px 30px rgba(239, 68, 68, .22);
+}

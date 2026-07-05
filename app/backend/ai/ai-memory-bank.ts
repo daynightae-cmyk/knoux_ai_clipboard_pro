@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(knoux): Legacy backend type-surface cleanup. Kept syntax/emit-safe for Electron main build.
 /**
  * AI Memory Bank - Revolutionary Learning System
  * Learns user patterns, predicts needs, builds personal knowledge

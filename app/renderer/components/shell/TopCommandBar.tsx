@@ -5,7 +5,9 @@
 
 import { NavTab } from "../../types";
 import { useState, useEffect } from "react";
-import { Search, RefreshCw, Lock, Unlock, Sparkles, Settings, Activity, Clock } from "lucide-react";
+import { Search, RefreshCw, Lock, Unlock, Sparkles, Settings, Activity, Clock, Sun, Moon, Monitor } from "lucide-react";
+import { AppSettings } from "../../types";
+import i18n from "../../utils/i18n";
 
 interface TopCommandBarProps {
   activeTab: NavTab;
@@ -18,6 +20,8 @@ interface TopCommandBarProps {
   isRefreshing: boolean;
   onToggleInspector?: () => void;
   isInspectorOpen?: boolean;
+  themeMode?: AppSettings["themeMode"];
+  setThemeMode?: (themeMode: AppSettings["themeMode"]) => void;
 }
 
 export default function TopCommandBar({
@@ -31,8 +35,11 @@ export default function TopCommandBar({
   isRefreshing,
   onToggleInspector,
   isInspectorOpen = false,
+  themeMode = "system",
+  setThemeMode,
 }: TopCommandBarProps) {
   const [currentTime, setCurrentTime] = useState("");
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
 
   useEffect(() => {
     const updateTime = () => {
@@ -48,24 +55,18 @@ export default function TopCommandBar({
 
   const getPageTitle = () => {
     switch (activeTab) {
-      case "overview":
-        return "Workspace Overview";
-      case "clipboard":
-        return "Clipboard Hub";
-      case "search":
-        return "Universal Search";
-      case "ai":
-        return "Knoux AI Co-Pilot";
-      case "security":
-        return "Security & Local Vault";
-      case "settings":
-        return "Preferences";
-      case "labs":
-        return "Experimental Labs";
-      case "about":
-        return "About KNOUX";
-      default:
-        return "Knoux AI Clipboard";
+      case "overview": return t("shell.topbar.pageTitles.overview", "Workspace Overview");
+      case "clipboard": return t("shell.topbar.pageTitles.clipboard", "Clipboard Hub");
+      case "search": return t("shell.topbar.pageTitles.search", "Universal Search");
+      case "ai": return t("shell.topbar.pageTitles.ai", "Knoux AI Co-Pilot");
+      case "security": return t("shell.topbar.pageTitles.security", "Security & Local Vault");
+      case "settings": return t("shell.topbar.pageTitles.settings", "Preferences");
+      case "labs": return t("shell.topbar.pageTitles.labs", "Experimental Labs");
+      case "developer": return t("shell.topbar.pageTitles.developer", "Developer Studio");
+      case "qa": return t("shell.topbar.pageTitles.qa", "Testing / QA Lab");
+      case "barcode": return t("shell.topbar.pageTitles.barcode", "Barcode Scanner");
+      case "about": return t("shell.topbar.pageTitles.about", "About KNOUX");
+      default: return t("shell.topbar.pageTitles.default", "Knoux AI Clipboard");
     }
   };
 
@@ -75,21 +76,22 @@ export default function TopCommandBar({
     }
   };
 
+  const cycleTheme = () => {
+    if (!setThemeMode) return;
+    setThemeMode(themeMode === "light" ? "dark" : themeMode === "dark" ? "system" : "light");
+  };
+
+  const ThemeIcon = themeMode === "light" ? Sun : themeMode === "dark" ? Moon : Monitor;
+
   return (
-    <header className="h-16 border-b border-knoux-purple/10 bg-white/70 backdrop-blur-md px-6 flex items-center justify-between gap-4 select-none sticky top-0 z-40">
-      {/* Page Title & Breadcrumb */}
+    <header className="h-16 border-b border-knoux-purple/10 bg-white/78 backdrop-blur-xl px-6 flex items-center justify-between gap-4 select-none sticky top-0 z-40">
       <div className="flex items-center gap-3 shrink-0">
         <div className="flex flex-col">
-          <h2 className="text-base font-bold text-knoux-dark-text tracking-tight leading-none">
-            {getPageTitle()}
-          </h2>
-          <span className="text-[10px] text-knoux-muted-text mt-1 font-mono uppercase tracking-widest">
-            KNOUX_SYSTEM_CORE // active
-          </span>
+          <h2 className="text-base font-bold text-knoux-dark-text tracking-tight leading-none">{getPageTitle()}</h2>
+          <span className="text-[10px] text-knoux-muted-text mt-1 font-mono uppercase tracking-widest">KNOUX_SYSTEM_CORE // honest status</span>
         </div>
       </div>
 
-      {/* Global Search Bar Input */}
       <div className="flex-1 max-w-md relative hidden md:block">
         <Search className="w-4 h-4 text-knoux-muted-text/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
@@ -97,87 +99,50 @@ export default function TopCommandBar({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={handleSearchFocus}
-          placeholder="Search clip history, code snippets, secure vaults (Ctrl+K)..."
-          className="w-full h-9 pl-10 pr-4 rounded-xl border border-knoux-purple/10 bg-white/60 hover:bg-white focus:bg-white text-xs text-knoux-dark-text placeholder-knoux-muted-text/50 outline-none focus:border-knoux-purple focus:ring-4 focus:ring-knoux-purple/10 transition-all"
+          placeholder={t("shell.topbar.searchPlaceholder", "Search clip history, code snippets, secure vaults (Ctrl+K)...")}
+          className="w-full h-10 pl-10 pr-4 rounded-xl border border-knoux-purple/15 bg-white/72 hover:bg-white focus:bg-white text-xs text-knoux-dark-text placeholder-knoux-muted-text/70 outline-none focus:border-knoux-purple focus:ring-4 focus:ring-knoux-purple/12 transition-all shadow-sm"
         />
         {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] bg-knoux-purple/10 hover:bg-knoux-purple/20 text-knoux-purple px-1.5 py-0.5 rounded font-mono transition-colors"
-          >
-            CLEAR
+          <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] bg-knoux-purple/10 hover:bg-knoux-purple/20 text-knoux-purple px-1.5 py-0.5 rounded font-mono transition-colors">
+            {t("shell.topbar.clear", "CLEAR")}
           </button>
         )}
       </div>
 
-      {/* Header Right Command Buttons */}
       <div className="flex items-center gap-2">
-        {/* UTC Clock */}
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-knoux-purple/5 bg-white/40 text-xs font-mono text-knoux-muted-text">
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-knoux-purple/10 bg-white/60 text-xs font-mono text-knoux-muted-text">
           <Clock className="w-3.5 h-3.5 text-knoux-purple" />
           <span>{currentTime || "08:09:18"}</span>
         </div>
 
-        {/* Server Health Status Pill */}
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-knoux-purple/5 bg-white/40 text-[11px] font-medium text-emerald-600">
-          <Activity className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
-          <span className="hidden sm:inline">AI Node Active</span>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-200 bg-amber-50 text-[11px] font-bold text-amber-800">
+          <Activity className="w-3.5 h-3.5 text-amber-600" />
+          <span className="hidden sm:inline">{t("shell.topbar.aiGuarded", "AI Provider Guarded")}</span>
         </div>
 
-        {/* Refresh Action Trigger */}
-        <button
-          onClick={onRefresh}
-          title="Refresh clipboard stream"
-          className={`w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer ${
-            isRefreshing ? "bg-knoux-purple/5" : ""
-          }`}
-        >
+        <button onClick={cycleTheme} title={`Theme: ${themeMode}`} className="w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/10 bg-white/65 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer">
+          <ThemeIcon className="w-4 h-4" />
+        </button>
+
+        <button onClick={onRefresh} title={t("shell.topbar.refreshTitle", "Refresh clipboard stream")} className={`w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/10 bg-white/65 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer ${isRefreshing ? "bg-knoux-purple/5" : ""}`}>
           <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-knoux-purple" : ""}`} />
         </button>
 
-        {/* Privacy Lock Toggle */}
-        <button
-          onClick={() => setPrivacyMode(!privacyMode)}
-          title={privacyMode ? "Disable Privacy Lock" : "Enable Privacy Lock"}
-          className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shadow-sm cursor-pointer ${
-            privacyMode
-              ? "border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-600"
-              : "border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple"
-          }`}
-        >
+        <button onClick={() => setPrivacyMode(!privacyMode)} title={privacyMode ? t("shell.topbar.disablePrivacy", "Disable Privacy Lock") : t("shell.topbar.togglePrivacy", "Enable Privacy Lock")} className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shadow-sm cursor-pointer ${privacyMode ? "border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-600" : "border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple"}`}>
           {privacyMode ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
         </button>
 
-        {/* Toggle Right Inspector Sidebar */}
         {onToggleInspector && (
-          <button
-            onClick={onToggleInspector}
-            title="Toggle system metrics side panel"
-            className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shadow-sm cursor-pointer ${
-              isInspectorOpen
-                ? "border-knoux-purple bg-knoux-purple/5 text-knoux-purple"
-                : "border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple"
-            }`}
-          >
+          <button onClick={onToggleInspector} title="Toggle system metrics side panel" className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shadow-sm cursor-pointer ${isInspectorOpen ? "border-knoux-purple bg-knoux-purple/10 text-knoux-purple" : "border-knoux-purple/10 bg-white/65 hover:bg-white text-knoux-muted-text hover:text-knoux-purple"}`}>
             <Activity className="w-4 h-4" />
           </button>
         )}
 
-        {/* Quick Spark AI Trigger */}
-        <button
-          onClick={() => setActiveTab("ai")}
-          title="Open AI Smart Assistant"
-          className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-tr from-knoux-purple to-knoux-neon text-white shadow-knoux-glow hover:brightness-110 transition-all cursor-pointer"
-        >
+        <button onClick={() => setActiveTab("ai")} title={t("shell.topbar.openAi", "Open AI Smart Assistant")} className="w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-tr from-knoux-purple to-knoux-neon text-white shadow-knoux-glow hover:brightness-110 transition-all cursor-pointer">
           <Sparkles className="w-4 h-4" />
         </button>
 
-        {/* Preferences Quick link */}
-        <button
-          onClick={() => setActiveTab("settings")}
-          title="Open Preferences"
-          className="w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/5 bg-white/50 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer"
-        >
+        <button onClick={() => setActiveTab("settings")} title={t("shell.topbar.openSettings", "Open Preferences")} className="w-9 h-9 rounded-xl flex items-center justify-center border border-knoux-purple/10 bg-white/65 hover:bg-white text-knoux-muted-text hover:text-knoux-purple transition-all shadow-sm cursor-pointer">
           <Settings className="w-4 h-4" />
         </button>
       </div>

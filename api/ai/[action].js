@@ -1,18 +1,53 @@
-const ALLOWED_ACTIONS = new Set(["chat","summarize","enhance","rewrite","translate","analyze","classify","extract","reply","format","explain-code","commit-message","readme-block","api-docs","action-items","checklist"]);
+const ALLOWED_ACTIONS = new Set([
+  "chat",
+  "summarize",
+  "enhance",
+  "rewrite",
+  "translate",
+  "analyze",
+  "classify",
+  "extract",
+  "reply",
+  "format",
+  "explain-code",
+  "commit-message",
+  "readme-block",
+  "api-docs",
+  "action-items",
+  "checklist",
+]);
+
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS = 20;
 const MAX_INPUT_LENGTH = 10_000;
 const buckets = new Map();
 
-function normalizeAction(action) { return String(action || "chat").trim(); }
-function safeModel() { return process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free"; }
+function normalizeAction(action) {
+  const value = String(action || "chat").trim();
+  return value === "format-text" ? "format" : value;
+}
+
+function safeModel() {
+  return process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free";
+}
+
+function safeReferer() {
+  return process.env.OPENROUTER_SITE_URL || "https://knoux.store";
+}
+
+function safeAppName() {
+  return process.env.OPENROUTER_APP_NAME || "Knoux AI Clipboard Pro";
+}
+
 function isAllowedOrigin(origin = "") {
   if (!origin) return true;
   if (origin === "https://knoux.store") return true;
+  if (origin === "https://www.knoux.store") return true;
   if (process.env.NODE_ENV !== "production" && /^http:\/\/localhost:\d+$/.test(origin)) return true;
   if (/^https:\/\/[a-z0-9-]+(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin)) return true;
   return false;
 }
+
 function applyCors(req, res) {
   const origin = req.headers.origin || "";
   if (isAllowedOrigin(origin) && origin) res.setHeader("Access-Control-Allow-Origin", origin);
@@ -20,15 +55,61 @@ function applyCors(req, res) {
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,x-knoux-ai-secret");
 }
-function clientIp(req) { return String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown").split(",")[0].trim(); }
+
+function clientIp(req) {
+  return String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown")
+    .split(",")[0]
+    .trim();
+}
+
 function rateLimit(req, action) {
   const key = `${clientIp(req)}:${action}`;
   const now = Date.now();
   const current = buckets.get(key) || { count: 0, resetAt: now + WINDOW_MS };
-  if (now > current.resetAt) { current.count = 0; current.resetAt = now + WINDOW_MS; }
-  current.count += 1; buckets.set(key, current);
+  if (now > current.resetAt) {
+    current.count = 0;
+    current.resetAt = now + WINDOW_MS;
+  }
+  current.count += 1;
+  buckets.set(key, current);
   return { ok: current.count <= MAX_REQUESTS, retryAfter: Math.ceil((current.resetAt - now) / 1000) };
 }
+
+function statusPayload(configured) {
+  return {
+    ok: configured,
+    status: configured ? "ready" : "provider_not_configured",
+    provider: "openrouter",
+    configured,
+    model: safeModel(),
+  };
+}
+
+function errorPayload(status, message, extra = {}) {
+  return {
+    ok: false,
+    status,
+    error: message,
+    provider: "openrouter",
+    model: safeModel(),
+    ...extra,
+  };
+}
+
+function classifyProviderError(statusCode, providerMessage = "") {
+  const message = String(providerMessage || "").toLowerCase();
+  if (statusCode === 401 || statusCode === 403 || /invalid.*key|unauthorized|forbidden/.test(message)) {
+    return { status: "invalid_api_key", http: 401, message: "OpenRouter API key is invalid or unauthorized." };
+  }
+  if (statusCode === 429 || /rate limit|quota/.test(message)) {
+    return { status: "rate_limited", http: 429, message: "OpenRouter rate limit reached. Try again shortly." };
+  }
+  if (statusCode >= 500) {
+    return { status: "provider_unavailable", http: 502, message: "OpenRouter is temporarily unavailable." };
+  }
+  return { status: "provider_unavailable", http: statusCode || 502, message: "OpenRouter request failed safely." };
+}
+
 function buildPrompt(action, text, targetLanguage) {
   const clean = String(text || "").trim();
   const prompts = {
@@ -55,27 +136,66 @@ function buildPrompt(action, text, targetLanguage) {
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
   applyCors(req, res);
+
   if (req.method === "OPTIONS") return res.status(204).end();
-  if (!isAllowedOrigin(req.headers.origin || "")) return res.status(403).json({ ok: false, error: "Origin not allowed." });
+  if (!isAllowedOrigin(req.headers.origin || "")) return res.status(403).json(errorPayload("origin_not_allowed", "Origin not allowed."));
+
   const action = normalizeAction(req.query.action);
-  if (req.method === "GET") return res.status(200).json({ ok: true, status: process.env.OPENROUTER_API_KEY ? "configured" : "missing_key", provider: "openrouter", model: safeModel() });
-  if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed." });
-  if (!ALLOWED_ACTIONS.has(action)) return res.status(400).json({ ok: false, error: `Unsupported AI action: ${action}` });
+  const configured = Boolean(process.env.OPENROUTER_API_KEY);
+
+  if (req.method === "GET") return res.status(configured ? 200 : 503).json(statusPayload(configured));
+  if (req.method !== "POST") return res.status(405).json(errorPayload("method_not_allowed", "Method not allowed."));
+  if (!ALLOWED_ACTIONS.has(action)) return res.status(400).json(errorPayload("action_not_supported", `Unsupported AI action: ${action}`));
+
   const expectedSecret = process.env.KNOUX_AI_PROXY_SECRET;
-  if (expectedSecret && req.headers["x-knoux-ai-secret"] !== expectedSecret) return res.status(401).json({ ok: false, error: "AI proxy secret is invalid or missing." });
+  if (expectedSecret && req.headers["x-knoux-ai-secret"] !== expectedSecret) {
+    return res.status(401).json(errorPayload("proxy_secret_invalid", "AI proxy secret is invalid or missing."));
+  }
+
   const quota = rateLimit(req, action);
-  if (!quota.ok) { res.setHeader("Retry-After", String(quota.retryAfter)); return res.status(429).json({ ok: false, error: "Rate limit exceeded. Try again shortly." }); }
+  if (!quota.ok) {
+    res.setHeader("Retry-After", String(quota.retryAfter));
+    return res.status(429).json(errorPayload("rate_limited", "Rate limit exceeded. Try again shortly.", { retryAfter: quota.retryAfter }));
+  }
+
   const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) return res.status(503).json({ ok: false, error: "AI provider is not configured.", status: "missing_key", provider: "openrouter", model: safeModel() });
+  if (!apiKey) return res.status(503).json(statusPayload(false));
+
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
     const text = String(body.text || "").trim();
-    if (!text) return res.status(400).json({ ok: false, error: "No input text provided." });
-    if (text.length > MAX_INPUT_LENGTH) return res.status(413).json({ ok: false, error: `Input exceeds ${MAX_INPUT_LENGTH} characters.` });
+    if (!text) return res.status(400).json(errorPayload("empty_input", "No input text provided."));
+    if (text.length > MAX_INPUT_LENGTH) return res.status(413).json(errorPayload("input_too_large", `Input exceeds ${MAX_INPUT_LENGTH} characters.`));
+
     const model = safeModel();
-    const upstream = await fetch(`${process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1"}/chat/completions`, { method:"POST", headers:{ Authorization:`Bearer ${apiKey}`, "Content-Type":"application/json", "HTTP-Referer":"https://knoux.store", "X-Title":"Knoux AI Clipboard Pro" }, body: JSON.stringify({ model, messages:[{ role:"system", content:"You are KNOUX AI Clipboard Pro, a precise clipboard productivity assistant. Never fabricate provider success or expose secrets." },{ role:"user", content: buildPrompt(action, text, body.targetLanguage) }], temperature:0.35, max_tokens:1200 }) });
+    const upstream = await fetch(`${process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1"}/chat/completions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": safeReferer(),
+        "X-OpenRouter-Title": safeAppName(),
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: "You are KNOUX AI Clipboard Pro, a precise clipboard productivity assistant. Never fabricate provider success or expose secrets." },
+          { role: "user", content: buildPrompt(action, text, body.targetLanguage) },
+        ],
+        temperature: 0.35,
+        max_tokens: 1200,
+      }),
+    });
+
     const data = await upstream.json().catch(() => ({}));
-    if (!upstream.ok) return res.status(upstream.status >= 500 ? 502 : upstream.status).json({ ok:false, error:data.error?.message || "AI provider request failed.", status:"provider_error", provider:"openrouter", model });
-    return res.status(200).json({ ok:true, success:true, result:data.choices?.[0]?.message?.content || "", provider:"openrouter", model, action, simulated:false, usage:data.usage || null });
-  } catch { return res.status(500).json({ ok:false, error:"AI API request failed safely.", status:"network_error" }); }
+    if (!upstream.ok) {
+      const mapped = classifyProviderError(upstream.status, data.error?.message || data.message || "");
+      return res.status(mapped.http).json(errorPayload(mapped.status, mapped.message));
+    }
+
+    const result = data.choices?.[0]?.message?.content || "";
+    return res.status(200).json({ ok: true, success: true, status: "ready", result, provider: "openrouter", model, action, simulated: false, usage: data.usage || null });
+  } catch {
+    return res.status(502).json(errorPayload("network_error", "AI API request failed safely."));
+  }
 };

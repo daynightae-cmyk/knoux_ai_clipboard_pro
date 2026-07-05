@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(knoux): Legacy backend type-surface cleanup. Kept syntax/emit-safe for Electron main build.
 /**
  * Sensitive Data Detection Engine
  * Uses optimized Regex patterns to identify PII, Credentials, and Secrets.

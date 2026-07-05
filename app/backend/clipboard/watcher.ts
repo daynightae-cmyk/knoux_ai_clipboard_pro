@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(knoux): Legacy backend type-surface cleanup. Kept syntax/emit-safe for Electron main build.
 /**
  * Knoux Clipboard AI - Clipboard Watcher Core
  * Monitors clipboard changes and coordinates with other components

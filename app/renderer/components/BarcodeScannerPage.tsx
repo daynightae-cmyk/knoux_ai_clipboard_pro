@@ -1,186 +1,168 @@
-import { useRef, useState } from "react";
-import { Camera, ImageUp, QrCode, Copy, CheckCircle, AlertTriangle, Keyboard, StopCircle } from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
+import { Camera, Upload, X, Copy, Save, ScanLine, AlertTriangle, ClipboardPaste } from 'lucide-react';
+import { motion } from 'framer-motion';
+import i18n from '../utils/i18n';
 
-interface BarcodeScannerPageProps {
-  onAddNewItem?: (content: string, type: "text" | "link" | "note", source?: string) => Promise<void> | void;
+// Assuming this type is available from a shared types file
+interface ClipboardItem {
+  id: string;
+  content: string;
+  type: 'text' | 'image' | 'file';
+  source?: string;
+  createdAt: string;
+  isSecure?: boolean;
+  tags?: string[];
+  aiSummarized?: boolean;
+  aiTags?: string[];
 }
 
-type ScanStatus = "ready" | "active" | "success" | "warning" | "error";
+interface BarcodeScannerPageProps {
+  onSaveToHub: (item: Partial<ClipboardItem>) => void;
+}
 
-const cleanDecodedText = (value: unknown) => String(value || "").trim();
-const isLinkValue = (value: string) => /^https?:\/\//i.test(value);
+export default function BarcodeScannerPage({ onSaveToHub }: BarcodeScannerPageProps) {
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
 
-export default function BarcodeScannerPage({ onAddNewItem }: BarcodeScannerPageProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const controlsRef = useRef<{ stop?: () => void } | null>(null);
-  const [status, setStatus] = useState("Ready. ZXing scanner is available with manual paste fallback.");
-  const [statusTone, setStatusTone] = useState<ScanStatus>("ready");
-  const [result, setResult] = useState("");
-  const [scanning, setScanning] = useState(false);
+  const [result, setResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [pastedContent, setPastedContent] = useState('');
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const codeReaderRef = useRef(new BrowserMultiFormatReader());
 
-  const setMessage = (message: string, tone: ScanStatus = "ready") => {
-    setStatus(message);
-    setStatusTone(tone);
-  };
+  const stopScan = useCallback(() => {
+    codeReaderRef.current.reset();
+    setIsScanning(false);
+  }, []);
 
-  const stopCamera = () => {
+  useEffect(() => {
+    return () => stopScan();
+  }, [stopScan]);
+
+  const handleStartCamera = async () => {
+    setError(null);
+    setResult(null);
+    setIsScanning(true);
     try {
-      controlsRef.current?.stop?.();
-    } catch {
-      // Scanner was already stopped by the browser or ZXing control bridge.
-    }
-    controlsRef.current = null;
-    setScanning(false);
-    if (videoRef.current) videoRef.current.srcObject = null;
-  };
-
-  const commitResult = async (value: string) => {
-    const clean = cleanDecodedText(value);
-    if (!clean) {
-      setMessage("No decoded value to save. Scan, upload, or paste a value first.", "warning");
-      return;
-    }
-
-    setResult(clean);
-    setMessage("Decoded value saved into the KNOUX clipboard workspace.", "success");
-    await onAddNewItem?.(clean, isLinkValue(clean) ? "link" : "note", "Barcode Scanner");
-  };
-
-  const startCamera = async () => {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setMessage("Camera access is unavailable in this browser. Use image upload or manual paste.", "error");
-      return;
-    }
-
-    stopCamera();
-    setMessage("Starting ZXing camera scanner. Allow camera permission if prompted.", "active");
-
-    try {
-      const { BrowserMultiFormatReader } = await import("@zxing/browser");
-      const reader: any = new BrowserMultiFormatReader();
-      const videoElement = videoRef.current;
-
-      if (!videoElement) {
-        setMessage("Camera preview is not ready. Reopen the scanner and try again.", "error");
-        return;
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await codeReaderRef.current.decodeFromStream(stream, videoRef.current, (scanResult, err) => {
+          if (scanResult) {
+            setResult(scanResult.getText());
+            stopScan();
+          }
+          if (err && !(err instanceof NotFoundException)) {
+            setError(t('barcode.error.scanFailed', 'Could not decode barcode.'));
+            stopScan();
+          }
+        });
       }
-
-      const controls = await reader.decodeFromVideoDevice(undefined, videoElement, async (scanResult: any, scanError: any) => {
-        const text = cleanDecodedText(scanResult?.getText?.() || scanResult?.text || scanResult);
-        if (text) {
-          await commitResult(text);
-          stopCamera();
-          return;
-        }
-
-        const errorName = scanError?.name || "";
-        if (errorName && errorName !== "NotFoundException") {
-          setMessage(`Camera active. Waiting for a clearer frame. ${errorName}`, "warning");
-        }
-      });
-
-      controlsRef.current = controls || reader;
-      setScanning(true);
-      setMessage("Camera active. Point at a QR code or barcode. ZXing is decoding frames locally.", "active");
-    } catch (error: any) {
-      stopCamera();
-      const message = error?.name === "NotAllowedError"
-        ? "Camera permission denied. Enable camera access or use image upload/manual paste."
-        : error?.message || "ZXing scanner failed to start. Use image upload or manual paste.";
-      setMessage(message, "error");
+    } catch (err) {
+      setError(t('barcode.error.noCamera', 'Camera not available or permission denied.'));
+      setIsScanning(false);
     }
   };
 
-  const scanImage = async (file: File) => {
+  const handleImageScan = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (!file) return;
-    setMessage("Decoding uploaded image with ZXing locally...", "active");
-    const url = URL.createObjectURL(file);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target?.result as string;
+      codeReaderRef.current.decodeFromImageUrl(imageUrl)
+        .then(scanResult => { setResult(scanResult.getText()); setError(null); })
+        .catch(() => { setError(t('barcode.error.scanFailed', 'Could not decode barcode from the image.')); setResult(null); });
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  };
 
-    try {
-      const { BrowserMultiFormatReader } = await import("@zxing/browser");
-      const reader: any = new BrowserMultiFormatReader();
-      const scanResult = await reader.decodeFromImageUrl(url);
-      const text = cleanDecodedText(scanResult?.getText?.() || scanResult?.text || scanResult);
+  const handlePasteScan = () => {
+    if (!pastedContent) return;
+    codeReaderRef.current.decodeFromImageUrl(pastedContent)
+      .then(scanResult => { setResult(scanResult.getText()); setError(null); })
+      .catch(() => { setError(t('barcode.error.scanFailed', 'Could not decode barcode from pasted content.')); setResult(null); });
+  };
 
-      if (text) await commitResult(text);
-      else setMessage("No readable barcode or QR code was found in this image.", "warning");
-    } catch (error: any) {
-      setMessage(error?.message || "No readable barcode or QR code was found. Try a sharper image.", "error");
-    } finally {
-      URL.revokeObjectURL(url);
+  const handleCopy = () => {
+    if (result) navigator.clipboard.writeText(result);
+  };
+
+  const handleSave = () => {
+    if (result) {
+      onSaveToHub({ content: result, type: 'text', source: 'Barcode Scanner', createdAt: new Date().toISOString() });
     }
   };
 
-  const copyResult = async () => {
-    const clean = cleanDecodedText(result);
-    if (!clean) {
-      setMessage("There is no decoded value to copy yet.", "warning");
-      return;
-    }
-
-    await navigator.clipboard.writeText(clean);
-    setMessage("Decoded value copied to the system clipboard.", "success");
+  const handleClear = () => {
+    setResult(null);
+    setError(null);
+    setPastedContent('');
+    if (isScanning) stopScan();
   };
-
-  const statusClass = {
-    ready: "bg-white text-knoux-muted-text border-knoux-purple/10",
-    active: "bg-violet-50 text-violet-800 border-violet-100",
-    success: "bg-emerald-50 text-emerald-800 border-emerald-100",
-    warning: "bg-amber-50 text-amber-800 border-amber-100",
-    error: "bg-red-50 text-red-700 border-red-100",
-  }[statusTone];
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto select-none">
-      <section className="glass-elevated p-6 overflow-hidden relative">
-        <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-knoux-purple/10 blur-3xl" />
-        <div className="relative space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-knoux-purple/10 bg-knoux-purple/5 text-[11px] font-black text-knoux-purple uppercase tracking-widest">
-            <QrCode className="w-4 h-4" /> KNOUX Barcode Scanner
-          </div>
-          <h2 className="text-3xl font-black text-knoux-dark-text">Real QR and barcode scanning for clipboard workflows.</h2>
-          <p className="text-sm text-knoux-muted-text max-w-3xl">
-            Camera scan, image upload scan, manual paste fallback, copy, and save-to-workspace are all local-first. No decoded value is sent to a server by this scanner page.
-          </p>
-        </div>
-      </section>
+    <div className="p-4 sm:p-6 md:p-8 space-y-8 max-w-6xl mx-auto select-none">
+      <div className="text-center">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">{t('barcode.title', 'Barcode & QR Code Scanner')}</h1>
+        <p className="mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">{t('barcode.description', 'Scan codes using your device camera, an image file, or by pasting content.')}</p>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-        <div className="rounded-3xl border border-knoux-purple/10 bg-[#150821] overflow-hidden min-h-[380px] flex items-center justify-center relative shadow-knoux-glow">
-          <video ref={videoRef} className="w-full h-full min-h-[380px] object-cover" muted playsInline />
-          {!scanning && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-[radial-gradient(circle_at_center,rgba(138,43,226,.22),rgba(13,5,39,.96))]">
-              <QrCode className="w-16 h-16 text-[#CFB4EA] mb-4" />
-              <p className="text-[#FCFAFF] font-black">Camera preview appears here.</p>
-              <p className="text-[#CFB4EA] text-sm mt-2 max-w-md">Use camera scan for live QR/barcode reading, or upload an image from the side panel.</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="relative aspect-square lg:aspect-auto lg:h-full bg-slate-900 rounded-3xl overflow-hidden border-4 border-slate-200 dark:border-slate-700 shadow-lg flex items-center justify-center">
+          {isScanning ? (
+            <>
+              <video ref={videoRef} className="w-full h-full object-cover" />
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="relative w-3/4 h-3/4 overflow-hidden">
+                  <div className="absolute inset-0 border-4 border-dashed border-violet-400/50 rounded-2xl" />
+                  <motion.div
+                    className="absolute w-full h-1 bg-red-500/70 shadow-[0_0_10px_2px_rgba(239,68,68,0.7)]"
+                    animate={{ y: ['5%', '95%', '5%'] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="text-center p-8">
+              <ScanLine className="w-24 h-24 mx-auto text-slate-600 dark:text-slate-500" />
+              <p className="mt-4 text-slate-400">{t('barcode.noResult', 'Start the camera or upload an image to begin scanning.')}</p>
             </div>
           )}
         </div>
 
-        <aside className="space-y-4">
-          <button onClick={scanning ? stopCamera : startCamera} className="w-full h-12 rounded-2xl bg-gradient-to-r from-knoux-purple to-knoux-neon text-white font-black flex items-center justify-center gap-2 shadow-knoux-glow hover:shadow-knoux-glow-lg transition">
-            {scanning ? <StopCircle className="w-4 h-4" /> : <Camera className="w-4 h-4" />}{scanning ? "Stop Camera" : "Start ZXing Camera Scan"}
-          </button>
-
-          <label className="w-full h-12 rounded-2xl border border-knoux-purple/15 bg-white text-knoux-purple font-black flex items-center justify-center gap-2 cursor-pointer hover:border-knoux-purple/30 transition">
-            <ImageUp className="w-4 h-4" /> Scan Uploaded Image
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && scanImage(e.target.files[0])} />
-          </label>
-
-          <div className={`rounded-3xl border p-4 space-y-3 ${statusClass}`}>
-            <div className="text-xs font-black uppercase tracking-widest flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Status</div>
-            <div className="text-sm font-semibold leading-6">{status}</div>
-          </div>
-
-          <div className="glass-panel p-4 space-y-3">
-            <div className="text-xs font-black uppercase tracking-widest text-knoux-muted-text flex items-center gap-2"><Keyboard className="w-4 h-4 text-knoux-purple" /> Decoded / Manual Value</div>
-            <textarea value={result} onChange={(e) => setResult(e.target.value)} placeholder="Decoded barcode value appears here, or paste a value manually..." className="w-full h-36 rounded-2xl border border-knoux-purple/10 bg-white p-3 text-xs text-knoux-dark-text outline-none focus:border-knoux-purple/40" />
-            <div className="grid grid-cols-2 gap-2">
-              <button onClick={copyResult} className="h-10 rounded-xl border border-knoux-purple/10 bg-white text-knoux-purple text-xs font-bold flex items-center justify-center gap-2"><Copy className="w-4 h-4" /> Copy</button>
-              <button onClick={() => commitResult(result)} className="h-10 rounded-xl bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-2"><CheckCircle className="w-4 h-4" /> Save</button>
+        <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl border border-slate-200 dark:border-slate-700/80 rounded-3xl p-6 space-y-6 shadow-sm">
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{t('barcode.controlsTitle', 'Controls')}</h3>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              {!isScanning ? (
+                <button onClick={handleStartCamera} className="h-14 rounded-xl bg-violet-600 text-white text-sm font-bold flex items-center justify-center gap-3 hover:bg-violet-700 transition-all shadow-lg"><Camera className="w-5 h-5" /><span>{t('barcode.startCamera', 'Start Camera')}</span></button>
+              ) : (
+                <button onClick={stopScan} className="h-14 rounded-xl bg-rose-600 text-white text-sm font-bold flex items-center justify-center gap-3 hover:bg-rose-700 transition-all shadow-lg"><X className="w-5 h-5" /><span>{t('barcode.stopCamera', 'Stop Camera')}</span></button>
+              )}
+              <label className="h-14 rounded-xl border border-violet-200 dark:border-violet-800 text-violet-600 dark:text-violet-300 text-sm font-bold flex items-center justify-center gap-3 bg-violet-50 dark:bg-violet-500/10 hover:bg-violet-100 dark:hover:bg-violet-500/20 transition-all cursor-pointer"><Upload className="w-5 h-5" /><span>{t('barcode.scanImage', 'Scan Image')}</span><input type="file" accept="image/*" onChange={handleImageScan} className="hidden" /></label>
+            </div>
+            <div className="mt-6">
+              <label className="text-sm font-bold text-slate-700 dark:text-slate-200">{t('barcode.pasteLabel', 'Or paste content to scan')}</label>
+              <div className="mt-2 flex gap-2"><textarea value={pastedContent} onChange={(e) => setPastedContent(e.target.value)} placeholder={t('barcode.pastePlaceholder', 'Paste a URL to an image or barcode data')} className="flex-grow p-3 rounded-lg bg-white dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition text-sm" rows={2} /><button onClick={handlePasteScan} className="h-full px-4 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold hover:bg-slate-300 dark:hover:bg-slate-600"><ClipboardPaste className="w-5 h-5" /></button></div>
             </div>
           </div>
-        </aside>
+          
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">{t('barcode.resultTitle', 'Scan Result')}</h3>
+            <div className="p-4 min-h-[100px] rounded-2xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 font-mono text-sm text-slate-700 dark:text-slate-300 break-all flex items-center justify-center">
+              {error ? (<div className="text-center text-rose-500"><AlertTriangle className="w-8 h-8 mx-auto mb-2" /><p>{error}</p></div>) : result ? (<p>{result}</p>) : (<p className="text-slate-400 dark:text-slate-500">{t('barcode.noResultShort', 'No code detected.')}</p>)}
+            </div>
+            <div className="pt-2 grid grid-cols-3 gap-4">
+              <button onClick={handleCopy} disabled={!result} className="h-12 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-bold flex items-center justify-center gap-2 bg-white dark:bg-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-600/50 transition disabled:opacity-50 disabled:cursor-not-allowed"><Copy className="w-4 h-4" /><span>{t('common.copy', 'Copy')}</span></button>
+              <button onClick={handleSave} disabled={!result} className="h-12 rounded-xl border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-bold flex items-center justify-center gap-2 bg-white dark:bg-slate-700/50 hover:bg-slate-50 dark:hover:bg-slate-600/50 transition disabled:opacity-50 disabled:cursor-not-allowed"><Save className="w-4 h-4" /><span>{t('common.save', 'Save')}</span></button>
+              <button onClick={handleClear} className="h-12 rounded-xl border border-red-300 dark:border-red-700 text-red-600 dark:text-red-300 text-sm font-bold flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 transition"><X className="w-4 h-4" /><span>{t('common.clear', 'Clear')}</span></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

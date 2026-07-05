@@ -1,0 +1,103 @@
+/* KNOUX production polish: stronger lavender glass, wider workspaces, clearer controls. */
+:root {
+  --knoux-card-violet: linear-gradient(180deg, rgba(255,255,255,.90), rgba(243,230,251,.72));
+}
+
+#developer-studio-container,
+#security-workspace-container {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+#developer-studio-container .knoux-premium-card,
+#developer-studio-container .glass-panel,
+#developer-studio-container .glass-elevated,
+#security-workspace-container .knoux-premium-card,
+#security-workspace-container .glass-panel,
+#security-workspace-container .glass-elevated,
+#about-workspace-container .knoux-premium-card {
+  background: var(--knoux-card-violet) !important;
+  border-color: rgba(130, 38, 238, .16) !important;
+  color: var(--knoux-text-primary) !important;
+}
+
+#developer-studio-container article,
+#security-workspace-container article,
+#developer-studio-container button.knoux-premium-card,
+#security-workspace-container button.knoux-premium-card {
+  background: var(--knoux-card-violet) !important;
+  border: 1px solid rgba(130, 38, 238, .16) !important;
+  box-shadow: 0 18px 58px rgba(130, 38, 238, .13), inset 0 1px 0 rgba(255,255,255,.78) !important;
+}
+
+#developer-studio-container article:hover,
+#security-workspace-container article:hover,
+#developer-studio-container button.knoux-premium-card:hover,
+#security-workspace-container button.knoux-premium-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(130, 38, 238, .34) !important;
+  box-shadow: 0 26px 80px rgba(130, 38, 238, .22), inset 0 1px 0 rgba(255,255,255,.86) !important;
+}
+
+.knoux-icon-shell {
+  width: 42px !important;
+  height: 42px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 16px !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, #8226ee, #500fc8 58%, #a74ce7) !important;
+  border: 1px solid rgba(255,255,255,.38) !important;
+  box-shadow: 0 14px 34px rgba(130, 38, 238, .28) !important;
+}
+
+.btn-knoux-primary,
+.btn-knoux-secondary {
+  min-height: 38px;
+  border-radius: 15px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-weight: 900 !important;
+  white-space: nowrap;
+}
+
+.btn-knoux-secondary {
+  background: rgba(255,255,255,.78) !important;
+  color: #500fc8 !important;
+  border: 1px solid rgba(130, 38, 238, .18) !important;
+}
+
+#about-workspace-container a {
+  color: #500fc8 !important;
+}
+
+html[data-theme="night"] #developer-studio-container .knoux-premium-card,
+html[data-theme="night"] #developer-studio-container .glass-panel,
+html[data-theme="night"] #developer-studio-container .glass-elevated,
+html[data-theme="night"] #security-workspace-container .knoux-premium-card,
+html[data-theme="night"] #security-workspace-container .glass-panel,
+html[data-theme="night"] #security-workspace-container .glass-elevated {
+  background: linear-gradient(180deg, rgba(36,20,58,.84), rgba(24,12,42,.76)) !important;
+  border-color: rgba(207,180,234,.20) !important;
+}
+
+html[data-theme="night"] .btn-knoux-secondary {
+  background: rgba(255,255,255,.08) !important;
+  color: #efe0fb !important;
+}
+
+@media (min-width: 1800px) {
+  #developer-studio-container,
+  #security-workspace-container {
+    padding-inline: 34px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .btn-knoux-primary,
+  .btn-knoux-secondary {
+    white-space: normal;
+  }
+}
