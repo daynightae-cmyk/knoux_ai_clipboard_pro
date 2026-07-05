@@ -25,6 +25,7 @@ export type NavTab =
   | "settings"
   | "labs"
   | "developer"
+  | "qa"
   | "barcode"
   | "about";
 
