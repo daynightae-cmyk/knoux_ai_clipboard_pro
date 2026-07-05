@@ -1,2 +1,8 @@
-/* KNOUX lavender override placeholder for premium UI consistency. */
+/* KNOUX lavender override for premium UI consistency. */
+:root {
+  --knoux-ui-muted: #5f5475;
+  --knoux-ui-strong: #381584;
+  --knoux-ui-soft-card: #fcfaff;
+}
+
 .knoux-lavender-override-ready { color: #381584; }
