@@ -122,7 +122,7 @@ export const PRODUCTION_SERVICES: ProductionService[] = [
 
   svc("openrouter-live-ai", "OpenRouter Live AI", "AI", "Ready", "shared", true, "OPENROUTER_API_KEY", "Server route supports real AI actions when the provider key is configured.", "Reports provider_not_configured or route errors without fake output.", "/api/ai/[action]", true),
   svc("offline-ai-boundary", "Offline AI Boundary", "AI", "Guarded", "shared", true, "No bundled local model runtime", "Offline generation is presented as a boundary check and never faked.", "Use manual editing or configure OpenRouter.", "offline-ai-boundary"),
-  ...["Summarize Clip", "Rewrite Clip", "Translate Clip", "Analyze Clip", "Format Clip", "Explain Code Clip", "Commit Message", "README Block", "API Docs", "Action Items", "Checklist"].map(aiAction),
+  ...["Summarize Clip", "Rewrite Clip", "Translate Clip", "Analyze Clip", "Format Clip", "Explain Code Clip", "AI Commit Message", "AI README Block", "API Docs", "Action Items", "Checklist"].map(aiAction),
 
   svc("camera-scan", "Camera Scan", "Barcode", "Active", "web", true, "@zxing/browser and camera permission", "ZXing camera scanning is implemented with browser permission handling.", "Use manual paste or image upload.", "BarcodeScannerPage"),
   svc("image-upload-scan", "Image Upload Scan", "Barcode", "Active", "web", true, "@zxing/browser", "Image upload barcode decode is implemented.", "Use manual paste if decode fails.", "BarcodeScannerPage"),
