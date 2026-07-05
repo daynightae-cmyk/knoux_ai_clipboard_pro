@@ -13,6 +13,7 @@ import LabsPage from "./components/LabsPage";
 import AboutPage from "./components/AboutPage";
 import StudioPage from "./components/StudioPage";
 import BarcodeScannerPage from "./components/BarcodeScannerPage";
+import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
 import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
@@ -62,6 +63,7 @@ export default function App() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [items, setItems] = useState<ClipboardItem[]>([]);
 
@@ -196,9 +198,9 @@ export default function App() {
 
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setActiveTab("search");
+        setCommandPaletteOpen((open) => !open);
       }
     };
     window.addEventListener("keydown", f);
@@ -226,6 +228,7 @@ export default function App() {
   return (
     <AppShellPro activeTab={activeTab} setActiveTab={setActiveTab} collapsed={collapsed} setCollapsed={setCollapsed} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} searchQuery={searchQuery} setSearchQuery={setSearchQuery} onRefresh={handleRefreshClipboard} isRefreshing={isRefreshing} itemsCount={items.length} onRunMaintenance={handleRunMaintenance} toastMessage={toastMessage} isInspectorOpen={isInspectorOpen} setIsInspectorOpen={setIsInspectorOpen} language={settings.language} themeMode={settings.themeMode} setThemeMode={(themeMode: AppSettings["themeMode"]) => setSettings((prev) => ({ ...prev, themeMode }))}>
       {renderActiveTab()}
+      <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} items={items} activeTab={activeTab} setActiveTab={setActiveTab} setSearchQuery={setSearchQuery} setAiInputText={setAiInputText} onCopyItem={handleCopyItem} onToast={triggerToast} privacyMode={privacyMode} setPrivacyMode={setPrivacyMode} />
       <AnimatePresence>{toastMessage && <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-2xl bg-[#160A26]/90 border border-white/15 shadow-knoux-glow flex items-center gap-2 text-xs font-bold text-white"><Check className="w-4 h-4 text-emerald-300" /><span>{toastMessage}</span></div>}</AnimatePresence>
     </AppShellPro>
   );
