@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { AlertTriangle, Check, Database, Download, Gauge, Languages, Layout, Lock, RefreshCw, RotateCcw, ServerCog, Settings, ShieldCheck, Sparkles, Upload, Zap } from "lucide-react";
 import { AppSettings, ClipboardItem, NavTab } from "../types";
 import { PRODUCTION_SERVICES, getServiceReadinessPercent } from "../services/productionCatalog";
-import { checkProviderRoute } from "../services/aiClient";
+import { checkProviderRoute, deriveAIStatus } from "../services/aiClient";
 
 interface SettingsPageProps {
   settings: AppSettings;
@@ -32,10 +32,12 @@ export default function SettingsPageServerOnly({ settings, setSettings, onClearH
     setProviderStatus(null);
     try {
       const result = await checkProviderRoute("chat");
-      setProviderStatus({ status: result.status, configured: result.configured, model: result.model, error: result.error });
-      toast(result.configured ? (ar ? "مزود الذكاء جاهز." : "AI provider route is ready.") : "provider_not_configured");
+      const mapped = deriveAIStatus(result, { hasSensitiveContent: false, isRuntimeGuarded: false });
+      setProviderStatus({ status: mapped.label, configured: result.configured, model: result.model, error: result.error, detail: mapped.detail, tone: mapped.tone });
+      toast(mapped.detail);
     } catch (error: any) {
-      setProviderStatus({ status: error?.message || "network_error", configured: false });
+      const mapped = deriveAIStatus({ ok: false, configured: false, status: error?.message || "network_error" }, { hasSensitiveContent: false, isRuntimeGuarded: false });
+      setProviderStatus({ status: mapped.label, configured: false, detail: mapped.detail, tone: mapped.tone });
     } finally {
       setCheckingProvider(false);
     }
@@ -84,7 +86,7 @@ export default function SettingsPageServerOnly({ settings, setSettings, onClearH
     { label: ar ? "المختبرات" : "Labs", icon: Zap, tab: "labs" as NavTab },
   ];
 
-  const providerTone = providerStatus?.configured ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200";
+  const providerTone = providerStatus?.tone === "success" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : providerStatus?.tone === "danger" ? "bg-red-50 text-red-700 border-red-200" : "bg-amber-50 text-amber-700 border-amber-200";
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto select-none">

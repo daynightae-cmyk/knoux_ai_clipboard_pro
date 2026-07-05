@@ -5,6 +5,7 @@ import { PRODUCTION_SERVICES, getServiceReadinessPercent } from "../services/pro
 import { DEVELOPER_TOOLS, DeveloperToolId, getDeveloperToolSample } from "../services/developerTools";
 import { isWorkerSupportedTool, runDeveloperToolFast } from "../services/developerToolWorkers";
 import ServiceControlPanel from "./ServiceControlPanel";
+import i18n from "../utils/i18n";
 
 interface Props { items?: ClipboardItem[]; }
 type ApiCheck = { ok: boolean; status?: string; provider?: string; model?: string; error?: string } | null;
@@ -59,6 +60,7 @@ const badgeClass = (status: string) => {
 
 export default function StudioPage({ items = [] }: Props) {
   const [status, setStatus] = useState("Ready");
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
   const [api, setApi] = useState<ApiCheck>(null);
   const [busy, setBusy] = useState(false);
   const [toolBusy, setToolBusy] = useState<DeveloperToolId | null>(null);
@@ -164,7 +166,7 @@ export default function StudioPage({ items = [] }: Props) {
     a.download = "knoux-developer-handoff.json";
     a.click();
     URL.revokeObjectURL(url);
-    setStatus("Developer handoff exported");
+    setStatus(t("studio.reportTitle", "Developer handoff exported"));
   };
 
   return (
@@ -173,10 +175,10 @@ export default function StudioPage({ items = [] }: Props) {
         <div className="absolute right-8 top-8 h-28 w-28 rounded-full bg-knoux-purple/10 blur-3xl" />
         <div className="relative grid grid-cols-1 2xl:grid-cols-[1fr_520px] gap-6 items-end">
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-knoux-purple/15 bg-white/60 text-[11px] font-black text-knoux-purple uppercase tracking-widest"><Wrench className="w-4 h-4" /> Developer Control Deck</div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-knoux-purple/15 bg-white/60 text-[11px] font-black text-knoux-purple uppercase tracking-widest"><Wrench className="w-4 h-4" /> {t("studio.statusLabel", "Developer Control Deck")}</div>
             <div className="space-y-2">
-              <h1 className="text-4xl md:text-5xl font-black text-knoux-dark-text tracking-tight">KNOUX Developer Studio</h1>
-              <p className="text-sm md:text-base text-knoux-muted-text max-w-5xl leading-relaxed">Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.</p>
+              <h1 className="text-4xl md:text-5xl font-black text-knoux-dark-text tracking-tight">{t("studio.heroTitle", "KNOUX Developer Studio")}</h1>
+              <p className="text-sm md:text-base text-knoux-muted-text max-w-5xl leading-relaxed">{t("studio.heroDescription", "Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.")}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

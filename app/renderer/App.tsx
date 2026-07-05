@@ -17,6 +17,7 @@ import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
 import { compactLocalStore, detectSensitiveTypes, writeSystemClipboard } from "./services/runtimeServices";
+import i18n from "./utils/i18n";
 import { autoTags, detectClipboardType, hashContent, importCurrentClipboardFromRuntime } from "./services/clientClipboardServices";
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -85,10 +86,12 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem("knoux_settings", JSON.stringify(settings));
-    document.documentElement.lang = settings.language || "en";
-    document.documentElement.dir = settings.language === "ar" ? "rtl" : "ltr";
+    const language = settings.language === "ar" ? "ar" : "en";
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
     localStorage.setItem("knoux_theme_mode", settings.themeMode);
     document.documentElement.dataset.density = settings.density;
+    i18n.setLanguage(language as "en" | "ar");
   }, [settings]);
 
   useEffect(() => {

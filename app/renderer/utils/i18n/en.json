@@ -3,6 +3,60 @@
     "title": "KNOUX AI Clipboard",
     "tagline": "Smart Clipboard with AI Intelligence"
   },
+  "shell": {
+    "sidebar": {
+      "overview": "Overview",
+      "clipboard": "Clipboard Hub",
+      "search": "Deep Search",
+      "ai": "AI Co-Pilot",
+      "barcode": "Barcode Scanner",
+      "security": "Security & Trust",
+      "preferences": "Preferences",
+      "developer": "Developer Studio",
+      "labs": "Experimental Labs",
+      "about": "About Knoux",
+      "advancedWorkspace": "Advanced Workspace",
+      "ready": "Ready",
+      "privacyLocked": "Privacy Locked",
+      "secureEnvironment": "Secure Environment",
+      "localVaultActive": "Local Vault Active"
+    },
+    "topbar": {
+      "searchPlaceholder": "Search clip history, code snippets, secure vaults (Ctrl+K)...",
+      "clear": "CLEAR",
+      "refreshTitle": "Refresh clipboard stream",
+      "togglePrivacy": "Enable Privacy Lock",
+      "disablePrivacy": "Disable Privacy Lock",
+      "openAi": "Open AI Smart Assistant",
+      "openSettings": "Open Preferences",
+      "themeTitle": "Theme",
+      "aiGuarded": "AI Provider Guarded",
+      "pageTitles": {
+        "overview": "Workspace Overview",
+        "clipboard": "Clipboard Hub",
+        "search": "Universal Search",
+        "ai": "Knoux AI Co-Pilot",
+        "security": "Security & Local Vault",
+        "settings": "Preferences",
+        "labs": "Experimental Labs",
+        "developer": "Developer Studio",
+        "barcode": "Barcode Scanner",
+        "about": "About KNOUX",
+        "default": "Knoux AI Clipboard"
+      }
+    }
+  },
+  "overview": {
+    "heroTitle": "Elevate Your Flow with Knoux AI",
+    "heroDescription": "Your clipboard history is local-first and augmented by guarded OpenRouter AI routes. Summarize, rewrite, translate, and review copied snippets without exposing provider secrets.",
+    "launchClipboard": "Launch Clipboard Hub",
+    "deployAi": "Deploy AI Assistant",
+    "quickActionsTitle": "One-Tap Quick Clipboard Actions",
+    "recentClipsTitle": "Recent Clipboard Clips",
+    "recentActivityTitle": "Recent AI-Processed Actions",
+    "emptyState": "Your clipboard is currently clean",
+    "emptyDescription": "Copy any text or code on your system to register records."
+  },
   "clipboard": {
     "title": "Clipboard History",
     "search": "Search clipboard items...",
@@ -11,7 +65,34 @@
     "delete": "Delete",
     "pin": "Pin",
     "unpin": "Unpin",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "smartInbox": "Smart Clipboard Inbox",
+    "serviceNotice": "Local vault ready."
+  },
+  "search": {
+    "title": "Universal Semantic Search Core",
+    "placeholder": "Type content query keywords, source app names, tags, or file extensions...",
+    "recommended": "Recommended Searches:",
+    "queryMatches": "Query Matches ({count} items found)",
+    "awaitingQuery": "Awaiting Query Input",
+    "emptyStateTitle": "Ready for search retrieval",
+    "emptyStateDescription": "Type inside the search bar above or click any suggested term to scan local clipboard records.",
+    "noMatchesTitle": "No matches in local database",
+    "noMatchesDescription": "Try search expansion terms or clear active filters. Knoux has scanned {count} records in temporary memory."
+  },
+  "about": {
+    "heroTitle": "Knoux AI Clipboard Pro",
+    "heroTagline": "Your clipboard. Upgraded by AI.",
+    "creativeDirector": "Creative Director",
+    "developerConnections": "Direct Developer Connections",
+    "philosophy": "Platform Engineering Philosophy",
+    "footer": "© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS."
+  },
+  "studio": {
+    "heroTitle": "KNOUX Developer Studio",
+    "heroDescription": "Full-width production workspace for diagnostics, 19 executable developer utilities, real service actions, guarded API testing, build commands, and exportable handoff reports. Heavy utilities use background workers where supported.",
+    "statusLabel": "Developer Control Deck",
+    "reportTitle": "Developer handoff exported"
   },
   "ai": {
     "title": "AI Features",

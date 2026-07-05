@@ -15,8 +15,11 @@ import {
   Zap,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../constants/brand";
+import i18n from "../utils/i18n";
 
 export default function AboutPage() {
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
+
   const contactLinks = [
     { label: "Website", url: "https://knoux.store", icon: Globe, value: "knoux.store", color: "text-knoux-purple hover:bg-knoux-purple/5" },
     { label: "GitHub", url: "https://github.com/KnouxOPS", icon: Github, value: "github.com/KnouxOPS", color: "text-gray-900 hover:bg-gray-100" },
@@ -42,8 +45,8 @@ export default function AboutPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-knoux-dark-text tracking-tight">Knoux <span className="text-knoux-purple">AI Clipboard Pro</span></h1>
-          <p className="text-sm font-semibold text-knoux-muted-text uppercase tracking-widest font-mono">Your clipboard. Upgraded by AI.</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-knoux-dark-text tracking-tight">Knoux <span className="text-knoux-purple">{t("about.heroTitle", "AI Clipboard Pro")}</span></h1>
+          <p className="text-sm font-semibold text-knoux-muted-text uppercase tracking-widest font-mono">{t("about.heroTagline", "Your clipboard. Upgraded by AI.")}</p>
           <span className="inline-block text-[10px] text-knoux-purple bg-knoux-purple/5 border border-knoux-purple/10 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Stable Release v1.0.0</span>
         </div>
       </div>
@@ -55,7 +58,7 @@ export default function AboutPage() {
           <div className="absolute -right-16 -top-16 w-40 h-40 rounded-full bg-white/20 blur-2xl" />
           <div className="absolute -left-10 bottom-0 w-32 h-32 rounded-full bg-[#c17ceb]/25 blur-2xl" />
           <div className="relative space-y-1">
-            <span className="text-[10px] text-[#d8b8ec] font-extrabold uppercase tracking-wider block font-mono">Creative Director</span>
+            <span className="text-[10px] text-[#d8b8ec] font-extrabold uppercase tracking-wider block font-mono">{t("about.creativeDirector", "Creative Director")}</span>
             <h3 className="text-lg font-black tracking-tight text-white">Eng. Sadek Elgazar (Knoux)</h3>
           </div>
           <p className="relative text-sm text-[#f3e6fb] leading-relaxed">Leading the Knoux visual system and developing premium productivity solutions that align clean aesthetics with honest local-first security boundaries.</p>
@@ -66,7 +69,7 @@ export default function AboutPage() {
         </div>
 
         <div className="p-6 rounded-3xl border border-knoux-purple/10 bg-[color:var(--knoux-card-elevated)] shadow-knoux-glow space-y-4">
-          <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider">Direct Developer Connections</h3>
+          <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider">{t("about.developerConnections", "Direct Developer Connections")}</h3>
           <div className="space-y-2">
             {contactLinks.map((link) => {
               const Icon = link.icon;
@@ -82,7 +85,7 @@ export default function AboutPage() {
       </div>
 
       <div className="space-y-3 pt-4">
-        <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider text-center">Platform Engineering Philosophy</h3>
+        <h3 className="text-xs font-extrabold text-knoux-dark-text uppercase tracking-wider text-center">{t("about.philosophy", "Platform Engineering Philosophy")}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {features.map((feat, i) => {
             const Icon = feat.icon;
@@ -97,7 +100,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="text-center text-[10px] text-knoux-muted-text/50 font-mono py-4">© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.</div>
+      <div className="text-center text-[10px] text-knoux-muted-text/50 font-mono py-4">{t("about.footer", "© 2026 Knoux. All rights reserved. Crafted with Electron, React, & Tailwind CSS.")}</div>
     </div>
   );
 }

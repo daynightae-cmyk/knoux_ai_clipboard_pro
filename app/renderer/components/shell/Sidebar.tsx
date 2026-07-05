@@ -20,6 +20,7 @@ import {
   Code2,
 } from "lucide-react";
 import { KNOUX_BRAND } from "../../constants/brand";
+import i18n from "../../utils/i18n";
 
 interface SidebarProps {
   activeTab: NavTab;
@@ -40,21 +41,22 @@ export default function Sidebar({
   language = "en",
 }: SidebarProps) {
   const ar = language === "ar";
+  const t = (key: string, fallback: string) => i18n.t(key, fallback);
 
   const menuItems = [
-    { id: "overview" as NavTab, label: ar ? "لوحة التحكم" : "Overview", icon: LayoutDashboard },
-    { id: "clipboard" as NavTab, label: ar ? "مركز الحافظة" : "Clipboard Hub", icon: Clipboard },
-    { id: "search" as NavTab, label: ar ? "بحث عميق" : "Deep Search", icon: Search },
-    { id: "ai" as NavTab, label: ar ? "مساعد الذكاء" : "AI Co-Pilot", icon: Sparkles },
-    { id: "barcode" as NavTab, label: ar ? "ماسح الباركود" : "Barcode Scanner", icon: QrCode },
-    { id: "security" as NavTab, label: ar ? "الأمان والخزنة" : "Security & Trust", icon: ShieldCheck },
-    { id: "settings" as NavTab, label: ar ? "الإعدادات" : "Preferences", icon: Settings },
+    { id: "overview" as NavTab, label: t("shell.sidebar.overview", ar ? "لوحة التحكم" : "Overview"), icon: LayoutDashboard },
+    { id: "clipboard" as NavTab, label: t("shell.sidebar.clipboard", ar ? "مركز الحافظة" : "Clipboard Hub"), icon: Clipboard },
+    { id: "search" as NavTab, label: t("shell.sidebar.search", ar ? "بحث عميق" : "Deep Search"), icon: Search },
+    { id: "ai" as NavTab, label: t("shell.sidebar.ai", ar ? "مساعد الذكاء" : "AI Co-Pilot"), icon: Sparkles },
+    { id: "barcode" as NavTab, label: t("shell.sidebar.barcode", ar ? "ماسح الباركود" : "Barcode Scanner"), icon: QrCode },
+    { id: "security" as NavTab, label: t("shell.sidebar.security", ar ? "الأمان والثقة" : "Security & Trust"), icon: ShieldCheck },
+    { id: "settings" as NavTab, label: t("shell.sidebar.preferences", ar ? "الإعدادات" : "Preferences"), icon: Settings },
   ];
 
   const experimentalItems = [
-    { id: "developer" as NavTab, label: ar ? "استوديو المطورين" : "Developer Studio", icon: Code2 },
-    { id: "labs" as NavTab, label: ar ? "مختبرات متقدمة" : "Experimental Labs", icon: FlaskConical },
-    { id: "about" as NavTab, label: ar ? "عن كنوكس" : "About Knoux", icon: Info },
+    { id: "developer" as NavTab, label: t("shell.sidebar.developer", ar ? "استوديو المطورين" : "Developer Studio"), icon: Code2 },
+    { id: "labs" as NavTab, label: t("shell.sidebar.labs", ar ? "مختبرات تجريبية" : "Experimental Labs"), icon: FlaskConical },
+    { id: "about" as NavTab, label: t("shell.sidebar.about", ar ? "عن كنوكس" : "About Knoux"), icon: Info },
   ];
 
   return (
@@ -81,7 +83,7 @@ export default function Sidebar({
           ); })}
         </nav>
 
-        <div className="px-6 py-2"><div className="h-[1px] bg-white/10" />{!collapsed && <div className="text-[10px] font-black text-[#BFA7DB]/55 tracking-wider uppercase mt-3">{ar ? "الأدوات المتقدمة" : "Advanced Workspace"}</div>}</div>
+        <div className="px-6 py-2"><div className="h-[1px] bg-white/10" />{!collapsed && <div className="text-[10px] font-black text-[#BFA7DB]/55 tracking-wider uppercase mt-3">{t("shell.sidebar.advancedWorkspace", ar ? "الأدوات المتقدمة" : "Advanced Workspace")}</div>}</div>
 
         <nav className="p-3 space-y-1.5">
           {experimentalItems.map((item) => { const Icon = item.icon; const isActive = activeTab === item.id; return (
