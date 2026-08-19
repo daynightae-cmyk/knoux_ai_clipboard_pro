@@ -34,7 +34,7 @@ export function getStorageHealth(items: ClipboardItem[] = getStoredClips()): Sto
   };
 }
 
-export function compactLocalStore(items: ClipboardItem[]): {
+export function compactLocalStore(items: ClipboardItem[]): StorageHealth & {
   compacted: ClipboardItem[];
   health: StorageHealth;
 } {
@@ -51,7 +51,8 @@ export function compactLocalStore(items: ClipboardItem[]): {
   } catch (error) {
     console.error("Failed to save compacted clips to localStorage:", error);
   }
-  return { compacted, health: getStorageHealth(compacted) };
+  const health = getStorageHealth(compacted);
+  return { ...health, compacted, health };
 }
 
 export function detectSensitiveTypes(value: string): string[] {
@@ -65,6 +66,7 @@ export function detectSensitiveTypes(value: string): string[] {
           text
         ),
     },
+    { type: "openrouter-key", matched: /\bsk-or-v1-[A-Za-z0-9_\-]{16,}\b/i.test(text) },
     { type: "bearer-token", matched: /\bbearer\s+[A-Za-z0-9._\-]{20,}/i.test(text) },
     {
       type: "access-token",
@@ -75,7 +77,9 @@ export function detectSensitiveTypes(value: string): string[] {
       matched: /\brefresh[_-]?token\s*[:=]\s*["']?[A-Za-z0-9._\-]{20,}/i.test(text),
     },
     { type: "token", matched: /\b(token)\s*[:=]\s*["']?[A-Za-z0-9._\-]{20,}/i.test(text) },
+    { type: "jwt", matched: /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/.test(text) },
     { type: "private-key", matched: /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/i.test(text) },
+    { type: "ssh-key", matched: /\bssh-(?:rsa|ed25519|ecdsa)\s+[A-Za-z0-9+/]{32,}/i.test(text) },
     {
       type: "secret-env-line",
       matched: /^[A-Z0-9_]*_?(SECRET|TOKEN|KEY|PASSWORD)_?[A-Z0-9_]*\s*=\s*.+/im.test(text),

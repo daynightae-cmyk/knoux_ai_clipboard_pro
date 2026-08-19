@@ -1,10 +1,17 @@
 const fs = require("fs");
 const path = require("path");
+const {
+  MAX_AI_INPUT_LENGTH,
+  buildAIPrompt,
+  classifyProviderError,
+  isAllowedAIAction,
+  normalizeAIAction,
+} = require("../../shared/ai-contract");
 
 function loadLocalEnv() {
   const candidates = [
     path.join(process.cwd(), ".env"),
-    path.join(process.cwd(), ".env.local")
+    path.join(process.cwd(), ".env.local"),
   ];
 
   for (const file of candidates) {
@@ -13,105 +20,123 @@ function loadLocalEnv() {
     for (const line of lines) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) continue;
-      const idx = trimmed.indexOf("=");
-      const key = trimmed.slice(0, idx).trim();
-      const value = trimmed.slice(idx + 1).trim().replace(/^["']|["']$/g, "");
+      const index = trimmed.indexOf("=");
+      const key = trimmed.slice(0, index).trim();
+      const value = trimmed.slice(index + 1).trim().replace(/^["']|["']$/g, "");
       if (key && process.env[key] === undefined) process.env[key] = value;
     }
   }
 }
 
-function normalizeAction(action) {
-  if (action === "format-text") return "format";
-  if (action === "explain-code") return "analyze";
-  return action || "chat";
-}
-
-function buildPrompt(action, text, targetLanguage) {
-  const clean = String(text || "").trim();
-
-  switch (normalizeAction(action)) {
-    case "summarize":
-      return `Summarize this clipboard content into concise professional bullets:\n\n${clean}`;
-    case "enhance":
-      return `Improve clarity, grammar, structure, and professional tone without changing meaning:\n\n${clean}`;
-    case "rewrite":
-      return `Rewrite this in a premium corporate KNOUX style without changing meaning:\n\n${clean}`;
-    case "translate":
-      return `Translate this text into ${targetLanguage || "Arabic"} while preserving formatting and meaning:\n\n${clean}`;
-    case "analyze":
-      return `Analyze this content deeply. Extract intent, entities, risks, action items, structure, and recommendations:\n\n${clean}`;
-    case "classify":
-      return `Classify this clipboard content. Return 3-6 short tags starting with # and a one-line reason:\n\n${clean}`;
-    case "predict":
-      return `Predict the most useful next actions for this clipboard content:\n\n${clean}`;
-    case "format":
-      return `Format this clipboard content into polished Markdown with clean structure:\n\n${clean}`;
-    case "extract":
-      return `Extract key points, dates, names, links, tasks, IDs, and structured data from this content:\n\n${clean}`;
-    case "reply":
-      return `Write a professional reply based on this clipboard content:\n\n${clean}`;
-    default:
-      return clean;
-  }
+function getOpenRouterStatus() {
+  loadLocalEnv();
+  const configured = Boolean(process.env.OPENROUTER_API_KEY);
+  return {
+    ok: configured,
+    configured,
+    status: configured ? "ready" : "provider_missing",
+    provider: "openrouter",
+    model: process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free",
+  };
 }
 
 async function runOpenRouterAction(action, text, options = {}) {
-  loadLocalEnv();
-
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is missing. Add it to local .env or Vercel Environment Variables.");
+  const normalizedAction = normalizeAIAction(action);
+  if (!isAllowedAIAction(normalizedAction)) {
+    const error = new Error(`Unsupported AI action: ${normalizedAction}`);
+    error.status = "action_not_supported";
+    error.http = 400;
+    throw error;
   }
 
-  const model = process.env.OPENROUTER_MODEL || "cohere/north-mini-code:free";
-  const baseUrl = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
-  const prompt = buildPrompt(action, text, options.targetLanguage);
+  const cleanText = String(text || "").trim();
+  if (!cleanText) {
+    const error = new Error("No input text provided.");
+    error.status = "empty_input";
+    error.http = 400;
+    throw error;
+  }
+  if (cleanText.length > MAX_AI_INPUT_LENGTH) {
+    const error = new Error(`Input exceeds ${MAX_AI_INPUT_LENGTH} characters.`);
+    error.status = "input_too_large";
+    error.http = 413;
+    throw error;
+  }
 
-  const response = await fetch(`${baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "https://knoux.store",
-      "X-Title": process.env.OPENROUTER_APP_NAME || "Knoux AI Clipboard Pro"
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        {
-          role: "system",
-          content: "You are KNOUX AI Clipboard Pro, a precise clipboard productivity assistant. Return useful, structured, production-ready output."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.35,
-      max_tokens: 1200
-    })
-  });
+  const status = getOpenRouterStatus();
+  if (!status.configured) {
+    const error = new Error("OPENROUTER_API_KEY is missing. Add it to local .env or Vercel Environment Variables.");
+    error.status = "provider_missing";
+    error.http = 503;
+    throw error;
+  }
+
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  const model = status.model;
+  const baseUrl = process.env.OPENROUTER_BASE_URL || "https://openrouter.ai/api/v1";
+
+  let response;
+  try {
+    response = await fetch(`${baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": process.env.OPENROUTER_SITE_URL || "https://knoux.store",
+        "X-OpenRouter-Title": process.env.OPENROUTER_APP_NAME || "Knoux AI Clipboard Pro",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content: "You are KNOUX AI Clipboard Pro, a precise clipboard productivity assistant. Never fabricate provider success or expose secrets.",
+          },
+          { role: "user", content: buildAIPrompt(normalizedAction, cleanText, options.targetLanguage) },
+        ],
+        temperature: 0.35,
+        max_tokens: 1200,
+      }),
+    });
+  } catch {
+    const error = new Error("AI API request failed safely.");
+    error.status = "network_error";
+    error.http = 502;
+    throw error;
+  }
 
   const data = await response.json().catch(() => ({}));
-
   if (!response.ok) {
-    throw new Error(data.error?.message || data.message || "OpenRouter request failed.");
+    const mapped = classifyProviderError(response.status, data.error?.message || data.message || "");
+    const error = new Error(mapped.message);
+    error.status = mapped.status;
+    error.http = mapped.http;
+    throw error;
+  }
+
+  const result = String(data.choices?.[0]?.message?.content || "").trim();
+  if (!result) {
+    const error = new Error("AI provider returned an empty response.");
+    error.status = "empty_result";
+    error.http = 502;
+    throw error;
   }
 
   return {
     ok: true,
     success: true,
-    result: data.choices?.[0]?.message?.content || "",
+    status: "ready",
+    result,
     provider: "openrouter",
     model,
-    action: normalizeAction(action),
+    action: normalizedAction,
     simulated: false,
-    usage: data.usage || null
+    usage: data.usage || null,
   };
 }
 
 module.exports = {
+  getOpenRouterStatus,
+  loadLocalEnv,
   runOpenRouterAction,
-  normalizeAction
 };
