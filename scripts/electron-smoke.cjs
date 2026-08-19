@@ -12,10 +12,11 @@ function requireFile(relativePath) {
   if (!fs.existsSync(target)) throw new Error(`Missing smoke-test artifact: ${relativePath}`);
 }
 
-const versionCommand = process.platform === "win32"
-  ? { command: process.env.ComSpec || "cmd.exe", args: ["/d", "/s", "/c", `\"${electron}\" --version`] }
-  : { command: electron, args: ["--version"] };
-const version = execFileSync(versionCommand.command, versionCommand.args, { cwd: root, encoding: "utf8" }).trim();
+const version = execFileSync(electron, ["--version"], {
+  cwd: root,
+  encoding: "utf8",
+  shell: process.platform === "win32",
+}).trim();
 const major = Number((version.match(/v(\d+)/) || [])[1]);
 if (!Number.isFinite(major) || major < 41) throw new Error(`Unsupported Electron runtime: ${version}`);
 
