@@ -45,13 +45,13 @@ interface ColorAnalysis {
 
 class SuperVisionAI {
   private static instance: SuperVisionAI;
-  private visionModel: VisionModel;
-  private arEngine: AREngine;
-  private ocrProcessor: OCRProcessor;
-  private imageAnalyzer: ImageAnalyzer;
-  private objectDetector: ObjectDetector;
-  private emotionRecognizer: EmotionRecognizer;
-  private visualMemory: VisualMemory;
+  private visionModel!: VisionModel;
+  private arEngine!: AREngine;
+  private ocrProcessor!: OCRProcessor;
+  private imageAnalyzer!: ImageAnalyzer;
+  private objectDetector!: ObjectDetector;
+  private emotionRecognizer!: EmotionRecognizer;
+  private visualMemory!: VisualMemory;
 
   private constructor() {
     this.initializeVisionSystem();
