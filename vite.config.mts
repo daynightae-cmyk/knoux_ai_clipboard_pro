@@ -1,11 +1,14 @@
 ﻿import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
+
+const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: path.resolve(__dirname, 'app', 'renderer'),
-  publicDir: path.resolve(__dirname, 'public'),
+  root: path.resolve(rootDir, 'app', 'renderer'),
+  publicDir: path.resolve(rootDir, 'public'),
   plugins: [
     react({
       jsxImportSource: 'react',
@@ -14,24 +17,24 @@ export default defineConfig({
   base: './',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '.'),
-      '@app': path.resolve(__dirname, 'app'),
-      '@shared': path.resolve(__dirname, 'app/shared'),
+      '@': path.resolve(rootDir, '.'),
+      '@app': path.resolve(rootDir, 'app'),
+      '@shared': path.resolve(rootDir, 'app/shared'),
       // âŒ @backend removed - renderer must use IPC only
-      '@renderer': path.resolve(__dirname, 'app/renderer'),
-      '@components': path.resolve(__dirname, 'app/renderer/components'),
-      '@hooks': path.resolve(__dirname, 'app/renderer/hooks'),
-      '@views': path.resolve(__dirname, 'app/renderer/views'),
-      '@services': path.resolve(__dirname, 'app/renderer/services'),
-      '@stores': path.resolve(__dirname, 'app/renderer/stores'),
-      '@contexts': path.resolve(__dirname, 'app/renderer/contexts'),
-      '@utils': path.resolve(__dirname, 'app/renderer/utils'),
-      '@styles': path.resolve(__dirname, 'app/renderer/styles'),
-      '@assets': path.resolve(__dirname, 'assets')
+      '@renderer': path.resolve(rootDir, 'app/renderer'),
+      '@components': path.resolve(rootDir, 'app/renderer/components'),
+      '@hooks': path.resolve(rootDir, 'app/renderer/hooks'),
+      '@views': path.resolve(rootDir, 'app/renderer/views'),
+      '@services': path.resolve(rootDir, 'app/renderer/services'),
+      '@stores': path.resolve(rootDir, 'app/renderer/stores'),
+      '@contexts': path.resolve(rootDir, 'app/renderer/contexts'),
+      '@utils': path.resolve(rootDir, 'app/renderer/utils'),
+      '@styles': path.resolve(rootDir, 'app/renderer/styles'),
+      '@assets': path.resolve(rootDir, 'assets')
     }
   },
   build: {
-    outDir: path.resolve(__dirname, 'dist'),
+    outDir: path.resolve(rootDir, 'dist'),
     assetsDir: 'assets',
     emptyOutDir: true,
     minify: 'terser',
@@ -49,6 +52,10 @@ export default defineConfig({
         entryFileNames: 'assets/[name].[hash].js',
         chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: 'assets/[name].[hash][extname]',
+        manualChunks(id) {
+          if (id.includes('node_modules/@zxing/')) return 'vendor-barcode'
+          return undefined
+        },
       },
     },
     sourcemap: false,
