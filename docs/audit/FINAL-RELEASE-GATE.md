@@ -2,8 +2,19 @@
 
 **Evidence date:** 2026-08-19  
 **Branch:** `codex/production-rescue-rc`  
+**Final HEAD at evidence capture:** `5743d00`  
 **Baseline:** `origin/main` at `1c50a8b235055a22cc52992d52ba5b6365429fb3`  
 **Evidence status:** This record is generated from executed commands in the rescue workspace. It is not a release approval by itself.
+
+## Execution commits
+
+| Commit | Purpose |
+|---|---|
+| `934f67f` | Unify Electron and web AI gateway. |
+| `b557f0e` | Centralize IPC and harden vault derivation. |
+| `abcd2d0` | Enforce truthful service catalog states and QA execution. |
+| `e4e408d` | Upgrade supported runtime and enable strict TypeScript build. |
+| `5743d00` | Enforce CI production gates, Installer preparation, and release evidence. |
 
 ## Implemented remediation
 
