@@ -2,13 +2,13 @@ name: KNOUX Production Validation
 
 on:
   push:
-    branches: [main, complete-production-polish]
+    branches: [main, codex/production-rescue-rc]
   pull_request:
     branches: [main]
 
 jobs:
   validate:
-    name: Renderer, Tests, and Electron Main
+    name: Security, Quality, and Runtime Gate
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -17,23 +17,32 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps --include=dev
+      - name: Install locked dependencies
+        run: npm ci --include=dev
 
-      - name: Build renderer
-        run: npm run build:renderer
+      - name: Scan tracked production sources for secrets
+        run: npm run secret:scan
 
-      - name: Run tests
+      - name: Audit production dependencies
+        run: npm run audit:production
+
+      - name: Lint production sources
+        run: npm run lint
+
+      - name: Run unit and integration tests
         run: npm test
 
-      - name: Build Electron main
-        run: npm run build:main
+      - name: Build renderer and Electron backend
+        run: npm run build
+
+      - name: Run Electron smoke gate
+        run: npm run electron:smoke
 
   windows-installer:
-    name: Premium Windows Installer Phase
+    name: Windows Installer Build Gate
     runs-on: windows-latest
     needs: validate
     if: ${{ needs.validate.result == 'success' }}
@@ -44,18 +53,25 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps --include=dev
+      - name: Install locked dependencies
+        run: npm ci --include=dev
 
-      - name: Build installer
+      - name: Build NSIS installer
         run: npm run dist:installer
+
+      - name: Verify installer artifact
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -Path release-installer -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $installer) { throw 'NSIS installer artifact was not created.' }
+          Write-Host "Installer artifact: $($installer.FullName)"
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: knoux-windows-installer
-          path: release/**/*
+          path: release-installer/**/*
           if-no-files-found: error

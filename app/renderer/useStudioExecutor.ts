@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { AppSettings, ClipboardItem } from "../types";
-import { ProductionService } from "../services/productionCatalog";
+import { AppSettings, ClipboardItem } from "./types";
+import { ProductionService } from "./services/productionCatalog";
 import {
   DeveloperTool,
   DeveloperToolId,
   DEVELOPER_TOOLS,
   getDeveloperToolSample,
-} from "../services/developerTools";
-import { isWorkerSupportedTool, runDeveloperToolFast } from "../services/developerToolWorkers";
-import { runServiceOperation, ServiceOperationResult } from "../services/serviceOperations";
-import { PreviewRun } from "../components/studio/LivePreviewPanel";
-import { copyToClipboard } from "../../shared/clipboard-utils";
+} from "./services/developerTools";
+import { isWorkerSupportedTool, runDeveloperToolFast } from "./services/developerToolWorkers";
+import { runServiceOperation, ServiceOperationResult } from "./services/serviceOperations";
+import { PreviewRun } from "./components/studio/LivePreviewPanel";
+import { copyToClipboard } from "../shared/clipboard-utils";
 
 const looksLikeError = (output: string) =>
   /^(error\b|invalid\b|.*error:|no input)/i.test((output.split("\n")[0] || "").trim());
