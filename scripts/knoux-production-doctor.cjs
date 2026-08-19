@@ -22,7 +22,11 @@ function requireFile(relativePath) {
 
 function run(label, args) {
   try {
-    execFileSync(npmCommand, args, { cwd: root, stdio: "inherit" });
+    execFileSync(npmCommand, args, {
+      cwd: root,
+      stdio: "inherit",
+      shell: process.platform === "win32",
+    });
     pass(label);
   } catch {
     fail(label);
