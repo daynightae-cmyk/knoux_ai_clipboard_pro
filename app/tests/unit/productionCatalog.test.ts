@@ -4,7 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { PRODUCTION_SERVICES, getServiceReadinessPercent, PRODUCTION_SCORE } from '@renderer/services/productionCatalog';
+import { PRODUCTION_SERVICES, getCategoryReadinessPercent, getServiceReadinessPercent, PRODUCTION_SCORE } from '@renderer/services/productionCatalog';
 
 describe('productionCatalog', () => {
   it('should have no empty titles or descriptions', () => {
@@ -46,13 +46,13 @@ describe('productionCatalog', () => {
     expect(typeof percent).toBe('number');
   });
 
-  it('should have consistent production score', () => {
-    const percent = getServiceReadinessPercent();
-    expect(PRODUCTION_SCORE.score).toBe(percent);
-    expect(PRODUCTION_SCORE.securityVault).toBe(percent);
-    expect(PRODUCTION_SCORE.openRouterBridge).toBe(percent);
-    expect(PRODUCTION_SCORE.sqlitePersistence).toBe(percent);
-    expect(PRODUCTION_SCORE.serviceTransparency).toBe(percent);
+  it('should derive each production score from its real source', () => {
+    expect(PRODUCTION_SCORE.score).toBe(getServiceReadinessPercent());
+    expect(PRODUCTION_SCORE.securityVault).toBe(getCategoryReadinessPercent('Security'));
+    expect(PRODUCTION_SCORE.openRouterBridge).toBe(getCategoryReadinessPercent('AI'));
+    expect(PRODUCTION_SCORE.sqlitePersistence).toBe(getCategoryReadinessPercent('Storage'));
+    const transparency = Math.round(PRODUCTION_SERVICES.filter(s => s.userFallback && s.fallback).length / PRODUCTION_SERVICES.length * 100);
+    expect(PRODUCTION_SCORE.serviceTransparency).toBe(transparency);
   });
 
   it('should have unique service IDs', () => {

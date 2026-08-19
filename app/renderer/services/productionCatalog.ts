@@ -17,10 +17,11 @@ export interface ProductionService {
   actionHandler: string;
   description: string;
   channel: string;
+  disabledReason?: string;
 }
 
 // Production services catalog - matches serviceOperations.ts capabilities
-export const PRODUCTION_SERVICES: ProductionService[] = [
+const DECLARED_PRODUCTION_SERVICES: ProductionService[] = [
   // Clipboard Core Services
   {
     id: "smart-clipboard-inbox",
@@ -1289,7 +1290,70 @@ export const PRODUCTION_SERVICES: ProductionService[] = [
   },
 ];
 
-const getCategoryReadinessPercent = (category: ServiceCategory) => {
+// Only these IDs have a non-placeholder operation in serviceOperations.ts. Any
+// declaration outside this registry is surfaced as guarded until it gains a real
+// runner and an execution test, preventing catalog metadata from becoming a claim.
+const VERIFIED_LIVE_SERVICE_IDS = new Set<string>([
+  "smart-clipboard-inbox",
+  "windows-current-clipboard-import",
+  "persistent-local-clipboard-vault",
+  "large-history-storage",
+  "clipboard-deduplication",
+  "quick-paste-favorites",
+  "clipboard-collections",
+  "smart-labels-auto-tags",
+  "clipboard-backup-export",
+  "json-export",
+  "csv-export",
+  "smart-search-assistant",
+  "daily-clipboard-summary",
+  "auto-cleanup",
+  "web-clipboard-limited-mode",
+  "current-session-import",
+  "smart-text-cleaner",
+  "link-organizer",
+  "code-snippet-saver",
+  "entity-extractor",
+  "offline-mode-indicator",
+  "sensitive-data-guard",
+  "secrets-exposure-guard",
+  "local-privacy-guard",
+  "redaction-lab",
+  "security-audit-trail",
+]);
+
+export function hasVerifiedServiceRunner(service: ProductionService): boolean {
+  return service.category === "Developer" || VERIFIED_LIVE_SERVICE_IDS.has(service.id);
+}
+
+export const PRODUCTION_SERVICES: ProductionService[] = DECLARED_PRODUCTION_SERVICES.map((service) => {
+  const renamedStorageHealth = service.id === "persistent-local-clipboard-vault"
+    ? {
+        displayName: "Local Clipboard Storage Health",
+        title: "Local Clipboard Storage Health",
+        description: "Audits local clipboard storage health only; browser localStorage is not presented as an encrypted vault.",
+        userFallback: "Use Electron vault encryption only after its IPC capability is verified.",
+        fallback: "Use Electron vault encryption only after its IPC capability is verified.",
+      }
+    : {};
+
+  if (service.status === "Active" && !hasVerifiedServiceRunner(service)) {
+    return {
+      ...service,
+      ...renamedStorageHealth,
+      status: "Guarded" as ServiceStatus,
+      tier: "guarded" as const,
+      implemented: false,
+      disabledReason: "The catalog entry has no verified executable runner in the current runtime.",
+      fallback: "This capability remains guarded until a real runner and execution test are added.",
+      userFallback: "This capability remains guarded until a real runner and execution test are added.",
+    };
+  }
+
+  return { ...service, ...renamedStorageHealth };
+});
+
+export const getCategoryReadinessPercent = (category: ServiceCategory) => {
   const categoryServices = PRODUCTION_SERVICES.filter(s => s.category === category);
   const total = categoryServices.length;
   if (total === 0) return 0;
