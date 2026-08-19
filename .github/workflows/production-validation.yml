@@ -96,7 +96,7 @@ jobs:
           if (Test-Path $app) { throw 'Application executable remains after uninstall.' }
 
       - name: Upload installer artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: knoux-windows-installer
           path: release-installer/**/*
