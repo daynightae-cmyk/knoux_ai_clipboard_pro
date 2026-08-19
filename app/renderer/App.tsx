@@ -1,20 +1,8 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { ClipboardItem, NavTab, AppSettings, ClipboardType } from "./types";
 import SplashScreen from "./components/SplashScreen";
 import AppShellPro from "./components/shell/AppShellPro";
-import OverviewDashboard from "./components/OverviewDashboard";
-import ClipboardWorkspace from "./components/ClipboardWorkspace";
-import AIToolsPage from "./components/AIToolsPage";
-import SearchPage from "./components/SearchPage";
-import SecurityPage from "./components/SecurityPage";
-import SettingsPage from "./components/SettingsPageServerOnly";
-import LabsPage from "./components/LabsPage";
-import AboutPage from "./components/AboutPage";
-import StudioPage from "./components/StudioPage";
-import QALabPage from "./components/QALabPage";
-import BarcodeScannerPage from "./components/BarcodeScannerPage";
-import CommandPalette from "./components/CommandPalette";
 import { Check } from "lucide-react";
 import { runKnouxAIAction } from "./services/aiClient";
 import {
@@ -29,6 +17,19 @@ import {
   hashContent,
   importCurrentClipboardFromRuntime,
 } from "./services/clientClipboardServices";
+
+const OverviewDashboard = lazy(() => import("./components/OverviewDashboard"));
+const ClipboardWorkspace = lazy(() => import("./components/ClipboardWorkspace"));
+const AIToolsPage = lazy(() => import("./components/AIToolsPage"));
+const SearchPage = lazy(() => import("./components/SearchPage"));
+const SecurityPage = lazy(() => import("./components/SecurityPage"));
+const SettingsPage = lazy(() => import("./components/SettingsPageServerOnly"));
+const LabsPage = lazy(() => import("./components/LabsPage"));
+const AboutPage = lazy(() => import("./components/AboutPage"));
+const StudioPage = lazy(() => import("./components/StudioPage"));
+const QALabPage = lazy(() => import("./components/QALabPage"));
+const BarcodeScannerPage = lazy(() => import("./components/BarcodeScannerPage"));
+const CommandPalette = lazy(() => import("./components/CommandPalette"));
 
 const DEFAULT_SETTINGS: AppSettings = {
   themeMode: "system",
@@ -451,20 +452,24 @@ export default function App() {
         setSettings((prev) => ({ ...prev, themeMode }))
       }
     >
-      {renderActiveTab()}
-      <CommandPalette
-        open={commandPaletteOpen}
-        onOpenChange={setCommandPaletteOpen}
-        items={items}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        setSearchQuery={setSearchQuery}
-        setAiInputText={setAiInputText}
-        onCopyItem={handleCopyItem}
-        onToast={triggerToast}
-        privacyMode={privacyMode}
-        setPrivacyMode={setPrivacyMode}
-      />
+      <Suspense fallback={<div className="p-6 text-sm text-white/70">Loading workspace…</div>}>
+        {renderActiveTab()}
+        {commandPaletteOpen && (
+          <CommandPalette
+            open={commandPaletteOpen}
+            onOpenChange={setCommandPaletteOpen}
+            items={items}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setSearchQuery={setSearchQuery}
+            setAiInputText={setAiInputText}
+            onCopyItem={handleCopyItem}
+            onToast={triggerToast}
+            privacyMode={privacyMode}
+            setPrivacyMode={setPrivacyMode}
+          />
+        )}
+      </Suspense>
       <AnimatePresence>
         {toastMessage && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-2xl bg-[#160A26]/90 border border-white/15 shadow-knoux-glow flex items-center gap-2 text-xs font-bold text-white">
