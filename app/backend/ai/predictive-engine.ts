@@ -89,13 +89,13 @@ export class PredictiveEngine {
   }
 
   private async analyzeAppPattern(application: string): Promise<any> {
-    const commonPatterns = {
-      'vscode': ['function', 'const', 'import'],
-      'chrome': ['https://', 'www.'],
-      'notepad': ['TODO:', 'Note:']
+    const commonPatterns: Record<string, string[]> = {
+      vscode: ['function', 'const', 'import'],
+      chrome: ['https://', 'www.'],
+      notepad: ['TODO:', 'Note:'],
     };
 
-    const patterns = commonPatterns[application] || [];
+    const patterns: string[] = commonPatterns[application] || [];
 
     return {
       predictions: patterns.map(pattern => ({

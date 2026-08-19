@@ -2,13 +2,13 @@ name: KNOUX Production Validation
 
 on:
   push:
-    branches: [main, complete-production-polish]
+    branches: [main, codex/production-rescue-rc]
   pull_request:
     branches: [main]
 
 jobs:
   validate:
-    name: Renderer, Tests, and Electron Main
+    name: Security, Quality, and Runtime Gate
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -17,23 +17,32 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps --include=dev
+      - name: Install locked dependencies
+        run: npm ci --include=dev
 
-      - name: Build renderer
-        run: npm run build:renderer
+      - name: Scan tracked production sources for secrets
+        run: npm run secret:scan
 
-      - name: Run tests
+      - name: Audit production dependencies
+        run: npm run audit:production
+
+      - name: Lint production sources
+        run: npm run lint
+
+      - name: Run unit and integration tests
         run: npm test
 
-      - name: Build Electron main
-        run: npm run build:main
+      - name: Build renderer and Electron backend
+        run: npm run build
+
+      - name: Run Electron smoke gate
+        run: npm run electron:smoke
 
   windows-installer:
-    name: Premium Windows Installer Phase
+    name: Windows Installer Build Gate
     runs-on: windows-latest
     needs: validate
     if: ${{ needs.validate.result == 'success' }}
@@ -44,18 +53,51 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps --include=dev
+      - name: Install locked dependencies
+        run: npm ci --include=dev
 
-      - name: Build installer
+      - name: Build NSIS installer
         run: npm run dist:installer
+
+      - name: Verify installer artifact
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -Path release-installer -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $installer) { throw 'NSIS installer artifact was not created.' }
+          Write-Host "Installer artifact: $($installer.FullName)"
+
+      - name: Smoke install, launch, and uninstall
+        shell: pwsh
+        run: |
+          $installer = Get-ChildItem -Path release-installer -Filter '*.exe' -File | Select-Object -First 1
+          if (-not $installer) { throw 'NSIS installer artifact was not created.' }
+
+          $installDir = Join-Path $env:LOCALAPPDATA 'Programs\Knoux AI Clipboard Pro'
+          if (Test-Path $installDir) { Remove-Item -Path $installDir -Recurse -Force }
+
+          $installProcess = Start-Process -FilePath $installer.FullName -ArgumentList '/S' -Wait -PassThru
+          if ($installProcess.ExitCode -ne 0) { throw "Installer failed with exit code $($installProcess.ExitCode)." }
+
+          $app = Join-Path $installDir 'Knoux AI Clipboard Pro.exe'
+          if (-not (Test-Path $app)) { throw "Installed application was not found at $app." }
+
+          $appProcess = Start-Process -FilePath $app -ArgumentList '--disable-gpu' -PassThru
+          Start-Sleep -Seconds 8
+          if ($appProcess.HasExited) { throw "Installed application exited during launch smoke with code $($appProcess.ExitCode)." }
+          Stop-Process -Id $appProcess.Id -Force
+
+          $uninstaller = Join-Path $installDir 'Uninstall Knoux AI Clipboard Pro.exe'
+          if (-not (Test-Path $uninstaller)) { throw "Uninstaller was not found at $uninstaller." }
+          $uninstallProcess = Start-Process -FilePath $uninstaller -ArgumentList '/S' -Wait -PassThru
+          if ($uninstallProcess.ExitCode -ne 0) { throw "Uninstaller failed with exit code $($uninstallProcess.ExitCode)." }
+          if (Test-Path $app) { throw 'Application executable remains after uninstall.' }
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: knoux-windows-installer
-          path: release/**/*
+          path: release-installer/**/*
           if-no-files-found: error

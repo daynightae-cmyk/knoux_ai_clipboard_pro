@@ -426,10 +426,6 @@ export default function StudioPage({ items = [], settings }: Props) {
               history={history}
               onCopy={() => currentRun && copy(currentRun.output)}
               onExport={exportPreview}
-              onClear={() => {
-                setCurrentRun(null);
-                setHistory([]);
-              }}
               onClear={() => setCurrentRun(null)}
               onClearHistory={() => setHistory([])}
               onSelectHistory={(run) => setCurrentRun(run)}

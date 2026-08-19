@@ -17,6 +17,8 @@ const allowedInvokeChannels = new Set([
   'ai:analyze',
   'ai:classify',
   'ai:predict',
+  'ai:run',
+  'ai:status',
   'ai-engine:summarize',
   'ai-engine:classify',
   'ai-engine:enhance',
@@ -41,6 +43,7 @@ const allowedInvokeChannels = new Set([
   'get-system-info',
   'system:get-stats',
   'system:check-health',
+  'system:ipc-integrity',
   'shell:open-external',
   'test:run-all',
   'test:run-single'
@@ -100,6 +103,8 @@ const aiApi = Object.freeze({
   analyze: (content) => invokeSafe('ai:analyze', content),
   classify: (content) => invokeSafe('ai:classify', content),
   predict: (context) => invokeSafe('ai:predict', context),
+  run: (input) => invokeSafe('ai:run', input),
+  status: () => invokeSafe('ai:status'),
 });
 
 const storageApi = Object.freeze({
@@ -190,6 +195,7 @@ contextBridge.exposeInMainWorld('knoux', {
     getInfo: () => invokeSafe('get-system-info'),
     getStats: () => invokeSafe('system:get-stats'),
     checkHealth: () => invokeSafe('system:check-health'),
+    checkIpcIntegrity: () => invokeSafe('system:ipc-integrity'),
   }),
   theme: Object.freeze({
     get: () => invokeSafe('theme:get'),

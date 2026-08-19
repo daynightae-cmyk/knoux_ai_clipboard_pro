@@ -385,36 +385,14 @@ export class ContentEnhancer {
    * Load local AI model - COMPLETE IMPLEMENTATION
    */
   private async loadLocalModel(): Promise<void> {
-    try {
-      this.logger.info("Loading local AI model", {
-        path: AI.LOCAL_MODEL_PATH,
-        provider: AI_MODEL_CONFIG.LOCAL_MODEL_PROVIDER,
-      });
-
-      // اختيار نموذج بناءً على التوفر والاحتياجات
-      const modelName = await this.selectBestModel();
-
-      // تحميل النموذج باستخدام المكتبة المناسبة
-      if (AI_MODEL_CONFIG.LOCAL_MODEL_PROVIDER === "@xenova/transformers") {
-        const { pipeline } = await import("@xenova/transformers");
-        this.model = await pipeline("text2text-generation", modelName, {
-          quantized: true, // استخدام النسخة المضغوطة لتوفير الذاكرة
-          device: "cpu", // أو 'gpu' إذا كان متاحاً
-        });
-      }
-      // يمكن إضافة دعم لمكتبات أخرى هنا
-
-      this.logger.info("Local AI model loaded successfully", {
-        model: modelName,
-      });
-    } catch (error) {
-      this.logger.error("Failed to load local AI model", error as Error, {
-        attemptingFallback: true,
-      });
-
-      // محاولة استخدام نموذج أبسط كبديل
-      await this.loadFallbackModel();
-    }
+    // The historical Transformers runtime carried an unpatched dependency chain and
+    // was never part of the verified production AI gateway. Keep the feature guarded
+    // rather than downloading or claiming a local model is available.
+    this.model = null;
+    this.logger.warn("Local model runtime is guarded; using rule-based enhancement only", {
+      provider: AI_MODEL_CONFIG.LOCAL_MODEL_PROVIDER,
+      reason: "unverified local model dependency chain",
+    });
   }
 
   /**
@@ -436,19 +414,8 @@ export class ContentEnhancer {
    * Load fallback model when primary fails
    */
   private async loadFallbackModel(): Promise<void> {
-    try {
-      this.logger.info("Loading fallback model");
-      // استخدام نموذج أصغر أو محلي مسبقاً
-      const { pipeline } = await import("@xenova/transformers");
-      this.model = await pipeline("text-generation", "Xenova/t5-small", {
-        quantized: true,
-      });
-      this.logger.info("Fallback model loaded");
-    } catch (error) {
-      this.logger.warn(
-        "No AI model available, using rule-based enhancement only",
-      );
-    }
+    this.model = null;
+    this.logger.warn("No verified local model is available; using rule-based enhancement only");
   }
 
   /**

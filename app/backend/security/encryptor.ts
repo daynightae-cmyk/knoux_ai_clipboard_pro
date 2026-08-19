@@ -1,13 +1,15 @@
-/**
- * Data Encryption Engine
- * Implements AES-256-GCM encryption/decryption with device-bound key derivation.
- * Guarantees that database files copied to another machine cannot be read.
- */
-
 import crypto from 'crypto';
+import fs from 'fs';
 import os from 'os';
+import path from 'path';
 import { logger } from '../../shared/logger';
 
+/**
+ * Local encrypted-storage helper. It is intentionally unavailable until a
+ * user-controlled vault secret is supplied through KNOUX_VAULT_MASTER_SECRET.
+ * The active IPC vault uses its own versioned payload contract in
+ * unified-service-ipc.js; this class protects older backend callers.
+ */
 export class Encryptor {
   private readonly algorithm = 'aes-256-gcm';
   private readonly encoding = 'hex';
@@ -17,91 +19,114 @@ export class Encryptor {
     this.initializeKey();
   }
 
-  /**
-   * Generates a stable machine-specific encryption key.
-   * Uses OS parameters to ensure the key persists across app restarts
-   * but fails if data is stolen/moved to another device.
-   */
+  private getSaltPath(): string {
+    return path.join(os.homedir(), '.knoux', 'vault-kdf-salt-v2');
+  }
+
+  private getOrCreateSalt(): Buffer {
+    const saltPath = this.getSaltPath();
+    if (fs.existsSync(saltPath)) {
+      const salt = Buffer.from(fs.readFileSync(saltPath, 'utf8').trim(), 'base64');
+      if (salt.length === 16) return salt;
+      throw new Error('Persisted vault KDF salt is invalid.');
+    }
+
+    const salt = crypto.randomBytes(16);
+    fs.mkdirSync(path.dirname(saltPath), { recursive: true, mode: 0o700 });
+    fs.writeFileSync(saltPath, salt.toString('base64'), { mode: 0o600 });
+    return salt;
+  }
+
+  private legacyKey(): Buffer {
+    const systemSignature = [
+      os.hostname(),
+      os.platform(),
+      os.arch(),
+      os.release(),
+      process.env.USERNAME || 'knoux-user',
+    ].join('-');
+    return crypto.pbkdf2Sync(systemSignature, 'knoux-salt-v1-static', 100000, 32, 'sha512');
+  }
+
   private initializeKey(): void {
+    const secret = process.env.KNOUX_VAULT_MASTER_SECRET;
+    if (!secret) {
+      logger.warn('Vault Encryptor is guarded: KNOUX_VAULT_MASTER_SECRET is not configured.');
+      return;
+    }
+
     try {
-      // Create a "fingerprint" from stable system characteristics
-      const systemSignature = [
-        os.hostname(),
-        os.platform(),
-        os.arch(),
-        os.release(), // On rolling distros this might change, consider CPUS/MAC in prod
-        process.env.USERNAME || 'knoux-user'
-      ].join('-');
-
-      // Derive a fixed 32-byte key from the signature using PBKDF2
-      this.masterKey = crypto.pbkdf2Sync(
-        systemSignature,
-        'knoux-salt-v1-static', // Salt
-        100000,                 // Iterations
-        32,                     // Key length
-        'sha512'                // Digest
-      );
-
-      logger.info('Encryption subsystem initialized');
+      const salt = this.getOrCreateSalt();
+      const machineBinding = `${os.hostname()}|${os.platform()}|${os.arch()}`;
+      this.masterKey = crypto.scryptSync(`${secret}:${machineBinding}`, salt, 32, {
+        N: 16384,
+        r: 8,
+        p: 1,
+        maxmem: 64 * 1024 * 1024,
+      });
+      logger.info('Vault Encryptor initialized with scrypt v2 key derivation');
     } catch (error) {
-      logger.error('CRITICAL: Failed to initialize encryption key', error);
-      throw new Error('Encryption System Failure');
+      const normalizedError = error instanceof Error ? error : new Error('Unknown key initialization error');
+      logger.error('Failed to initialize vault encryption key', normalizedError);
+      this.masterKey = null;
     }
   }
 
-  /**
-   * Encrypts a string value.
-   * Returns format: iv:authTag:encryptedContent
-   */
   public encrypt(text: string): string {
     if (!text) return '';
-    if (!this.masterKey) throw new Error('Encryptor not initialized');
+    if (!this.masterKey) throw new Error('Vault encryption is guarded until KNOUX_VAULT_MASTER_SECRET is configured.');
 
     try {
-      const iv = crypto.randomBytes(16);
+      const iv = crypto.randomBytes(12);
       const cipher = crypto.createCipheriv(this.algorithm, this.masterKey, iv);
-      
-      let encrypted = cipher.update(text, 'utf8', this.encoding);
-      encrypted += cipher.final(this.encoding);
-      
+      const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
       const authTag = cipher.getAuthTag();
-
-      // Return IV:AuthTag:EncryptedData
-      return `${iv.toString(this.encoding)}:${authTag.toString(this.encoding)}:${encrypted}`;
+      return `knoux:v2:${iv.toString(this.encoding)}:${authTag.toString(this.encoding)}:${encrypted.toString(this.encoding)}`;
     } catch (error) {
-      logger.error('Encryption failed', error);
-      throw error;
+      const normalizedError = error instanceof Error ? error : new Error('Unknown encryption error');
+      logger.error('Encryption failed', normalizedError);
+      throw normalizedError;
     }
   }
 
-  /**
-   * Decrypts an encrypted string value.
-   * Expects format: iv:authTag:encryptedContent
-   */
   public decrypt(encryptedData: string): string {
     if (!encryptedData) return '';
-    if (!this.masterKey) throw new Error('Encryptor not initialized');
 
     try {
       const parts = encryptedData.split(':');
-      if (parts.length !== 3) {
-        throw new Error('Invalid encrypted data format');
+      let key: Buffer;
+      let iv: Buffer;
+      let authTag: Buffer;
+      let content: string;
+
+      if (parts.length === 5 && parts[0] === 'knoux' && parts[1] === 'v2') {
+        if (!this.masterKey) throw new Error('Vault decryption is guarded until KNOUX_VAULT_MASTER_SECRET is configured.');
+        key = this.masterKey;
+        iv = Buffer.from(parts[2], this.encoding as BufferEncoding);
+        authTag = Buffer.from(parts[3], this.encoding as BufferEncoding);
+        content = parts[4];
+      } else if (parts.length === 3) {
+        // Read-only compatibility for the historical static-KDF format. Re-encrypt
+        // successfully recovered values to migrate them to v2.
+        key = this.legacyKey();
+        iv = Buffer.from(parts[0], this.encoding as BufferEncoding);
+        authTag = Buffer.from(parts[1], this.encoding as BufferEncoding);
+        content = parts[2];
+      } else {
+        throw new Error('Invalid encrypted data format.');
       }
 
-      const iv = Buffer.from(parts[0], this.encoding as BufferEncoding);
-      const authTag = Buffer.from(parts[1], this.encoding as BufferEncoding);
-      const content = parts[2];
-
-      const decipher = crypto.createDecipheriv(this.algorithm, this.masterKey, iv);
+      if (iv.length !== 12 || authTag.length !== 16) throw new Error('Invalid encrypted data payload.');
+      const decipher = crypto.createDecipheriv(this.algorithm, key, iv);
       decipher.setAuthTag(authTag);
-
-      let decrypted = decipher.update(content, this.encoding as BufferEncoding, 'utf8');
-      decrypted += decipher.final('utf8');
-
-      return decrypted;
+      return Buffer.concat([
+        decipher.update(Buffer.from(content, this.encoding as BufferEncoding)),
+        decipher.final(),
+      ]).toString('utf8');
     } catch (error) {
-      logger.error('Decryption failed. Data corruption or wrong machine key.', error);
-      return '[[ENCRYPTED DATA ERROR]]'; // Fail safe UI text
+      const normalizedError = error instanceof Error ? error : new Error('Unknown decryption error');
+      logger.error('Decryption failed. Data corruption or wrong secret.', normalizedError);
+      return '[[ENCRYPTED DATA ERROR]]';
     }
   }
 }

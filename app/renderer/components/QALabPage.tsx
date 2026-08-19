@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Activity, AlertTriangle, CheckCircle2, Clock, Download, FlaskConical, Gauge, Languages, LayoutGrid, ListChecks, MousePointerClick, Play, Rocket, ShieldCheck, Sparkles, Wrench, XCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { runQaChecks, summarizeQa, buildQaReport, type QACheckResult, type QACategory } from "../services/qaChecks";
+import { runIpcIntegrityCheck, runQaChecks, runRuntimeServiceChecks, summarizeQa, buildQaReport, type QACheckResult, type QACategory } from "../services/qaChecks";
 import { WorkspaceHero, StatusSummaryCard, SectionHeader } from "./studio/StudioKit";
 import { QAResultCard } from "./studio/QAResultCard";
 import { LivePreviewPanel, type PreviewRun } from "./studio/LivePreviewPanel";
@@ -51,7 +51,7 @@ export default function QALabPage() {
     };
     setCurrentRun(running);
     await wait(320);
-    const res = runQaChecks();
+    const res = [...runQaChecks(), await runRuntimeServiceChecks(), await runIpcIntegrityCheck()];
     const sum = summarizeQa(res);
     const report = buildQaReport(res);
     const done: PreviewRun = {

@@ -1,6 +1,7 @@
 import en from "../utils/i18n/en.json";
 import ar from "../utils/i18n/ar.json";
-import { PRODUCTION_SERVICES, type ServiceStatus } from "./productionCatalog";
+import { hasVerifiedServiceRunner, PRODUCTION_SERVICES, type ServiceStatus } from "./productionCatalog";
+import { buildServiceSample, runServiceOperation } from "./serviceOperations";
 import {
   DEVELOPER_TOOLS,
   runDeveloperTool,
@@ -242,27 +243,22 @@ function checkToolLabelUniqueness(): QACheckResult {
 }
 
 function checkServiceOperationCoverage(): QACheckResult {
-  // This is a conceptual check. A real implementation would need to parse serviceOperations.ts
-  // For now, we check if every 'actionHandler' seems plausible.
-  const missingHandlers = PRODUCTION_SERVICES.filter(
-    (s) => s.implemented && s.status === "Active" && !s.actionHandler
+  const unresolved = PRODUCTION_SERVICES.filter(
+    (service) => service.status === "Active" && (!service.actionHandler || !hasVerifiedServiceRunner(service))
   );
+  const active = PRODUCTION_SERVICES.filter((service) => service.status === "Active");
 
   return {
     id: "service-operation-coverage",
-    title: "Service Operation Coverage",
+    title: "Executable Service Coverage",
     category: "catalog",
-    status: missingHandlers.length === 0 ? "pass" : "warning",
-    summary:
-      missingHandlers.length === 0
-        ? `All ${PRODUCTION_SERVICES.filter((s) => s.status === "Active").length} active services have an actionHandler.`
-        : `${missingHandlers.length} active service(s) are missing an actionHandler.`,
-    details:
-      missingHandlers.length === 0
-        ? ["Ensures every active service can be triggered."]
-        : missingHandlers.map(
-            (s) => `${s.displayName} (ID: ${s.id}) is Active but has no actionHandler.`
-          ),
+    status: unresolved.length === 0 ? "pass" : "fail",
+    summary: unresolved.length === 0
+      ? `All ${active.length} Active services resolve through the verified service-runner registry.`
+      : `${unresolved.length} Active service(s) lack a verified executable runner.`,
+    details: unresolved.length === 0
+      ? ["Metadata is checked against the executable runner registry; runtime execution is performed in the QA session."]
+      : unresolved.map((service) => `${service.displayName} (${service.id}): unresolved handler ${service.actionHandler || "<none>"}`),
   };
 }
 
@@ -320,7 +316,7 @@ function checkDuplicateIds(): QACheckResult {
 
 function checkSecretScanner(): QACheckResult {
   const sample =
-    "OPENROUTER_API_KEY=sk-or-v1-abcdefghijklmnopqrstuvwxyz123456\nEmail: admin@knoux.store";
+    "OPENROUTER_API_KEY=sk-or-v1-EXAMPLE_DO_NOT_USE_1234567890\nEmail: admin@knoux.store";
   const output = runDeveloperTool("secret-scanner", sample);
   const detected = /openrouter-key/.test(output) && /email/.test(output);
   return {
@@ -336,7 +332,7 @@ function checkSecretScanner(): QACheckResult {
 }
 
 function checkRedaction(): QACheckResult {
-  const secret = "sk-or-v1-abcdefghijklmnopqrstuvwxyz123456";
+  const secret = "sk-or-v1-EXAMPLE_DO_NOT_USE_1234567890";
   const output = runDeveloperTool(
     "redaction-map",
     `OPENROUTER_API_KEY=${secret}\nadmin@knoux.store`
@@ -514,6 +510,66 @@ function checkRegexTool(): QACheckResult {
       ? "Regex tool matches expected token count."
       : "Regex tool output did not match expectation.",
     details: [output.replace(/\n/g, " ")],
+  };
+}
+
+export async function runRuntimeServiceChecks(): Promise<QACheckResult> {
+  const activeServices = PRODUCTION_SERVICES.filter((service) => service.status === "Active");
+  const failures: string[] = [];
+
+  for (const service of activeServices) {
+    try {
+      const result = await runServiceOperation(service, buildServiceSample(service), []);
+      if (!result.ok || !result.output.trim()) {
+        failures.push(`${service.id}: ${result.status || "no executable output"}`);
+      }
+    } catch (error) {
+      failures.push(`${service.id}: ${error instanceof Error ? error.message : "runtime execution failed"}`);
+    }
+  }
+
+  return {
+    id: "runtime-service-execution",
+    title: "Active Service Runtime Execution",
+    category: "runtime",
+    status: failures.length === 0 ? "pass" : "fail",
+    summary: failures.length === 0
+      ? `${activeServices.length} Active services executed with non-empty output in this QA session.`
+      : `${failures.length} Active service(s) failed runtime execution.`,
+    details: failures.length === 0
+      ? ["Each Active catalog entry was dispatched through its actual runner during this session."]
+      : failures,
+  };
+}
+
+export async function runIpcIntegrityCheck(): Promise<QACheckResult> {
+  const api = typeof window === "undefined"
+    ? undefined
+    : (window as typeof window & { knoux?: { system?: { checkIpcIntegrity?: () => Promise<Record<string, unknown>> } } }).knoux?.system;
+
+  if (!api?.checkIpcIntegrity) {
+    return {
+      id: "ipc-integrity",
+      title: "IPC Registry Integrity",
+      category: "runtime",
+      status: "warning",
+      summary: "IPC integrity is guarded outside Electron; run this check in the packaged desktop runtime.",
+      details: ["The web runtime has no Electron IPC bridge by design."],
+    };
+  }
+
+  const result = await api.checkIpcIntegrity();
+  const duplicates = Array.isArray(result?.data?.duplicates) ? result.data.duplicates : [];
+  const channelCount = Number(result?.data?.channelCount || 0);
+  return {
+    id: "ipc-integrity",
+    title: "IPC Registry Integrity",
+    category: "runtime",
+    status: result?.ok && duplicates.length === 0 ? "pass" : "fail",
+    summary: result?.ok && duplicates.length === 0
+      ? `${channelCount} canonical IPC channels registered without duplicates.`
+      : "IPC registry reported a failed integrity check or duplicate channel.",
+    details: result?.ok && duplicates.length === 0 ? ["Canonical IPC is registered once during app readiness, not window creation."] : duplicates.map(String),
   };
 }
 

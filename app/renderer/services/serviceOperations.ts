@@ -81,7 +81,7 @@ export function buildServiceSample(service: ProductionService): string {
   if (service.id.includes("code") || service.id.includes("api")) return "const service = { name: 'Knoux', ready: true };\nexport default service;";
   if (service.id.includes("json")) return '{"product":"Knoux AI Clipboard Pro","ready":true}';
   if (service.id.includes("pdf") || service.id.includes("document")) return "Project Proposal.pdf\nClient: KNOUX\nPurpose: AI Clipboard Pro deployment\nAction: review document and extract tasks.";
-  if (service.category === "Security") return "OPENROUTER_API_KEY=sk-or-v1-REPLACE_ME_12345678901234567890\npassword: example-only\nadmin@knoux.store\n4242 4242 4242 4242";
+  if (service.category === "Security") return "OPENROUTER_API_KEY=sk-or-v1-EXAMPLE_DO_NOT_USE_1234567890\npassword: example-only\nadmin@knoux.store\n4242 4242 4242 4242";
   if (service.category === "Barcode") return "https://knoux.store/tracking/KNX-4455";
   if (service.category === "Packaging") return "npm run build && npm run dist:installer";
   return sampleText;
