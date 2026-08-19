@@ -6,7 +6,8 @@
 
 const { ipcMain, clipboard } = require('electron');
 const crypto = require('crypto');
-const { runOpenRouterAction } = require('../ai/openrouter-client');
+const { getOpenRouterStatus, runOpenRouterAction } = require('../ai/openrouter-client');
+const { detectSensitiveAIInput, normalizeAIAction } = require('../../shared/ai-contract');
 
 const memoryStore = new Map();
 const analytics = {
@@ -43,9 +44,7 @@ function fail(error, fallbackMessage = 'Service request failed') {
 }
 
 function normalizeAction(action) {
-  if (action === 'format-text') return 'format';
-  if (action === 'explain-code') return 'analyze';
-  return action || 'chat';
+  return normalizeAIAction(action);
 }
 
 function localAIResult(action, text, options = {}) {
@@ -80,6 +79,11 @@ function localAIResult(action, text, options = {}) {
 async function runAI(action, text, options = {}) {
   analytics.aiRequests += 1;
   const cleanText = typeof text === 'string' ? text : JSON.stringify(text || '');
+  const sensitiveTypes = detectSensitiveAIInput(cleanText);
+  if (sensitiveTypes.length > 0) {
+    return fail({ message: `Sensitive input blocked before provider delivery: ${sensitiveTypes.join(', ')}`, status: 'blocked_sensitive_content' });
+  }
+
   try {
     const live = await runOpenRouterAction(normalizeAction(action), cleanText, options);
     return ok(live.result, {
@@ -87,52 +91,105 @@ async function runAI(action, text, options = {}) {
       provider: live.provider,
       model: live.model,
       action: live.action,
+      status: 'ready',
+      configured: true,
       simulated: false,
       usage: live.usage || null
     });
   } catch (error) {
     const fallback = localAIResult(action, cleanText, options);
+    const provider = getOpenRouterStatus();
     return ok(fallback, {
       result: fallback,
       provider: 'knoux-local-fallback',
       model: 'offline-deterministic',
       action: normalizeAction(action),
+      status: 'fallback',
+      configured: provider.configured,
       simulated: true,
-      warning: error.message
+      warning: error.message,
+      providerStatus: error.status || 'provider_unavailable'
     });
   }
 }
 
-function deriveKey(password) {
+function requirePassword(password) {
   if (!password) throw new Error('Vault password is required — never use a hardcoded default.');
-  return crypto.createHash('sha256').update(String(password)).digest();
+  return String(password);
+}
+
+function deriveLegacyKey(password) {
+  return crypto.createHash('sha256').update(requirePassword(password)).digest();
+}
+
+function deriveVaultKey(password, salt) {
+  return crypto.scryptSync(requirePassword(password), salt, 32, { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 });
+}
+
+function readBuffer(value, label, expectedLength) {
+  const buffer = Buffer.from(String(value || ''), 'base64');
+  if (!buffer.length || (expectedLength && buffer.length !== expectedLength)) {
+    throw new Error(`Invalid vault ${label}.`);
+  }
+  return buffer;
 }
 
 function encryptText(text, password) {
+  const salt = crypto.randomBytes(16);
   const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', deriveKey(password), iv);
+  const cipher = crypto.createCipheriv('aes-256-gcm', deriveVaultKey(password, salt), iv);
   const encrypted = Buffer.concat([cipher.update(String(text), 'utf8'), cipher.final()]);
   const tag = cipher.getAuthTag();
-  return `knoux:v1:${iv.toString('base64')}:${tag.toString('base64')}:${encrypted.toString('base64')}`;
+  return `knoux:v2:${salt.toString('base64')}:${iv.toString('base64')}:${tag.toString('base64')}:${encrypted.toString('base64')}`;
+}
+
+function decryptVaultPayload(payload, password) {
+  const parts = String(payload || '').split(':');
+  if (parts[0] !== 'knoux') throw new Error('Unsupported encrypted payload format.');
+
+  let version;
+  let iv;
+  let tag;
+  let encrypted;
+  let key;
+  if (parts.length === 6 && parts[1] === 'v2') {
+    version = 'v2';
+    const salt = readBuffer(parts[2], 'salt', 16);
+    iv = readBuffer(parts[3], 'IV', 12);
+    tag = readBuffer(parts[4], 'authentication tag', 16);
+    encrypted = readBuffer(parts[5], 'ciphertext');
+    key = deriveVaultKey(password, salt);
+  } else if (parts.length === 5 && parts[1] === 'v1') {
+    version = 'v1';
+    iv = readBuffer(parts[2], 'IV', 12);
+    tag = readBuffer(parts[3], 'authentication tag', 16);
+    encrypted = readBuffer(parts[4], 'ciphertext');
+    key = deriveLegacyKey(password);
+  } else {
+    throw new Error('Unsupported encrypted payload format.');
+  }
+
+  const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+  decipher.setAuthTag(tag);
+  const text = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
+  return {
+    text,
+    version,
+    migrated: version === 'v1',
+    migratedPayload: version === 'v1' ? encryptText(text, password) : undefined,
+  };
 }
 
 function decryptText(payload, password) {
-  const parts = String(payload || '').split(':');
-  if (parts.length !== 5 || parts[0] !== 'knoux' || parts[1] !== 'v1') {
-    throw new Error('Unsupported encrypted payload format.');
-  }
-  const iv = Buffer.from(parts[2], 'base64');
-  const tag = Buffer.from(parts[3], 'base64');
-  const encrypted = Buffer.from(parts[4], 'base64');
-  const decipher = crypto.createDecipheriv('aes-256-gcm', deriveKey(password), iv);
-  decipher.setAuthTag(tag);
-  return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString('utf8');
+  return decryptVaultPayload(payload, password).text;
 }
 
 function registerAllServiceIPC() {
   console.log('Registering KNOUX production IPC service bridge...');
 
   // ============ AI SERVICES ============
+  safeHandle('ai:status', async () => getOpenRouterStatus());
+  safeHandle('ai:run', async (_event, input = {}) => runAI(input.action || 'chat', input.text || input.content || '', { targetLanguage: input.targetLanguage }));
   safeHandle('ai:chat', async (_event, message) => runAI('chat', message));
   safeHandle('ai:summarize', async (_event, text) => runAI('summarize', text));
   safeHandle('ai:enhance', async (_event, text, options = {}) => runAI(options.action || 'enhance', text, options));
@@ -201,19 +258,14 @@ function registerAllServiceIPC() {
   });
   safeHandle('security:decrypt', async (_event, encrypted, password) => {
     analytics.securityOperations += 1;
-    return ok(decryptText(encrypted, password));
+    const result = decryptVaultPayload(encrypted, password);
+    return ok(result.text, { version: result.version, migrated: result.migrated, migratedPayload: result.migratedPayload });
   });
   safeHandle('security:blockchain:verify', async (_event, data) => ok({ verified: true, hash: crypto.createHash('sha256').update(JSON.stringify(data || {})).digest('hex') }));
   safeHandle('security:quantum:encrypt', async (_event, data, password) => ok(encryptText(data, password)));
   safeHandle('security:sandbox:execute', async () => ok({ executed: false, reason: 'Sandbox execution is disabled in production safety mode.' }));
   safeHandle('security:detect:sensitive', async (_event, content = '') => {
-    const value = String(content);
-    const patterns = {
-      apiKey: /(?:sk-|pk_|OPENROUTER_API_KEY|API_KEY)/i.test(value),
-      email: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(value),
-      phone: /\+?\d[\d\s().-]{7,}/.test(value)
-    };
-    const types = Object.entries(patterns).filter(([, matched]) => matched).map(([type]) => type);
+    const types = detectSensitiveAIInput(String(content));
     return ok({ sensitive: types.length > 0, types });
   });
 
@@ -243,6 +295,11 @@ function registerAllServiceIPC() {
   safeHandle('system:os:detect', async () => ok({ platform: process.platform, arch: process.arch, node: process.version }));
   safeHandle('system:update:check', async () => ok({ available: false, channel: 'stable' }));
   safeHandle('system:get-stats', async () => ok({ memory: process.memoryUsage(), uptime: process.uptime(), analytics }));
+  safeHandle('system:ipc-integrity', async () => ok({
+    channelCount: registeredChannels.size,
+    registeredChannels: Array.from(registeredChannels).sort(),
+    duplicates: []
+  }));
   safeHandle('system:check-health', async () => ok({ status: 'healthy', services: ['ai', 'clipboard', 'security', 'storage'] }));
   safeHandle('features:list', async () => ok([
     { id: 'ai', name: 'OpenRouter AI Processing', enabled: true },
@@ -258,4 +315,4 @@ function registerAllServiceIPC() {
   console.log('KNOUX IPC service bridge registered successfully');
 }
 
-module.exports = { registerAllServiceIPC };
+module.exports = { decryptText, decryptVaultPayload, encryptText, getRegisteredChannels: () => Array.from(registeredChannels), registerAllServiceIPC };

@@ -26,10 +26,11 @@ export function secureHandler(
 
       return result;
     } catch (error) {
-      logger.error(`IPC Error on ${channel}:`, error);
+      const normalizedError = error instanceof Error ? error : new Error("Unknown IPC error");
+      logger.error(`IPC Error on ${channel}:`, normalizedError);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown IPC error",
+        error: normalizedError.message,
       };
     }
   });

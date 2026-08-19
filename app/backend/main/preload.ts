@@ -26,7 +26,6 @@ contextBridge.exposeInMainWorld("electron", ipcWrapper);
 
 // 2. Legacy/Specific ElectronAPI
 contextBridge.exposeInMainWorld("electronAPI", {
-  invoke: ipcWrapper.invoke,
   ...ipcWrapper.ipcRenderer,
 });
 
