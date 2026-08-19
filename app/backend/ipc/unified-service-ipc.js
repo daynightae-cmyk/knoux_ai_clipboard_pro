@@ -4,12 +4,15 @@
  * Core AI calls use OpenRouter when configured, with safe local fallbacks.
  */
 
-const { ipcMain, clipboard } = require('electron');
+const { ipcMain, clipboard, BrowserWindow, app } = require('electron');
 const crypto = require('crypto');
 const { getOpenRouterStatus, runOpenRouterAction } = require('../ai/openrouter-client');
 const { detectSensitiveAIInput, normalizeAIAction } = require('../../shared/ai-contract');
 
 const memoryStore = new Map();
+const clipboardStore = new Map();
+let clipboardMonitorTimer = null;
+let lastClipboardText = '';
 const analytics = {
   aiRequests: 0,
   clipboardWrites: 0,
@@ -184,6 +187,57 @@ function decryptText(payload, password) {
   return decryptVaultPayload(payload, password).text;
 }
 
+function emitClipboardChange(content) {
+  const text = String(content || '');
+  if (!text || text === lastClipboardText) return null;
+  lastClipboardText = text;
+  const item = {
+    id: `clip_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`,
+    content: text,
+    type: 'text',
+    source: 'electron-clipboard-monitor',
+    timestamp: Date.now(),
+    createdAt: new Date().toISOString(),
+  };
+  clipboardStore.set(item.id, item);
+  analytics.clipboardWrites += 1;
+  for (const window of BrowserWindow.getAllWindows()) {
+    if (!window.isDestroyed()) window.webContents.send('clipboard:changed', item);
+  }
+  return item;
+}
+
+function startClipboardMonitor() {
+  if (clipboardMonitorTimer) return { monitoring: true, alreadyRunning: true };
+  try {
+    lastClipboardText = clipboard.readText() || '';
+  } catch {
+    lastClipboardText = '';
+  }
+  clipboardMonitorTimer = setInterval(() => {
+    try {
+      emitClipboardChange(clipboard.readText() || '');
+    } catch (error) {
+      console.warn(`Clipboard monitor read failed: ${error.message}`);
+    }
+  }, 500);
+  clipboardMonitorTimer.unref?.();
+  return { monitoring: true, alreadyRunning: false, intervalMs: 500 };
+}
+
+function stopClipboardMonitor() {
+  if (clipboardMonitorTimer) clearInterval(clipboardMonitorTimer);
+  clipboardMonitorTimer = null;
+  return { monitoring: false };
+}
+
+function setAutoStart(enabled) {
+  const supported = process.platform === 'win32' || process.platform === 'darwin';
+  if (!supported) return { enabled: false, supported: false, platform: process.platform };
+  app.setLoginItemSettings({ openAtLogin: Boolean(enabled), path: process.execPath });
+  return { enabled: Boolean(enabled), supported: true, platform: process.platform };
+}
+
 function registerAllServiceIPC() {
   console.log('Registering KNOUX production IPC service bridge...');
 
@@ -230,26 +284,33 @@ function registerAllServiceIPC() {
   safeHandle('ai:uimorpher:transform', async (_event, params = {}) => ok({ theme: params.theme || 'knoux-light', applied: true }));
 
   // ============ CLIPBOARD SERVICES ============
-  safeHandle('clipboard:watch:start', async () => ok({ monitoring: true }));
-  safeHandle('clipboard:watch:stop', async () => ok({ monitoring: false }));
+  safeHandle('clipboard:watch:start', async () => ok(startClipboardMonitor()));
+  safeHandle('clipboard:watch:stop', async () => ok(stopClipboardMonitor()));
   safeHandle('clipboard:format', async (_event, params = {}) => ok(params.content || params));
   safeHandle('clipboard:normalize', async (_event, content) => ok(String(content || '').trim()));
-  safeHandle('clipboard:get-history', async () => ok([]));
-  safeHandle('clipboard:add-item', async (_event, item = {}) => {
-    analytics.clipboardWrites += 1;
-    if (item.content) clipboard.writeText(String(item.content));
-    const id = item.id || `clip_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
-    memoryStore.set(id, { id, ...item, createdAt: new Date().toISOString() });
-    return ok({ id });
+  safeHandle('clipboard:get-history', async (_event, options = {}) => {
+    const limit = Math.min(Math.max(Number(options?.limit) || 100, 1), 500);
+    const offset = Math.max(Number(options?.offset) || 0, 0);
+    const items = Array.from(clipboardStore.values()).sort((a, b) => b.timestamp - a.timestamp);
+    return ok(items.slice(offset, offset + limit), { count: items.length, total: items.length, offset, limit });
   });
-  safeHandle('clipboard:delete-item', async (_event, id) => ok({ deleted: memoryStore.delete(id) }));
+  safeHandle('clipboard:add-item', async (_event, item = {}) => {
+    const content = String(item.content || '');
+    if (content) clipboard.writeText(content);
+    const id = item.id || `clip_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+    const record = { id, ...item, content, createdAt: item.createdAt || new Date().toISOString(), timestamp: item.timestamp || Date.now() };
+    clipboardStore.set(id, record);
+    analytics.clipboardWrites += 1;
+    return ok(record);
+  });
+  safeHandle('clipboard:delete-item', async (_event, id) => ok({ deleted: clipboardStore.delete(String(id)) }));
   safeHandle('clipboard:search', async (_event, query = '') => {
     const needle = String(query).toLowerCase();
-    const results = Array.from(memoryStore.values()).filter((item) => JSON.stringify(item).toLowerCase().includes(needle));
+    const results = Array.from(clipboardStore.values()).filter((item) => JSON.stringify(item).toLowerCase().includes(needle));
     return ok(results.slice(0, 50), { count: results.length });
   });
-  safeHandle('clipboard:get-stats', async () => ok({ items: memoryStore.size, writes: analytics.clipboardWrites }));
-  safeHandle('clipboard:start-monitoring', async () => ok({ monitoring: true }));
+  safeHandle('clipboard:get-stats', async () => ok({ items: clipboardStore.size, writes: analytics.clipboardWrites, monitoring: Boolean(clipboardMonitorTimer) }));
+  safeHandle('clipboard:start-monitoring', async () => ok(startClipboardMonitor()));
 
   // ============ SECURITY SERVICES ============
   safeHandle('security:encrypt', async (_event, data, password) => {
@@ -268,6 +329,7 @@ function registerAllServiceIPC() {
     const types = detectSensitiveAIInput(String(content));
     return ok({ sensitive: types.length > 0, types });
   });
+  safeHandle('security:status', async () => ok({ available: true, algorithm: 'AES-256-GCM', kdf: 'scrypt', requiresPassword: true }));
 
   // ============ STORAGE SERVICES ============
   safeHandle('storage:cache:get', async (_event, key) => ok(memoryStore.get(String(key)) || null));
@@ -290,8 +352,8 @@ function registerAllServiceIPC() {
   safeHandle('storage:get-stats', async () => ok({ keys: memoryStore.size, writes: analytics.storageWrites }));
 
   // ============ SYSTEM / FEATURE SERVICES ============
-  safeHandle('system:autostart:enable', async () => ok({ enabled: true }));
-  safeHandle('system:autostart:disable', async () => ok({ enabled: false }));
+  safeHandle('system:autostart:enable', async () => ok(setAutoStart(true)));
+  safeHandle('system:autostart:disable', async () => ok(setAutoStart(false)));
   safeHandle('system:os:detect', async () => ok({ platform: process.platform, arch: process.arch, node: process.version }));
   safeHandle('system:update:check', async () => ok({ available: false, channel: 'stable' }));
   safeHandle('system:get-stats', async () => ok({ memory: process.memoryUsage(), uptime: process.uptime(), analytics }));

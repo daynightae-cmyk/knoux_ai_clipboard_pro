@@ -109,7 +109,13 @@ export async function runServiceOperation(service: ProductionService, input: str
   switch (service.id) {
     case "smart-clipboard-inbox": return { ok: true, status: "active", title: service.displayName, output: format(Object.fromEntries(Object.entries(groupClipsByDate(items)).map(([key, value]) => [key, value.length]))), action: "group" };
     case "windows-current-clipboard-import": return { ok: true, status: "ready", title: service.displayName, output: (await readSystemClipboard()) || "Clipboard is empty or browser permission was denied. Use manual paste.", action: "read-clipboard" };
-    case "windows-live-clipboard-monitor": return { ok: false, status: "guarded", title: service.displayName, output: "Live monitor requires a verified Electron bridge. Web runtime stays guarded. Use current clipboard import now.", action: "guarded" };
+    case "windows-live-clipboard-monitor": {
+      const bridge = (window as any).knoux?.clipboard;
+      if (!bridge?.startMonitoring) return { ok: false, status: "guarded", title: service.displayName, output: "Live monitor requires the Electron clipboard bridge. Web runtime stays guarded.", action: "guarded" };
+      const result = await bridge.startMonitoring();
+      const started = Boolean(result?.ok ?? result?.success);
+      return { ok: started, status: started ? "active" : "guarded", title: service.displayName, output: started ? "Electron clipboard monitoring is active. Updates are emitted through the allowlisted clipboard:changed event." : format(result), action: "monitor" };
+    }
     case "persistent-local-clipboard-vault": return { ok: true, status: "active", title: service.displayName, output: format(getStorageHealth(items)), action: "health" };
     case "large-history-storage": return { ok: true, status: "ready", title: service.displayName, output: `Current records: ${items.length}\nStorage: ${format(getStorageHealth(items))}`, action: "retention" };
     case "clipboard-deduplication": return { ok: true, status: "active", title: service.displayName, output: `Duplicate report:\n${format(duplicateSummary(items))}\n\nPreview after cleanup: ${removeDuplicates(items).length} records.`, action: "dedupe-preview" };
@@ -124,7 +130,13 @@ export async function runServiceOperation(service: ProductionService, input: str
     case "daily-clipboard-summary": return { ok: true, status: "active", title: service.displayName, output: format(buildDailySummary(items)), action: "daily-summary" };
     case "auto-cleanup": return { ok: true, status: "ready", title: service.displayName, output: format(compactLocalStore(items)), action: "compact" };
     case "web-clipboard-limited-mode": return { ok: await writeSystemClipboard(text), status: "permission-dependent", title: service.displayName, output: "Attempted browser clipboard write. If permission was denied, use manual copy.", action: "write-clipboard" };
-    case "start-on-login-status": return { ok: false, status: "guarded", title: service.displayName, output: "Start-on-login is a native Electron/installer boundary. This web runtime cannot honestly enable it. The UI reports the boundary and keeps manual launch as fallback.", action: "startup-boundary" };
+    case "start-on-login-status": {
+      const system = (window as any).knoux?.system;
+      if (!system?.enableAutostart) return { ok: false, status: "guarded", title: service.displayName, output: "Start-on-login requires the Electron system bridge. Web runtime remains guarded.", action: "startup-boundary" };
+      const result = await system.enableAutostart();
+      const enabled = Boolean(result?.data?.enabled);
+      return { ok: enabled, status: enabled ? "ready" : "guarded", title: service.displayName, output: enabled ? "Start-on-login is enabled by the native Electron runtime." : `Start-on-login is unavailable on ${result?.data?.platform || "this runtime"}. Manual launch remains the safe fallback.`, action: "startup-boundary" };
+    }
     case "current-session-import": return { ok: true, status: "active", title: service.displayName, output: text, action: "session-import" };
     case "smart-text-cleaner": return { ok: true, status: "active", title: service.displayName, output: cleanText(text), action: "clean" };
     case "link-organizer": return { ok: true, status: "active", title: service.displayName, output: format(extractEntities(text).urls.map((url) => { try { return { url, domain: new URL(url).hostname }; } catch { return { url, domain: "invalid-url" }; } })), action: "links" };
@@ -137,7 +149,13 @@ export async function runServiceOperation(service: ProductionService, input: str
     case "sensitive-data-guard":
     case "secrets-exposure-guard": return { ok: true, status: "active", title: service.displayName, output: format(secretScanReport(text)), action: "guard-scan" };
     case "local-privacy-guard": localStorage.setItem("knoux_privacy_mode_last_check", new Date().toISOString()); return { ok: true, status: "active", title: service.displayName, output: "Privacy guard check recorded locally. New clips can be marked secure by Privacy Mode.", action: "privacy" };
-    case "vault-encryption": return { ok: Boolean((window as any).knoux?.security), status: Boolean((window as any).knoux?.security) ? "ready" : "guarded", title: service.displayName, output: "Electron encryption bridge is checked at runtime. Web localStorage is not claimed as encrypted.", action: "encryption-check" };
+    case "vault-encryption": {
+      const security = (window as any).knoux?.security;
+      if (!security?.status) return { ok: false, status: "guarded", title: service.displayName, output: "Electron encryption bridge is unavailable. Web localStorage is not claimed as encrypted.", action: "encryption-check" };
+      const result = await security.status();
+      const available = Boolean(result?.data?.available);
+      return { ok: available, status: available ? "ready" : "guarded", title: service.displayName, output: available ? `Native vault is available: ${result.data.algorithm} with ${result.data.kdf}. A password is required for every operation.` : format(result), action: "encryption-check" };
+    }
     case "cloud-sync-boundary": return { ok: false, status: "guarded", title: service.displayName, output: "Cloud sync is intentionally blocked in this local-first build. Use JSON export/import until a real account and sync backend exists.", action: "sync-boundary" };
     case "ai-upload-guard": return { ok: true, status: "guarded", title: service.displayName, output: detectSensitiveTypes(text).length ? "Sensitive input detected. AI upload should remain blocked until redacted." : "No sensitive classes detected in the active text buffer.", action: "ai-guard" };
     case "redaction-lab": return { ok: true, status: "active", title: service.displayName, output: redact(text), action: "redact" };
